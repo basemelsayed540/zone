@@ -1,0 +1,6 @@
+zone_backup*.json
+*.xlsx
+*.xls
+.env
+.env.*
+node_modules/
