@@ -69,11 +69,17 @@ small{color:var(--mut);opacity:1}
 #gpop{display:none;position:absolute;top:110%;right:0;z-index:30;background:var(--c);border:1px solid var(--b);border-radius:12px;padding:10px 14px;box-shadow:0 8px 28px rgba(0,0,0,.2);min-width:230px}
 #gpop label{display:flex;gap:8px;align-items:center;margin:5px 0;cursor:pointer;white-space:nowrap}
 #gpop .gh{font-weight:700;margin-bottom:4px}
-#cmpw{display:none;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
-#cmpw .cc{background:var(--c);border:2px solid var(--tc);border-radius:14px;overflow:hidden}
-#cmpw h4{margin:0;padding:10px 12px;background:color-mix(in srgb,var(--tc) 14%,var(--c));cursor:pointer;font-size:14px}
-#cmpw textarea{width:100%;height:60vh;border:0;border-radius:0;resize:vertical;line-height:1.7;white-space:pre;font:inherit;display:block}
-@media(max-width:700px){#cmpw{grid-template-columns:1fr}}
+#cmpw{display:none;margin-top:8px}
+.sgw{overflow:auto;max-height:70vh;margin-bottom:6px}
+#sgt{border-collapse:collapse;table-layout:fixed;background:var(--c);width:886px}
+#sgt th,#sgt td{border:1px solid var(--b)!important;padding:0 8px;height:30px;line-height:30px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-align:right}
+#sgt th{color:var(--t);position:sticky;top:0;z-index:2;background:color-mix(in srgb,var(--tc) 13%,var(--c));font-size:13px;cursor:pointer;user-select:none}
+#sgt .rn{width:46px;text-align:center;background:var(--bg);color:var(--mut);font-size:12px;cursor:pointer;user-select:none;padding:0}
+#sgt td{user-select:none;-webkit-user-select:none}#sgt td.ed{cursor:cell}
+#sgt td.sgr{background:color-mix(in srgb,var(--tc) 20%,transparent)}
+#sgt td.sgs{outline:2px solid var(--tc);outline-offset:-2px;background:color-mix(in srgb,var(--tc) 8%,var(--c))}
+#sgt td.sge{padding:0;outline:2px solid var(--tc);outline-offset:-2px}
+.sgi{width:100%;height:100%;box-sizing:border-box;border:0!important;border-radius:0!important;outline:0;padding:0 8px;background:var(--c);color:var(--t);font:inherit;box-shadow:none!important}
 </style>
 </head><body>
 <h1>مستخرج الزون والشحنات (بدون إنترنت)</h1>
@@ -82,7 +88,7 @@ small{color:var(--mut);opacity:1}
 <div class="bar">اليوم: <select id="dsel" onchange="goDay(this.value)"></select><span id="gearw"><button class="s" id="gear" onclick="gearToggle(event)" title="إظهار / إخفاء الأعمدة">⚙</button><div id="gpop" onclick="event.stopPropagation()"></div></span> <small>(الأيام اللي فيها ملفات متسجلة بس. الاستيراد بيتسجل على تاريخ النهارده)</small> <small id="bk"></small></div><div class="bar" style="display:none"><button class="s" id="bdir" onclick="pickDir()">الحفظ التلقائي في فولدر</button> <small id="as"></small></div>
 <div class="row1"><button id="t1" class="tb on" onclick="tab('w')">الملف الحالي</button><button id="t2" class="tb" onclick="tab('t')">المنقول</button><button id="t3" class="tb" onclick="tab('b')">بومبو</button><button id="t4" class="tb" onclick="tab('g')">تصوير</button><button id="t5" class="tb" onclick="tab('s')">مقارنة الراسلين</button></div>
 <div class="bar"></div>
-<div id="mp"></div><div class="bar w2 w12" style="display:none">الراسل: <select id="sf" onchange="SF=this.value;draw()"></select></div><div class="row2"><button class="s" onclick="delDay()">🗑 حذف اليوم</button><span id="sum"></span><button class="s w3" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s w4" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s wbg" onclick="gPasteAsk()" style="display:none">📋 لصق</button><button class="s wns" id="bwr" onclick="wr()" title="عرض النص كامل">عرض النص كامل</button><button class="s wns" onclick="rzReset()" title="اسحب حافة رأس العمود لتغيير عرضه (دبل كليك يرجّعه)">إعادة ضبط الأعمدة</button></div><div class="bar"><small id="msg"></small></div><div class="wrap"><table id="out"></table></div><div id="cmpw"><div class="cc"><h4 onclick="cmpSel(1)">الراسلين في كل التبويبات (<span id="c1n">0</span>) ⟵ اضغط للتحديد</h4><textarea id="cmp1" readonly spellcheck="false"></textarea></div><div class="cc"><h4 onclick="cmpSel(2)">اكتب الراسلين بإيدك (<span id="c2n">0</span>)</h4><textarea id="cmp2" spellcheck="false" placeholder="اكتب أو الصق اسم راسل في كل سطر"></textarea></div><div class="cc"><h4 onclick="cmpSel(3)">الراسلين الناقصين (<span id="c3n">0</span>) ⟵ اضغط للتحديد</h4><textarea id="cmp3" readonly spellcheck="false"></textarea></div></div><div id="selbar" style="display:none"><b id="selcnt"></b><button onclick="copySel()">📋 نسخ</button><button class="s" id="bdel" onclick="delSel()">🗑 حذف المحدد (0)</button><button class="w1 w12" onclick="mvSel()">➡ نقل لتبويب المنقول</button></div>
+<div id="mp"></div><div class="bar w2 w12" style="display:none">الراسل: <select id="sf" onchange="SF=this.value;draw()"></select></div><div class="row2"><button class="s" onclick="delDay()">🗑 حذف اليوم</button><span id="sum"></span><button class="s w3" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s w4" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s wbg" onclick="gPasteAsk()" style="display:none">📋 لصق</button><button class="s wns" id="bwr" onclick="wr()" title="عرض النص كامل">عرض النص كامل</button><button class="s wns" onclick="rzReset()" title="اسحب حافة رأس العمود لتغيير عرضه (دبل كليك يرجّعه)">إعادة ضبط الأعمدة</button></div><div class="bar"><small id="msg"></small></div><div class="wrap"><table id="out"></table></div><div id="cmpw"><div class="wrap sgw"><table id="sgt"></table></div><small>اضغط مرتين على خلية في عمود "اكتب الراسلين بإيدك" للكتابة، أو اختار الخلية واكتب. اسحب بالماوس لتحديد خلايا، واضغط على عنوان العمود لتحديده كله ثم Ctrl+C للنسخ. Delete بيمسح المحدد. كل التعديلات بتتحفظ في قاعدة البيانات.</small></div><div id="selbar" style="display:none"><b id="selcnt"></b><button onclick="copySel()">📋 نسخ</button><button class="s" id="bdel" onclick="delSel()">🗑 حذف المحدد (0)</button><button class="w1 w12" onclick="mvSel()">➡ نقل لتبويب المنقول</button></div>
 <details class="w1"><summary>لصق عناوين فقط</summary><textarea id="in" placeholder="عنوان في كل سطر"></textarea><button onclick="paste()">إضافة لليوم</button></details>
 <details><summary>إضافة كلمة جديدة لجدول الزونات</summary><input id="nk" placeholder="الكلمة"> <input id="nz" placeholder="الزون"><button onclick="add()">إضافة</button> <small id="cn"></small><div id="kl"></div></details>
 <details><summary>إعدادات متقدمة</summary><button class="s" onclick="resetMaps()">نسيان إعدادات الأعمدة المحفوظة</button></details>
@@ -266,7 +272,7 @@ function kl(){const d=$('kl');if(!d)return;d.innerHTML=kwList().map((t,i)=>'<but
 function kdel(i){const c=kwList();c.splice(i,1);kwSave(c);load()}
 async function paste(){await toDay();tab('w');load();$('in').value.split('\n').map(cl).filter(Boolean).forEach(a=>RW.push({n:'',a,z:'',p:'',ph:'',ph2:'',m:'',sn:'لصق',c:'',ar:'',s:'n',nt:'لم يُستخرج',o:null,pk:-1}));$('in').value='';save();draw()}
 function draw(){const BG=TAB=='b'||TAB=='g';
- $('main').dataset.tab=TAB;$('cmpw').style.display=TAB=='s'?'grid':'none';document.querySelector('.wrap').style.display=TAB=='s'?'none':'';
+ $('main').dataset.tab=TAB;$('cmpw').style.display=TAB=='s'?'block':'none';document.querySelector('.wrap').style.display=TAB=='s'?'none':'';
  if(BG)gTrim();
  const sn=BG?[]:[...new Set(RT.map(x=>x.sn))];if(!BG&&SF&&!sn.includes(SF))SF='';
  if(!BG)$('sf').innerHTML='<option value="">كل الراسلين ('+RT.length+')</option>'+sn.map(s=>'<option value="'+e(s)+'"'+(s==SF?' selected':'')+'>'+e(s)+' ('+RT.filter(x=>x.sn==s).length+')</option>').join('');
@@ -579,20 +585,79 @@ function gearToggle(ev){ev.stopPropagation();const p=$('gpop');if(p.style.displa
 document.addEventListener('click',()=>{const p=$('gpop');if(p)p.style.display='none'});
 
 /* ===== تبويب مقارنة الراسلين ===== */
-const nrmS=s=>String(s||'').replace(/[ً-ٰٟـ​-‏]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^\p{L}\p{N}]+/gu,' ').trim().toLowerCase();
-function cmpAll(){const m=new Map();[RW,RT,RB,RG].forEach(A=>A.forEach(r=>{const s=String(r&&r.sn!=null?r.sn:'').trim();if(!s||s=='لصق')return;const k=nrmS(s);if(k&&!m.has(k))m.set(k,s)}));return[...m.values()].sort((a,b)=>a.localeCompare(b,'ar'))}
-function cmpMissing(all,txt){const mn=[...new Set(String(txt||'').split(/[\n\t]+/).map(nrmS).filter(Boolean))];
- return all.filter(s=>{const k=nrmS(s);return!mn.some(m=>m==k||(m.length>=3&&k.length>=3&&(k.includes(m)||m.includes(k))))})}
-let CMPD='',CMPT=0;
-function cmpUpd(){const all=cmpAll(),t=$('cmp2').value,miss=cmpMissing(all,t);
- $('cmp1').value=all.join('\n');$('c1n').textContent=all.length;
- $('c2n').textContent=t.split(/\n/).filter(x=>x.trim()).length;
- $('cmp3').value=miss.join('\n');$('c3n').textContent=miss.length}
-async function drawS(){const day=DAY;CMPD=day;const t2=$('cmp2');
- if(!t2.dataset.b){t2.dataset.b=1;t2.addEventListener('input',()=>{cmpUpd();clearTimeout(CMPT);const d=CMPD,v=t2.value;CMPT=setTimeout(()=>{db('put',v,'cmp:'+d).catch(()=>0)},500)})}
- let v='';try{const x=await db0('get','cmp:'+day);if(typeof x=='string')v=x}catch(e){}
- if(CMPD!=day||TAB!='s')return;if(document.activeElement!==t2||!t2.value)t2.value=v;cmpUpd()}
-function cmpSel(n){const t=$('cmp'+n);t.focus();t.select()}
+const nrmS=s=>String(s||'').replace(/[\u064B-\u065F\u0670\u0640\u200b-\u200f]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^\p{L}\p{N}]+/gu,' ').trim().toLowerCase().replace(/(^| )ال(?=\S{2})/g,'$1');
+const nrmK=s=>nrmS(s).split(' ').filter(Boolean).sort().join('');
+function cmpAll(){const m=new Map();[RW,RT,RB,RG].forEach(A=>A.forEach(r=>{const s=String(r&&r.sn!=null?r.sn:'').trim();if(!s||s=='لصق')return;const k=nrmK(s);if(k&&!m.has(k))m.set(k,s)}));return[...m.values()].sort((a,b)=>a.localeCompare(b,'ar'))}
+function cmpMissing(all,txt){const mn=[...new Set(String(txt||'').split(/[\n\t]+/).map(nrmK).filter(Boolean))];
+ return all.filter(s=>{const k=nrmK(s);return!mn.some(m=>m==k||(m.length>=3&&k.length>=3&&(k.includes(m)||m.includes(k))))})}
+/* --- الجدول --- */
+let MAN=[],MAND=null,SRL=false,ALLS=[],MISS=[],sgA=null,sgF={r:0,c:1},sgE=null,sgH=[],sgHr=[];
+const sgGet=(r,c)=>c==0?(ALLS[r]||''):c==1?(MAN[r]==null?'':String(MAN[r])):(MISS[r]||'');
+const sgRows=()=>Math.max(30,ALLS.length,MAN.length+3,MISS.length);
+const sgSelR=()=>{const a=sgA||sgF;return{r1:Math.min(a.r,sgF.r),r2:Math.max(a.r,sgF.r),c1:Math.min(a.c,sgF.c),c2:Math.max(a.c,sgF.c)}};
+const sgCalc=()=>{ALLS=cmpAll();MISS=cmpMissing(ALLS,MAN.join('\n'))};
+const sgCell=(r,c)=>$('sgt').querySelector('td[data-r="'+r+'"][data-c="'+c+'"]');
+function sgSave(){const a=MAN.map(x=>x==null?'':String(x));while(a.length&&!a[a.length-1].trim())a.pop();db('put',a,'cmp:'+DAY).catch(()=>0)}
+const sgPush=()=>{sgH.push(JSON.stringify(MAN));if(sgH.length>60)sgH.shift();sgHr.length=0};
+async function drawS(){
+ if(MAND!==DAY||SRL){SRL=false;MAND=DAY;let v=null;try{v=await db0('get','cmp:'+DAY)}catch(x){}
+  MAN=Array.isArray(v)?v.map(String):(typeof v=='string'?v.split(/\n/):[]);sgH=[];sgHr=[];sgA=null;sgF={r:0,c:1}}
+ if(TAB!='s'||sgE)return;sgCalc();sgRender()}
+function sgRender(){const n=sgRows();
+ let h='<colgroup><col style="width:46px"><col style="width:280px"><col style="width:280px"><col style="width:280px"></colgroup><tr><th class="rn"></th>'+
+  [['الراسلين في كل التبويبات',ALLS.length],['اكتب الراسلين بإيدك',MAN.filter(x=>String(x).trim()).length],['الراسلين الناقصين',MISS.length]].map((x,c)=>'<th onclick="sgCol('+c+')" title="اضغط لتحديد العمود كله">'+x[0]+' ('+x[1]+')</th>').join('')+'</tr>';
+ for(let r=0;r<n;r++){h+='<tr><td class="rn" onclick="sgRow('+r+')">'+(r+1)+'</td>';
+  for(let c=0;c<3;c++){const v=sgGet(r,c);h+='<td data-r="'+r+'" data-c="'+c+'"'+(c==1?' class="ed"':'')+' onpointerdown="sgDown(event,'+r+','+c+')" ondblclick="sgEdit('+r+','+c+')" title="'+e(v)+'">'+e(v)+'</td>'}
+  h+='</tr>'}
+ $('sgt').innerHTML=h;sgPaint()}
+function sgPaint(noscroll){const g=sgSelR(),multi=!!sgA&&(sgA.r!=sgF.r||sgA.c!=sgF.c);
+ $('sgt').querySelectorAll('td[data-r]').forEach(td=>{const r=+td.dataset.r,c=+td.dataset.c;td.classList.toggle('sgs',r==sgF.r&&c==sgF.c);td.classList.toggle('sgr',multi&&r>=g.r1&&r<=g.r2&&c>=g.c1&&c<=g.c2)});
+ const on=$('sgt').querySelector('td.sgs');if(!noscroll&&on&&on.scrollIntoView)on.scrollIntoView({block:'nearest',inline:'nearest'})}
+function sgDown(ev,r,c){if(ev.button)return;if(sgE){if(sgE.r==r&&c==1)return;sgCommit()}
+ if(ev.shiftKey){if(!sgA)sgA={r:sgF.r,c:sgF.c};sgF={r,c};sgPaint();return}
+ sgA={r,c};sgF={r,c};sgPaint();
+ if(ev.pointerType=='touch')return;
+ const mv=m=>{if(m.clientY>innerHeight-40)scrollBy(0,18);else if(m.clientY<40)scrollBy(0,-18);const el=document.elementFromPoint(m.clientX,m.clientY),td=el&&el.closest&&el.closest('td[data-r]');if(!td)return;const rr=+td.dataset.r,cc=+td.dataset.c;if(rr!=sgF.r||cc!=sgF.c){sgF={r:rr,c:cc};sgPaint(true)}};
+ const up=()=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',up)};
+ document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up)}
+function sgCol(c){if(sgE)sgCommit();let last=0;for(let r=0;r<sgRows();r++)if(sgGet(r,c).trim())last=r;sgA={r:0,c};sgF={r:last,c};sgPaint(true)}
+function sgRow(r){if(sgE)sgCommit();sgA={r,c:0};sgF={r,c:2};sgPaint(true)}
+function sgEdit(r,c,seed){if(c!=1)return;if(sgE)sgCommit();sgF={r,c};sgA=null;sgPaint();const td=sgCell(r,1);if(!td)return;
+ const orig=sgGet(r,1);td.classList.add('sge');td.innerHTML='<input class="sgi" spellcheck="false" autocomplete="off">';const inp=td.firstChild;
+ inp.value=seed!=null?String(seed):orig;sgE={r,inp,orig};inp.addEventListener('input',sgLive);inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length);sgLive()}
+function sgLive(){if(!sgE)return;const t=MAN.slice();while(t.length<=sgE.r)t.push('');t[sgE.r]=sgE.inp.value;MISS=cmpMissing(ALLS,t.join('\n'));
+ for(let r=0;r<sgRows();r++){const td=sgCell(r,2);if(td){const v=MISS[r]||'';if(td.textContent!==v){td.textContent=v;td.title=v}}}
+ const T=$('sgt').querySelectorAll('th');if(T.length>3){T[2].textContent='اكتب الراسلين بإيدك ('+t.filter(x=>String(x).trim()).length+')';T[3].textContent='الراسلين الناقصين ('+MISS.length+')'}}
+function sgCommit(){const E=sgE;if(!E)return;sgE=null;const v=E.inp.value;if(v!==E.orig){sgPush();while(MAN.length<=E.r)MAN.push('');MAN[E.r]=v;sgSave()}sgCalc();sgRender()}
+function sgCancel(){sgE=null;sgCalc();sgRender()}
+function sgMove(dr,dc,ext){if(ext){if(!sgA)sgA={r:sgF.r,c:sgF.c}}else sgA=null;sgF={r:Math.max(0,Math.min(sgRows()-1,sgF.r+dr)),c:Math.max(0,Math.min(2,sgF.c+dc))};sgPaint()}
+function sgClear(){const g=sgSelR();if(g.c2<1||g.c1>1)return;let ch=false;for(let r=g.r1;r<=g.r2;r++)if(String(MAN[r]||'').length)ch=true;if(!ch)return;sgPush();for(let r=g.r1;r<=g.r2;r++)if(r<MAN.length)MAN[r]='';sgSave();sgCalc();sgRender()}
+function sgUndo(re){const from=re?sgHr:sgH,to=re?sgH:sgHr;if(!from.length)return;to.push(JSON.stringify(MAN));MAN=JSON.parse(from.pop());sgSave();sgCalc();sgRender()}
+function sgTSV(){const g=sgSelR(),o=[];for(let r=g.r1;r<=g.r2;r++){const row=[];for(let c=g.c1;c<=g.c2;c++)row.push(sgGet(r,c).replace(/[\t\r\n]+/g,' '));o.push(row.join('\t'))}return o.join('\n')}
+function sgPaste(ts){const g=sgSelR();if(g.c2<1||g.c1>1){toast('اللصق بيتم في عمود "اكتب الراسلين بإيدك" بس. اختار خلية فيه الأول');return}
+ const L=String(ts).replace(/\r\n?/g,'\n').replace(/\n+$/,'').split('\n').map(l=>l.split('\t')[0].trim());sgPush();
+ while(MAN.length<g.r1+L.length)MAN.push('');L.forEach((l,i)=>{MAN[g.r1+i]=l});sgSave();sgA={r:g.r1,c:1};sgF={r:g.r1+L.length-1,c:1};sgCalc();sgRender()}
+document.addEventListener('keydown',ev=>{if(TAB!='s')return;const t=ev.target,k=ev.key,ct=ev.ctrlKey||ev.metaKey,sh=ev.shiftKey;
+ if(sgE&&t===sgE.inp){if(k=='Enter'){ev.preventDefault();const r=sgE.r;sgCommit();sgF={r:r+1,c:1};sgA=null;sgPaint()}
+  else if(k=='Tab'){ev.preventDefault();sgCommit()}else if(k=='Escape'){ev.preventDefault();sgCancel()}
+  else if(k=='ArrowDown'||k=='ArrowUp'){ev.preventDefault();const r=sgE.r;sgCommit();sgF={r:Math.max(0,r+(k=='ArrowDown'?1:-1)),c:1};sgA=null;sgPaint()}return}
+ if(t&&(t.tagName=='INPUT'||t.tagName=='SELECT'||t.tagName=='TEXTAREA'))return;
+ if(ct&&!sh&&(k=='z'||k=='Z')){ev.preventDefault();return sgUndo(false)}
+ if(ct&&(k=='y'||k=='Y'||(sh&&(k=='z'||k=='Z')))){ev.preventDefault();return sgUndo(true)}
+ if(ct&&!sh&&(k=='a'||k=='A')){ev.preventDefault();sgA={r:0,c:0};sgF={r:Math.max(0,sgRows()-1),c:2};return sgPaint(true)}
+ if(ct&&(k=='c'||k=='C'||k=='x'||k=='X'||k=='v'||k=='V'))return;
+ if(k=='F2'||k=='Enter'){ev.preventDefault();return sgEdit(sgF.r,sgF.c)}
+ if(k=='ArrowLeft'){ev.preventDefault();return sgMove(0,1,sh)}
+ if(k=='ArrowRight'){ev.preventDefault();return sgMove(0,-1,sh)}
+ if(k=='ArrowUp'){ev.preventDefault();return sgMove(-1,0,sh)}
+ if(k=='ArrowDown'){ev.preventDefault();return sgMove(1,0,sh)}
+ if(k=='Escape'){sgA=null;return sgPaint()}
+ if(k=='Delete'||k=='Backspace'){ev.preventDefault();return sgClear()}
+ if(k.length==1&&!ct&&!ev.altKey&&sgF.c==1&&!(sgA&&(sgA.r!=sgF.r||sgA.c!=sgF.c))){ev.preventDefault();return sgEdit(sgF.r,1,k)}
+},true);
+document.addEventListener('copy',ev=>{if(TAB!='s'||sgE)return;const t=ev.target;if(t&&(t.tagName=='INPUT'||t.tagName=='TEXTAREA'))return;ev.preventDefault();if(ev.clipboardData)ev.clipboardData.setData('text/plain',sgTSV())},true);
+document.addEventListener('cut',ev=>{if(TAB!='s'||sgE)return;const t=ev.target;if(t&&(t.tagName=='INPUT'||t.tagName=='TEXTAREA'))return;ev.preventDefault();if(ev.clipboardData)ev.clipboardData.setData('text/plain',sgTSV());sgClear()},true);
+document.addEventListener('paste',ev=>{if(TAB!='s'||sgE)return;const t=ev.target;if(t&&(t.tagName=='INPUT'||t.tagName=='TEXTAREA'))return;const d=ev.clipboardData&&ev.clipboardData.getData('text/plain');if(!d)return;ev.preventDefault();sgPaste(d)},true);
 
 /* ====== Cloud sync (Supabase REST + polling). Local IndexedDB stays the working copy. ====== */
 const TABS=['w','t','b','g'];
@@ -717,7 +782,7 @@ async function pushSettings(){for(const k of Object.keys(SY.q)){const v=SY.q[k];
  await db0('put',SY.q,'sy:q').catch(()=>0)}
 async function applySetting(k,v){if(k=='kw'){if(Array.isArray(v)){lsSet('zs',v);await db0('put',v,'kw');load()}}
  else if(k=='lh'){if(v&&typeof v=='object'){Object.keys(LH).forEach(x=>delete LH[x]);Object.assign(LH,v);lsSet('lh',LH);await db0('put',LH,'lh')}}
- else if(/^(m2|cmp):/.test(k)){await db0('put',v,k);if(k=='cmp:'+DAY&&TAB=='s')SY.redraw=true}}
+ else if(/^(m2|cmp):/.test(k)){await db0('put',v,k);if(k=='cmp:'+DAY){SRL=true;if(TAB=='s')SY.redraw=true}}}
 async function pullSettings(){const r=await sbj('/rest/v1/app_settings?select=*'+(SY.sSince?'&updated_at=gt.'+encodeURIComponent(back(SY.sSince)):'')),a=await r.json();let mx=SY.sSince;
  for(const x of a){if(x.updated_at>mx)mx=x.updated_at;if(SY.q[x.key]!==undefined||SY.sv[x.key]==x.updated_at)continue;await applySetting(x.key,x.value);SY.sv[x.key]=x.updated_at}
  lsSet('zsv',SY.sv);if(mx!=SY.sSince){SY.sSince=mx;lsSet('zsw',mx)}}
