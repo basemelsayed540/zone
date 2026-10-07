@@ -49,14 +49,40 @@ small{color:var(--mut);opacity:1}
 .gw{position:relative}
 .gi{width:100%;display:block;font:inherit;line-height:1.55;padding:4px 6px;border:1px solid var(--g);border-radius:0;background:var(--c);color:var(--t)}
 .gs{position:absolute;top:0;display:none;pointer-events:none;white-space:pre;font:inherit;line-height:1.55;padding:4px 6px;border:1px solid transparent;opacity:.6;color:var(--mut)}
-</style></head><body>
+</style>
+<style id="ui2">
+#t5{--tc:#be185d}
+#main{--tc:#2e7d32}#main[data-tab=t]{--tc:#e65100}#main[data-tab=b]{--tc:#6d28d9}#main[data-tab=g]{--tc:#0e7490}#main[data-tab=s]{--tc:#be185d}
+#main{--g:var(--tc);--p:var(--tc);--hv:color-mix(in srgb,var(--tc) 11%,transparent)}
+.row1{gap:6px;border-bottom:3px solid var(--tc);padding-bottom:0;margin-bottom:10px}
+.tb{border-radius:14px 14px 0 0;border:2px solid var(--tc);border-bottom:0;margin:0;box-shadow:none!important}
+.tb.on{background:var(--tc);color:#fff}
+.wrap{border:2px solid var(--tc)}
+#out th{background:color-mix(in srgb,var(--tc) 13%,var(--c));color:var(--t)}
+#main .f.on,#main .o.on{background:var(--tc);border-color:var(--tc)}
+#main button:not(.s):not(.f):not(.o):not(.tb){background:var(--tc)}
+#out td[data-g]{user-select:none;-webkit-user-select:none}#out td.gce{user-select:text;-webkit-user-select:text}
+#out td.gcr{background:color-mix(in srgb,var(--tc) 20%,transparent)}
+#out th[onclick]{cursor:pointer}
+#gearw{position:relative;display:inline-block}
+#gear{margin:0 6px;padding:3px 10px;font-size:17px;line-height:1}
+#gpop{display:none;position:absolute;top:110%;right:0;z-index:30;background:var(--c);border:1px solid var(--b);border-radius:12px;padding:10px 14px;box-shadow:0 8px 28px rgba(0,0,0,.2);min-width:230px}
+#gpop label{display:flex;gap:8px;align-items:center;margin:5px 0;cursor:pointer;white-space:nowrap}
+#gpop .gh{font-weight:700;margin-bottom:4px}
+#cmpw{display:none;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+#cmpw .cc{background:var(--c);border:2px solid var(--tc);border-radius:14px;overflow:hidden}
+#cmpw h4{margin:0;padding:10px 12px;background:color-mix(in srgb,var(--tc) 14%,var(--c));cursor:pointer;font-size:14px}
+#cmpw textarea{width:100%;height:60vh;border:0;border-radius:0;resize:vertical;line-height:1.7;white-space:pre;font:inherit;display:block}
+@media(max-width:700px){#cmpw{grid-template-columns:1fr}}
+</style>
+</head><body>
 <h1>مستخرج الزون والشحنات (بدون إنترنت)</h1>
 <div id="app"><aside id="side"><button class="w1 w12" onclick="fi.click()">📂 فتح ملف Excel</button><input type="file" id="fi" multiple hidden accept=".xlsx,.xls,.xlsm,.xlsb,.csv,.ods" onchange="openF(Array.from(this.files));this.value=''">
-<button onclick="ex()">📤 تصدير Excel</button><button class="w12" onclick="run()">🔍 استخراج الزونات</button><hr><button class="s" onclick="backup()">💾 نسخة احتياطية</button><button class="s" onclick="fr.click()">♻ استعادة</button><button class="w1 w12" onclick="mv()">➡ نقل للتبويب 2</button><input type="file" id="fr" hidden accept=".json" onchange="restore(this.files[0]);this.value=''"></aside><main id="main">
-<div class="bar">اليوم: <select id="dsel" onchange="goDay(this.value)"></select> <small>(الأيام اللي فيها ملفات متسجلة بس. الاستيراد بيتسجل على تاريخ النهارده)</small> <small id="bk"></small></div><div class="bar" style="display:none"><button class="s" id="bdir" onclick="pickDir()">الحفظ التلقائي في فولدر</button> <small id="as"></small></div>
-<div class="row1"><button id="t1" class="tb on" onclick="tab('w')">1) الملف الحالي</button><button id="t2" class="tb" onclick="tab('t')">2) المنقول</button><button id="t3" class="tb" onclick="tab('b')">3) بومبو</button><button id="t4" class="tb" onclick="tab('g')">4) تصوير</button></div>
+<button class="wns" onclick="ex()">📤 تصدير Excel</button><button class="w12" onclick="run()">🔍 استخراج الزونات</button><hr><button class="s" onclick="backup()">💾 نسخة احتياطية</button><button class="s" onclick="fr.click()">♻ استعادة</button><button class="w1 w12" onclick="mv()">➡ نقل للمنقول</button><input type="file" id="fr" hidden accept=".json" onchange="restore(this.files[0]);this.value=''"></aside><main id="main" data-tab="w">
+<div class="bar">اليوم: <select id="dsel" onchange="goDay(this.value)"></select><span id="gearw"><button class="s" id="gear" onclick="gearToggle(event)" title="إظهار / إخفاء الأعمدة">⚙</button><div id="gpop" onclick="event.stopPropagation()"></div></span> <small>(الأيام اللي فيها ملفات متسجلة بس. الاستيراد بيتسجل على تاريخ النهارده)</small> <small id="bk"></small></div><div class="bar" style="display:none"><button class="s" id="bdir" onclick="pickDir()">الحفظ التلقائي في فولدر</button> <small id="as"></small></div>
+<div class="row1"><button id="t1" class="tb on" onclick="tab('w')">الملف الحالي</button><button id="t2" class="tb" onclick="tab('t')">المنقول</button><button id="t3" class="tb" onclick="tab('b')">بومبو</button><button id="t4" class="tb" onclick="tab('g')">تصوير</button><button id="t5" class="tb" onclick="tab('s')">مقارنة الراسلين</button></div>
 <div class="bar"></div>
-<div id="mp"></div><div class="bar w2 w12" style="display:none">الراسل: <select id="sf" onchange="SF=this.value;draw()"></select></div><div class="row2"><button class="s" onclick="delDay()">🗑 حذف اليوم</button><span id="sum"></span><button class="s w3" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s w4" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s wbg" onclick="gPasteAsk()" style="display:none">📋 لصق</button><button class="s" id="bwr" onclick="wr()" title="عرض النص كامل">عرض النص كامل</button><button class="s" onclick="rzReset()" title="اسحب حافة رأس العمود لتغيير عرضه (دبل كليك يرجّعه)">إعادة ضبط الأعمدة</button></div><div class="bar"><small id="msg"></small></div><div class="wrap"><table id="out"></table></div><div id="selbar" style="display:none"><b id="selcnt"></b><button onclick="copySel()">📋 نسخ</button><button class="s" id="bdel" onclick="delSel()">🗑 حذف المحدد (0)</button><button class="w1 w12" onclick="mvSel()">➡ نقل لتبويب المنقول</button></div>
+<div id="mp"></div><div class="bar w2 w12" style="display:none">الراسل: <select id="sf" onchange="SF=this.value;draw()"></select></div><div class="row2"><button class="s" onclick="delDay()">🗑 حذف اليوم</button><span id="sum"></span><button class="s w3" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s w4" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s wbg" onclick="gPasteAsk()" style="display:none">📋 لصق</button><button class="s wns" id="bwr" onclick="wr()" title="عرض النص كامل">عرض النص كامل</button><button class="s wns" onclick="rzReset()" title="اسحب حافة رأس العمود لتغيير عرضه (دبل كليك يرجّعه)">إعادة ضبط الأعمدة</button></div><div class="bar"><small id="msg"></small></div><div class="wrap"><table id="out"></table></div><div id="cmpw"><div class="cc"><h4 onclick="cmpSel(1)">الراسلين في كل التبويبات (<span id="c1n">0</span>) ⟵ اضغط للتحديد</h4><textarea id="cmp1" readonly spellcheck="false"></textarea></div><div class="cc"><h4 onclick="cmpSel(2)">اكتب الراسلين بإيدك (<span id="c2n">0</span>)</h4><textarea id="cmp2" spellcheck="false" placeholder="اكتب أو الصق اسم راسل في كل سطر"></textarea></div><div class="cc"><h4 onclick="cmpSel(3)">الراسلين الناقصين (<span id="c3n">0</span>) ⟵ اضغط للتحديد</h4><textarea id="cmp3" readonly spellcheck="false"></textarea></div></div><div id="selbar" style="display:none"><b id="selcnt"></b><button onclick="copySel()">📋 نسخ</button><button class="s" id="bdel" onclick="delSel()">🗑 حذف المحدد (0)</button><button class="w1 w12" onclick="mvSel()">➡ نقل لتبويب المنقول</button></div>
 <details class="w1"><summary>لصق عناوين فقط</summary><textarea id="in" placeholder="عنوان في كل سطر"></textarea><button onclick="paste()">إضافة لليوم</button></details>
 <details><summary>إضافة كلمة جديدة لجدول الزونات</summary><input id="nk" placeholder="الكلمة"> <input id="nz" placeholder="الزون"><button onclick="add()">إضافة</button> <small id="cn"></small><div id="kl"></div></details>
 <details><summary>إعدادات متقدمة</summary><button class="s" onclick="resetMaps()">نسيان إعدادات الأعمدة المحفوظة</button></details>
@@ -240,30 +266,33 @@ function kl(){const d=$('kl');if(!d)return;d.innerHTML=kwList().map((t,i)=>'<but
 function kdel(i){const c=kwList();c.splice(i,1);kwSave(c);load()}
 async function paste(){await toDay();tab('w');load();$('in').value.split('\n').map(cl).filter(Boolean).forEach(a=>RW.push({n:'',a,z:'',p:'',ph:'',ph2:'',m:'',sn:'لصق',c:'',ar:'',s:'n',nt:'لم يُستخرج',o:null,pk:-1}));$('in').value='';save();draw()}
 function draw(){const BG=TAB=='b'||TAB=='g';
+ $('main').dataset.tab=TAB;$('cmpw').style.display=TAB=='s'?'grid':'none';document.querySelector('.wrap').style.display=TAB=='s'?'none':'';
  if(BG)gTrim();
  const sn=BG?[]:[...new Set(RT.map(x=>x.sn))];if(!BG&&SF&&!sn.includes(SF))SF='';
  if(!BG)$('sf').innerHTML='<option value="">كل الراسلين ('+RT.length+')</option>'+sn.map(s=>'<option value="'+e(s)+'"'+(s==SF?' selected':'')+'>'+e(s)+' ('+RT.filter(x=>x.sn==s).length+')</option>').join('');
- $('t1').textContent='1) الملف الحالي ('+RW.length+')';$('t2').textContent='2) المنقول ('+RT.length+')';$('t3').textContent='3) بومبو ('+RB.length+')';$('t4').textContent='4) تصوير ('+RG.length+')';
- $('t1').className='tb'+(TAB=='w'?' on':'');$('t2').className='tb'+(TAB=='t'?' on':'');$('t3').className='tb'+(TAB=='b'?' on':'');$('t4').className='tb'+(TAB=='g'?' on':'');
+ $('t1').textContent='الملف الحالي ('+RW.length+')';$('t2').textContent='المنقول ('+RT.length+')';$('t3').textContent='بومبو ('+RB.length+')';$('t4').textContent='تصوير ('+RG.length+')';
+ $('t1').className='tb'+(TAB=='w'?' on':'');$('t2').className='tb'+(TAB=='t'?' on':'');$('t3').className='tb'+(TAB=='b'?' on':'');$('t4').className='tb'+(TAB=='g'?' on':'');$('t5').className='tb'+(TAB=='s'?' on':'');
  if($('out').style)$('out').style.setProperty('--p',TAB=='w'?'#2e7d32':TAB=='t'?'#e65100':TAB=='b'?'#6d28d9':'#0e7490');
- if(document.querySelectorAll){document.querySelectorAll('.w1,.w2,.w3,.w4,.w12,.wbg').forEach(b=>{const c=b.classList;
+ if(document.querySelectorAll){document.querySelectorAll('.w1,.w2,.w3,.w4,.w12,.wbg,.wns').forEach(b=>{const c=b.classList;
   let v=true;
   if(c.contains('w1')&&TAB!='w')v=false;
   if(c.contains('w2')&&TAB!='t')v=false;
   if(c.contains('w3')&&TAB!='b')v=false;
   if(c.contains('w4')&&TAB!='g')v=false;
-  if(c.contains('w12')&&BG)v=false;
+  if(c.contains('w12')&&(BG||TAB=='s'))v=false;
+  if(c.contains('wns')&&TAB=='s')v=false;
   if(c.contains('wbg')&&!BG)v=false;
   b.style.display=v?'':'none'})}
+ if(TAB=='s'){$('sum').innerHTML='';drawS();return}
  const c=s=>V().filter(x=>x.s==s).length,nn=c('n');
  $('sum').innerHTML=BG?'':([['all','الإجمالي '+V().length],['a','تلقائي '+c('a')],['r','مراجعة '+c('r')],['u','غير محدد '+c('u')]].concat(nn?[['n','لم يُستخرج '+nn]]:[]).map(([k,l])=>'<button class="f'+(F==k?' on':'')+'" onclick="F=\''+k+'\';draw()">'+l+'</button>').join(''));
  if(BG){drawN();return}
  $('out').innerHTML='<colgroup>'+CW.map(w=>'<col style="width:'+w+'px">').join('')+'</colgroup><tr>'+['<input type="checkbox" id="sa" onchange="tgAll(this.checked)">','#','اسم العميل','العنوان','الزون','المنتج','الهاتف','هاتف بديل','المبلغ','الراسل','الكود','العدد','ملاحظات الشحنة','الملاحظة'].map((h,j)=>'<th>'+h+'<span class="rz" onpointerdown="rz(event,'+j+')" ondblclick="rzd('+j+')"></span></th>').join('')+'</tr>'+R.map((x,i)=>{if(!vis(x))return'';
   const nt=x.o?'تعارض: '+x.o.map((z,j)=>'<button class="o'+(x.pk==j?' on':'')+'" onclick="pick('+i+','+j+')">'+e(z)+'</button>').join(''):(x.s=='u'||x.pk==9)?'<input id="kw'+i+'" placeholder="جزء من العنوان للتعلّم" value="'+e(x.kw||'')+'" onchange="learn('+i+')"> <small>'+e(x.nt)+'</small>':e(x.nt);
-  return'<tr class="'+x.s+(SEL.has(x)?' sl':'')+'"><td><input type="checkbox"'+(SEL.has(x)?' checked':'')+' onclick="tg('+i+',this.checked,this,event)"></td><td>'+(i+1)+'</td><td title="'+e(x.n)+'">'+e(x.n)+'</td><td title="'+e(x.a)+'">'+e(x.a)+'</td><td><input value="'+e(x.z)+'" onchange="sz('+i+',this.value)"></td><td title="'+e(x.p)+'">'+e(x.p)+'</td><td>'+e(x.ph)+'</td><td>'+e(x.ph2)+'</td><td>'+e(x.m)+'</td><td title="'+e(x.sn)+'">'+e(x.sn)+'</td><td title="'+e(x.c)+'">'+e(x.c)+'</td><td>'+(x.q==null?'':x.q)+'</td><td title="'+e(x.nn||'')+'">'+e(x.nn||'')+'</td><td class="nt">'+nt+'</td></tr>'}).join('');if($('out').style)$('out').style.width=CW.reduce((x,y)=>x+y,0)+'px';updSel()}
+  return'<tr class="'+x.s+(SEL.has(x)?' sl':'')+'"><td><input type="checkbox"'+(SEL.has(x)?' checked':'')+' onclick="tg('+i+',this.checked,this,event)"></td><td>'+(i+1)+'</td><td title="'+e(x.n)+'">'+e(x.n)+'</td><td title="'+e(x.a)+'">'+e(x.a)+'</td><td><input value="'+e(x.z)+'" onchange="sz('+i+',this.value)"></td><td title="'+e(x.p)+'">'+e(x.p)+'</td><td>'+e(x.ph)+'</td><td>'+e(x.ph2)+'</td><td>'+e(x.m)+'</td><td title="'+e(x.sn)+'">'+e(x.sn)+'</td><td title="'+e(x.c)+'">'+e(x.c)+'</td><td>'+(x.q==null?'':x.q)+'</td><td title="'+e(x.nn||'')+'">'+e(x.nn||'')+'</td><td class="nt">'+nt+'</td></tr>'}).join('');if($('out').style)$('out').style.width=CW.reduce((x,y)=>x+y,0)+'px';updSel();applyCols()}
 function rz(ev,j){ev.preventDefault();ev.stopPropagation();const el=ev.target,Wc=gCW(),x0=ev.clientX,w0=Wc[j];if(el.setPointerCapture)el.setPointerCapture(ev.pointerId);el.classList.add('on');
  const mv=m=>{Wc[j]=Math.max(40,Math.min(900,w0+(x0-m.clientX)));const c=document.querySelectorAll('#out col')[j];if(c)c.style.width=Wc[j]+'px';$('out').style.width=Wc.reduce((x,y)=>x+y,0)+'px'};
- const up=()=>{el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up);el.classList.remove('on');saveCWi(cwKey(),gCW())};
+ const up=()=>{el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up);el.classList.remove('on');saveCWi(cwKey(),gCW());applyCols()};
  el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up)}
 function rzd(j){const Wc=gCW();Wc[j]=(TAB=='b'||TAB=='g')?NW[j]:CWD[j];saveCWi(cwKey(),Wc);draw()}
 function rzReset(){if(TAB=='b'){CWB=NW.slice();saveCWi('cwb',CWB)}else if(TAB=='g'){CWG=NW.slice();saveCWi('cwg',CWG)}else{CW=CWD.slice();saveCW()}draw()}
@@ -319,11 +348,11 @@ function tg(i,c,el,ev){if(!R[i])return;if(ev&&ev.shiftKey&&LAST!=null&&LAST!=i){
 function tgAll(c){R.filter(vis).forEach(x=>c?SEL.add(x):SEL.delete(x));draw()}
 function delSel(){if(!SEL.size){alert('حدد شحنات الأول بعلامة ✓ على الصف');return}const k=SEL.size,tn=TAB=='w'?'الملف الحالي':TAB=='t'?'المنقول':TAB=='b'?'بومبو':'تصوير';if(!confirm('حذف '+k+(TAB=='w'||TAB=='t'?' شحنة':' صف')+' نهائياً من '+tn+'؟'))return;
  const A=gArr(),B=A.filter(x=>!SEL.has(x));gSet(B);SEL.clear();save();draw();$('msg').textContent='اتحذف '+k+(TAB=='w'||TAB=='t'?' شحنة':' صف')}
-function mv(){if(TAB!='w'||!RW.length){alert('مفيش بيانات في التبويب 1 للنقل');return}
+function mv(){if(TAB!='w'||!RW.length){alert('مفيش بيانات في الملف الحالي للنقل');return}
  const c=s=>RW.filter(x=>x.s==s).length,n=c('n'),r=c('r'),u=c('u');
  if(n&&!confirm('تنبيه: لسه ما ضغطتش "استخراج الزونات" ('+n+' صف من '+RW.length+' من غير استخراج).\nتنقل برضه؟'))return;
- if(!n&&(r||u)&&!confirm('فيه '+r+' للمراجعة و '+u+' غير محدد.\nتنقل برضه وتراجعهم في التبويب 2؟'))return;
- const k=RW.length;RT=RT.concat(RW);RW=[];R=RW;SEL.clear();save();draw();$('msg').textContent='اتنقل '+k+' صف للتبويب 2 (إجمالي التبويب 2: '+RT.length+')'}
+ if(!n&&(r||u)&&!confirm('فيه '+r+' للمراجعة و '+u+' غير محدد.\nتنقل برضه وتراجعهم في المنقول؟'))return;
+ const k=RW.length;RT=RT.concat(RW);RW=[];R=RW;SEL.clear();save();draw();$('msg').textContent='اتنقل '+k+' صف للمنقول (إجمالي المنقول: '+RT.length+')'}
 function copySel(){if(TAB=='b'||TAB=='g'){const Q=R.filter(x=>SEL.has(x));if(!Q.length)return;const f=v=>String(v==null?'':v).replace(/[\t\r\n]+/g,' '),t=Q.map(x=>NC.map(c=>f(x[c[0]])).join('\t')).join('\n');
   const ok=()=>{$('msg').textContent='اتنسخ '+Q.length+' صف (اسم، عنوان، زون، منتج، هاتف، بديل، مبلغ، راسل، كود، ملاحظات) - الصق في Excel'};
   const fb=()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();ok()};navigator.clipboard?navigator.clipboard.writeText(t).then(ok,fb):fb();return}
@@ -335,7 +364,7 @@ function mvSel(){if(TAB!='w'||!SEL.size)return;const Q=RW.filter(x=>SEL.has(x)),
  RT=RT.concat(Q);RW=RW.filter(x=>!SEL.has(x));R=RW;SEL.clear();save();draw();$('msg').textContent='اتنقل '+Q.length+' شحنة للمنقول (إجمالي المنقول: '+RT.length+')'}
 function cp(){const Q=V();if(!Q.length)return;const t=Q.map(x=>x.z).join('\n'),w=Q.filter(x=>x.s=='r'||x.s=='u'||x.s=='n').length;const ok=()=>alert('تم نسخ '+Q.length+' سطر بنفس ترتيب الصفوف'+(SF?' (الراسل: '+SF+' فقط)':'')+'.'+(w?'\nتنبيه: '+w+' صف لسه للمراجعة/غير محدد/لم يُستخرج.':''));
  const fb=()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();ok()};navigator.clipboard?navigator.clipboard.writeText(t).then(ok,fb):fb()}
-function ex(){if(TAB=='b'||TAB=='g')return exN();const Q=V();if(!Q.length)return;if(SF&&!confirm('هيتصدّر الراسل "'+SF+'" بس ('+Q.length+' من '+R.length+' صف).\nعشان تصدّر الكل اختار "كل الراسلين".\nتكمل؟'))return;const H=['اسم العميل','العنوان','الزون','المنتج','الهاتف','هاتف بديل','المبلغ','الراسل','الكود','العدد'];
+function ex(){if(TAB=='s')return;if(TAB=='b'||TAB=='g')return exN();const Q=V();if(!Q.length)return;if(SF&&!confirm('هيتصدّر الراسل "'+SF+'" بس ('+Q.length+' من '+R.length+' صف).\nعشان تصدّر الكل اختار "كل الراسلين".\nتكمل؟'))return;const H=['اسم العميل','العنوان','الزون','المنتج','الهاتف','هاتف بديل','المبلغ','الراسل','الكود','العدد'];
  const ws=XLSX.utils.aoa_to_sheet([H].concat(Q.map(x=>[x.n,x.a,x.z,x.p,x.ph,x.ph2,x.m===''?'':x.m,x.sn,x.c,x.q==null?'':x.q])));ws['!cols']=[22,60,18,30,14,14,10,18,16,8].map(w=>({wch:w}));
  const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};XLSX.utils.book_append_sheet(wb,ws,'shipments');XLSX.writeFile(wb,'shipments_'+DAY+(TAB=='t'?'_all':'_file')+'.xlsx')}
 function exN(){const A=gArr(),H=NC.map(c=>c[1]);
@@ -362,33 +391,48 @@ const gVal=(r,f)=>r&&r[f]!=null?String(r[f]):'';
 const gBlankRow=r=>!r||NC.every(c=>gVal(r,c[0])==='');
 const gTot=()=>Math.max(30,gArr().length+GEA);
 function gTrim(){const A=gArr();let n=A.length;while(n>0&&gBlankRow(A[n-1]))n--;if(n!==A.length)gSet(A.slice(0,n))}
-const gReset=()=>{GE={r:0,c:0};GED=null;GEA=0;GH=[];GHr=[]};
-let GE={r:0,c:0},GED=null,GEA=0,GH=[],GHr=[];
+const gReset=()=>{GE={r:0,c:0};GA=null;GED=null;GEA=0;GH=[];GHr=[]};
+let GE={r:0,c:0},GA=null,GED=null,GEA=0,GH=[],GHr=[];
+const gSelR=()=>{const a=GA||GE;return{r1:Math.min(a.r,GE.r),r2:Math.max(a.r,GE.r),c1:Math.min(a.c,GE.c),c2:Math.max(a.c,GE.c)}};
 function gRender(){save();draw()}
 const cellEl=(r,c)=>($('out')||document).querySelector('td[data-r="'+r+'"][data-g="'+c+'"]');
-function gPaint(full){const t=$('out');if(!t)return;if(full){draw();return}
- t.querySelectorAll('td[data-g]').forEach(td=>td.classList.toggle('gcs',+td.dataset.r==GE.r&&+td.dataset.g==GE.c));
- const on=t.querySelector('td.gcs');if(on&&on.scrollIntoView)on.scrollIntoView({block:'nearest',inline:'nearest'})}
+function gPaint(full,noscroll){const t=$('out');if(!t)return;if(full){draw();return}
+ const g=gSelR(),multi=!!GA&&(GA.r!=GE.r||GA.c!=GE.c);
+ t.querySelectorAll('td[data-g]').forEach(td=>{const r=+td.dataset.r,c=+td.dataset.g;td.classList.toggle('gcs',r==GE.r&&c==GE.c);td.classList.toggle('gcr',multi&&r>=g.r1&&r<=g.r2&&c>=g.c1&&c<=g.c2)});
+ const on=t.querySelector('td.gcs');if(!noscroll&&on&&on.scrollIntoView)on.scrollIntoView({block:'nearest',inline:'nearest'})}
 function drawN(){const A=gArr(),CWi=gCW(),tot=gTot(),HD=['<input type="checkbox" id="sa" onchange="tgAll(this.checked)">','#'].concat(NC.map(c=>c[1]));
- let h='<colgroup>'+CWi.map(w=>'<col style="width:'+w+'px">').join('')+'</colgroup><tr>'+HD.map((x,j)=>'<th>'+x+'<span class="rz" onpointerdown="rz(event,'+j+')" ondblclick="rzd('+j+')"></span></th>').join('')+'</tr>';
+ let h='<colgroup>'+CWi.map(w=>'<col style="width:'+w+'px">').join('')+'</colgroup><tr>'+HD.map((x,j)=>'<th'+(j>=2?' onclick="gColSel('+(j-2)+',event)" title="اضغط لتحديد العمود كله"':'')+'>'+x+'<span class="rz" onpointerdown="rz(event,'+j+')" ondblclick="rzd('+j+')"></span></th>').join('')+'</tr>';
  for(let i=0;i<tot;i++){const r=A[i],sl=r&&SEL.has(r);
   h+='<tr'+(sl?' class="sl"':'')+'><td><input type="checkbox"'+(sl?' checked':'')+' onclick="tg('+i+',this.checked,this,event)"></td><td>'+(i+1)+'</td>';
   for(let j=0;j<10;j++){const v=gVal(r,NC[j][0]);
    h+='<td data-g="'+j+'" data-r="'+i+'" onpointerdown="gSel(event,'+i+','+j+')" ondblclick="gEdit('+i+','+j+')" title="'+e(v)+'">'+e(v)+'</td>'}
   h+='</tr>'}
  $('out').innerHTML=h;if($('out').style)$('out').style.width=CWi.reduce((x,y)=>x+y,0)+'px';
- gPaint(false);updSel()}
-function gSel(ev,r,c){const t=ev.target;if(t&&(t.tagName=='INPUT'||(t.closest&&t.closest('.rz'))))return;
- if(GED)gCommit();GE={r,c};gPaint()}
-function gMove(dr,dc,wrap){let r=GE.r+dr,c=GE.c+dc,tot=gTot();
- if(c<0){if(wrap){r--;c=9}else c=0}
- if(c>9){if(wrap){r++;c=0}else c=9}
+ applyCols();gPaint(false);updSel()}
+function gSel(ev,r,c){const t=ev.target;if(t&&(t.tagName=='INPUT'||(t.closest&&t.closest('.rz'))))return;if(ev.button)return;
+ if(GED)gCommit();
+ if(ev.shiftKey){if(!GA)GA={r:GE.r,c:GE.c};GE={r,c};gPaint();return}
+ GA={r,c};GE={r,c};gPaint();gDrag(ev)}
+function gDrag(ev){if(ev.pointerType=='touch')return;
+ const mv=m=>{if(m.clientY>innerHeight-40)scrollBy(0,18);else if(m.clientY<40)scrollBy(0,-18);
+  const el=document.elementFromPoint(m.clientX,m.clientY),td=el&&el.closest&&el.closest('td[data-g]');if(!td)return;
+  const r=+td.dataset.r,c=+td.dataset.g;if(r!=GE.r||c!=GE.c){GE={r,c};gPaint(false,true)}};
+ const up=()=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',up)};
+ document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up)}
+function gColSel(c,ev){if(ev&&ev.target&&ev.target.closest&&ev.target.closest('.rz'))return;if(GED)gCommit();
+ const A=gArr();let last=0;A.forEach((r,i)=>{if(!gBlankRow(r))last=i});GA={r:0,c};GE={r:last,c};gPaint(false,true)}
+function gMove(dr,dc,wrap,ext){if(ext){if(!GA)GA={r:GE.r,c:GE.c}}else GA=null;
+ let r=GE.r+dr,c=GE.c,tot=gTot();const vc=[];for(let j=0;j<10;j++)if(!colHidden(j))vc.push(j);if(!vc.length)return;
+ if(dc){let k=vc.indexOf(c);if(k<0)k=dc>0?-1:vc.length;k+=dc;
+  if(k<0){if(wrap){r--;k=vc.length-1}else k=0}
+  if(k>vc.length-1){if(wrap){r++;k=0}else k=vc.length-1}
+  c=vc[k]}else if(colHidden(c))c=vc[0];
  if(r<0)r=0;
  let ch=false;if(r>tot-1){GEA++;ch=true}
  tot=gTot();if(r>tot-1)r=tot-1;
  GE={r,c};gPaint(ch)}
 function gEdit(r,c,seed){if(GED){if(GED.r==r&&GED.c==c)return;gCommit()}
- GE={r,c};gPaint();
+ GE={r,c};GA=null;gPaint();
  const td=cellEl(r,c);if(!td)return;
  const A=gArr(),row=A[r],f=NC[c][0],v=gVal(row,f);
  td.classList.add('gce');
@@ -440,7 +484,8 @@ function gUndo(){if(!GH.length){$('msg').textContent='مفيش حاجة للتر
  GHr.push(JSON.stringify(gArr()));if(GHr.length>60)GHr.shift();gSet(JSON.parse(GH.pop()));gRender();$('msg').textContent='تراجع — فاضل '+GH.length+' خطوة رجوع'}
 function gRedo(){if(!GHr.length){$('msg').textContent='مفيش حاجة للإعادة';return}GED=null;
  GH.push(JSON.stringify(gArr()));gSet(JSON.parse(GHr.pop()));gRender();$('msg').textContent='إعادة ('+GHr.length+' خطوة باقية)'}
-function gDel(){const A=gArr(),f=NC[GE.c][0],ov=gVal(A[GE.r],f);
+function gDel(){const g=gSelR();if(GA&&(g.r1!=g.r2||g.c1!=g.c2))return gDelRange(g);
+ const A=gArr(),f=NC[GE.c][0],ov=gVal(A[GE.r],f);
  if(ov===''){draw();return}
  pushH();if(!A[GE.r])A[GE.r]=gBlank();A[GE.r][f]='';
  gRender()}
@@ -452,18 +497,17 @@ function gFill(){const A=gArr(),f=NC[GE.c][0],src=gVal(A[GE.r],f);
 function gUsed(){const A=gArr();let r1=-1,r2=-1,c1=9,c2=0;
  A.forEach((r,i)=>{if(!r||gBlankRow(r))return;NC.forEach((c,j)=>{if(gVal(r,c[0])==='')return;if(j<c1)c1=j;if(j>c2)c2=j});if(r1<0)r1=i;r2=i});
  return r1<0?null:{r1,r2,c1,c2}}
-function gRange(){const u=gUsed();if(!u)return{r1:GE.r,c1:GE.c,r2:GE.r,c2:GE.c};
- return{r1:Math.max(GE.r,u.r1),c1:Math.max(GE.c,u.c1),r2:Math.max(GE.r,u.r2),c2:Math.max(GE.c,u.c2)}}
+const gRange=()=>gSelR();
 function gTSV(g){const A=gArr(),o=[];
- for(let i=g.r1;i<=g.r2;i++){const r=A[i]||{},ln=[];for(let j=g.c1;j<=g.c2;j++)ln.push(gVal(r,NC[j][0]).replace(/[\t\r\n]+/g,' '));o.push(ln.join('\t'))}
+ for(let i=g.r1;i<=g.r2;i++){const r=A[i]||{},ln=[];for(let j=g.c1;j<=g.c2;j++){if(colHidden(j))continue;ln.push(gVal(r,NC[j][0]).replace(/[\t\r\n]+/g,' '))}o.push(ln.join('\t'))}
  return o.join('\n')}
 function gDelRange(g){const A=gArr();let ch=false;
- for(let i=g.r1;i<=g.r2;i++){const r=A[i];if(!r)continue;for(let j=g.c1;j<=g.c2;j++){if(gVal(r,NC[j][0])!=='')ch=true}}
+ for(let i=g.r1;i<=g.r2;i++){const r=A[i];if(!r)continue;for(let j=g.c1;j<=g.c2;j++){if(!colHidden(j)&&gVal(r,NC[j][0])!=='')ch=true}}
  if(!ch)return;
  pushH();
- for(let i=g.r1;i<=g.r2;i++){const r=A[i];if(!r)continue;for(let j=g.c1;j<=g.c2;j++)r[NC[j][0]]=''}
+ for(let i=g.r1;i<=g.r2;i++){const r=A[i];if(!r)continue;for(let j=g.c1;j<=g.c2;j++){if(!colHidden(j))r[NC[j][0]]=''}}
  gRender()}
-function gPaste(ts){ts=String(ts==null?'':ts).replace(/\r\n?/g,'\n').replace(/\n+$/,'');
+function gPaste(ts){{const g=gSelR();GE={r:g.r1,c:g.c1};GA=null}ts=String(ts==null?'':ts).replace(/\r\n?/g,'\n').replace(/\n+$/,'');
  if(ts==='')return;
  const lines=ts.split('\n').map(l=>l.replace(/\n$/,'').split('\t')),A=gArr(),need=GE.r+lines.length;
  if(need>gTot())GEA+=need-gTot();
@@ -483,14 +527,16 @@ function gKey(ev){if(TAB!='b'&&TAB!='g')return;
  if(ct&&!sh&&(k=='y'||k=='Y')){ev.preventDefault();return gRedo()}
  if(ct&&!sh&&(k=='d'||k=='D')){ev.preventDefault();return gFill()}
  if(ct&&sh&&(k=='z'||k=='Z')){ev.preventDefault();return gRedo()}
- if(ct&&!sh&&(k=='a'||k=='A'||k=='c'||k=='C'||k=='x'||k=='X'||k=='v'||k=='V'))return;
+ if(ct&&!sh&&(k=='a'||k=='A')){ev.preventDefault();const u=gUsed();if(u){GA={r:u.r1,c:0};GE={r:u.r2,c:9};gPaint(false,true)}return}
+ if(ct&&!sh&&(k=='c'||k=='C'||k=='x'||k=='X'||k=='v'||k=='V'))return;
  if(k=='F2'){ev.preventDefault();return gEdit(GE.r,GE.c)}
  if(k=='Enter'){ev.preventDefault();return gMove(1,0)}
  if(k=='Tab'){ev.preventDefault();return gMove(0,sh?-1:1,1)}
- if(k=='ArrowLeft'){ev.preventDefault();return gMove(0,1,0)}
- if(k=='ArrowRight'){ev.preventDefault();return gMove(0,-1,0)}
- if(k=='ArrowUp'){ev.preventDefault();return gMove(-1,0,0)}
- if(k=='ArrowDown'){ev.preventDefault();return gMove(1,0,0)}
+ if(k=='ArrowLeft'){ev.preventDefault();return gMove(0,1,0,sh)}
+ if(k=='ArrowRight'){ev.preventDefault();return gMove(0,-1,0,sh)}
+ if(k=='ArrowUp'){ev.preventDefault();return gMove(-1,0,0,sh)}
+ if(k=='ArrowDown'){ev.preventDefault();return gMove(1,0,0,sh)}
+ if(k=='Escape'){GA=null;return gPaint()}
  if(k=='Delete'||k=='Backspace'){ev.preventDefault();return gDel()}
  if(k.length==1&&!ct&&!ev.altKey&&k>=' '){ev.preventDefault();return gEdit(GE.r,GE.c,k)}}
 function gKeyE(ev){const G=GED;if(!G)return;const k=ev.key,ct=ev.ctrlKey||ev.metaKey,sh=ev.shiftKey,inp=G.inp;
@@ -517,6 +563,37 @@ if(typeof document!='undefined'&&document.body){
  document.addEventListener('copy',ev=>{if(!gClipCtx(ev))return;const g=gRange();ev.preventDefault();if(ev.clipboardData)ev.clipboardData.setData('text/plain',gTSV(g))},true);
  document.addEventListener('cut',ev=>{if(!gClipCtx(ev))return;const g=gRange();ev.preventDefault();if(ev.clipboardData)ev.clipboardData.setData('text/plain',gTSV(g));gDelRange(g)},true);
  document.addEventListener('paste',ev=>{if(!gClipCtx(ev))return;const d=ev.clipboardData&&ev.clipboardData.getData('text/plain');if(!d)return;ev.preventDefault();gPaste(d)},true)}
+
+/* ===== إظهار/إخفاء الأعمدة (ينطبق على كل التبويبات) ===== */
+let HC=new Set();try{HC=new Set(JSON.parse(localStorage.getItem('zhc')||'[]'))}catch(e){}
+const colHidden=j=>HC.has(NC[j][0]);
+const HCL=[['n','اسم العميل'],['a','العنوان'],['z','الزون'],['p','المنتج'],['ph','الهاتف'],['ph2','هاتف بديل'],['m','المبلغ'],['sn','الراسل'],['c','كود الشحنة'],['q','العدد (الملف الحالي والمنقول)'],['nn','ملاحظات'],['nt','الملاحظة (الملف الحالي والمنقول)']];
+const CMAP_WT=['chk','#','n','a','z','p','ph','ph2','m','sn','c','q','nn','nt'],CMAP_G=['chk','#','n','a','z','p','ph','ph2','m','sn','c','nn'];
+function applyCols(){let st=document.getElementById('colhide');if(!st){st=document.createElement('style');st.id='colhide';document.head.appendChild(st)}
+ const mp=(TAB=='b'||TAB=='g')?CMAP_G:CMAP_WT,hid=[];mp.forEach((k,i)=>{if(HC.has(k))hid.push(i+1)});
+ st.textContent=hid.map(k=>'#out col:nth-child('+k+'),#out th:nth-child('+k+'),#out td:nth-child('+k+'){display:none}').join('');
+ const o=$('out');if(o&&o.style){const W=gCW?gCW():CW;o.style.width=W.reduce((x,y,i)=>x+(HC.has(mp[i])?0:y),0)+'px'}}
+function gearDraw(){$('gpop').innerHTML='<div class="gh">الأعمدة الظاهرة (كل التبويبات)</div>'+HCL.map(([k,l])=>'<label><input type="checkbox" '+(HC.has(k)?'':'checked ')+'onchange="gearSet(\''+k+'\',this.checked)">'+l+'</label>').join('')}
+function gearSet(k,on){if(on)HC.delete(k);else HC.add(k);try{localStorage.setItem('zhc',JSON.stringify([...HC]))}catch(e){}applyCols();if(TAB=='b'||TAB=='g'){if(colHidden(GE.c)){gMove(0,1,0)}gPaint(false,true)}}
+function gearToggle(ev){ev.stopPropagation();const p=$('gpop');if(p.style.display=='block'){p.style.display='none';return}gearDraw();p.style.display='block'}
+document.addEventListener('click',()=>{const p=$('gpop');if(p)p.style.display='none'});
+
+/* ===== تبويب مقارنة الراسلين ===== */
+const nrmS=s=>String(s||'').replace(/[ً-ٰٟـ​-‏]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^\p{L}\p{N}]+/gu,' ').trim().toLowerCase();
+function cmpAll(){const m=new Map();[RW,RT,RB,RG].forEach(A=>A.forEach(r=>{const s=String(r&&r.sn!=null?r.sn:'').trim();if(!s||s=='لصق')return;const k=nrmS(s);if(k&&!m.has(k))m.set(k,s)}));return[...m.values()].sort((a,b)=>a.localeCompare(b,'ar'))}
+function cmpMissing(all,txt){const mn=[...new Set(String(txt||'').split(/[\n\t]+/).map(nrmS).filter(Boolean))];
+ return all.filter(s=>{const k=nrmS(s);return!mn.some(m=>m==k||(m.length>=3&&k.length>=3&&(k.includes(m)||m.includes(k))))})}
+let CMPD='',CMPT=0;
+function cmpUpd(){const all=cmpAll(),t=$('cmp2').value,miss=cmpMissing(all,t);
+ $('cmp1').value=all.join('\n');$('c1n').textContent=all.length;
+ $('c2n').textContent=t.split(/\n/).filter(x=>x.trim()).length;
+ $('cmp3').value=miss.join('\n');$('c3n').textContent=miss.length}
+async function drawS(){const day=DAY;CMPD=day;const t2=$('cmp2');
+ if(!t2.dataset.b){t2.dataset.b=1;t2.addEventListener('input',()=>{cmpUpd();clearTimeout(CMPT);const d=CMPD,v=t2.value;CMPT=setTimeout(()=>{db('put',v,'cmp:'+d).catch(()=>0)},500)})}
+ let v='';try{const x=await db0('get','cmp:'+day);if(typeof x=='string')v=x}catch(e){}
+ if(CMPD!=day||TAB!='s')return;if(document.activeElement!==t2||!t2.value)t2.value=v;cmpUpd()}
+function cmpSel(n){const t=$('cmp'+n);t.focus();t.select()}
+
 /* ====== Cloud sync (Supabase REST + polling). Local IndexedDB stays the working copy. ====== */
 const TABS=['w','t','b','g'];
 const CFG=(typeof window!='undefined'&&window.ZONE_CONFIG)||{},SBU=String(CFG.SUPABASE_URL||'').replace(/\/+$/,''),SBK=String(CFG.SUPABASE_KEY||'');
@@ -528,7 +605,7 @@ const saveDirty=()=>lsSet('zsd',[...SY.dirty]),saveDD=()=>lsSet('zsx',[...SY.dd]
 const uuid=()=>(typeof crypto!='undefined'&&crypto.randomUUID)?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c=='x'?r:(r&3|8)).toString(16)});
 const sj=o=>JSON.stringify(o,(k,v)=>v&&typeof v=='object'&&!Array.isArray(v)?Object.keys(v).sort().reduce((a,x)=>(a[x]=v[x],a),{}):v);
 const strip=r=>{const o={};for(const k in r)if(k!='_id')o[k]=r[k];return o};
-const isSK=k=>k=='kw'||k=='lh'||/^m2:/.test(k);
+const isSK=k=>k=='kw'||k=='lh'||/^(m2|cmp):/.test(k);
 const back=ts=>{const t=Date.parse(ts);return isNaN(t)?ts:new Date(t-15000).toISOString()};
 
 /* --- session --- */
@@ -570,7 +647,7 @@ const putSnap=(d,s)=>db0('put',s,'sn:'+d).catch(()=>0);
 async function loadState(d){if(d==DAY)return{w:RW,t:RT,b:RB,g:RG};let v=null;try{v=await db0('get',d)}catch(e){}
  if(Array.isArray(v))return{w:v,t:[],b:[],g:[]};return{w:(v&&v.w)||[],t:(v&&v.t)||[],b:(v&&v.b)||[],g:(v&&v.g)||[]}}
 const persistDay=(d,s)=>db0('put',{w:s.w,t:s.t,b:s.b,g:s.g},d).catch(()=>0);
-function softDraw(){if((typeof GED!='undefined'&&GED)||(document.activeElement&&document.activeElement.tagName=='INPUT'&&document.activeElement.type!='checkbox')){SY.redraw=true;return}SY.redraw=false;draw();days()}
+function softDraw(){if((typeof GED!='undefined'&&GED)||(document.activeElement&&(document.activeElement.tagName=='TEXTAREA'||document.activeElement.tagName=='INPUT')&&document.activeElement.type!='checkbox')){SY.redraw=true;return}SY.redraw=false;draw();days()}
 
 /* --- diff: what must be sent to the cloud --- */
 function plan(st,sn){const seen=new Set(),ins=[],upd=[],del=[];let fresh=false;
@@ -640,7 +717,7 @@ async function pushSettings(){for(const k of Object.keys(SY.q)){const v=SY.q[k];
  await db0('put',SY.q,'sy:q').catch(()=>0)}
 async function applySetting(k,v){if(k=='kw'){if(Array.isArray(v)){lsSet('zs',v);await db0('put',v,'kw');load()}}
  else if(k=='lh'){if(v&&typeof v=='object'){Object.keys(LH).forEach(x=>delete LH[x]);Object.assign(LH,v);lsSet('lh',LH);await db0('put',LH,'lh')}}
- else if(/^m2:/.test(k))await db0('put',v,k)}
+ else if(/^(m2|cmp):/.test(k)){await db0('put',v,k);if(k=='cmp:'+DAY&&TAB=='s')SY.redraw=true}}
 async function pullSettings(){const r=await sbj('/rest/v1/app_settings?select=*'+(SY.sSince?'&updated_at=gt.'+encodeURIComponent(back(SY.sSince)):'')),a=await r.json();let mx=SY.sSince;
  for(const x of a){if(x.updated_at>mx)mx=x.updated_at;if(SY.q[x.key]!==undefined||SY.sv[x.key]==x.updated_at)continue;await applySetting(x.key,x.value);SY.sv[x.key]=x.updated_at}
  lsSet('zsv',SY.sv);if(mx!=SY.sSince){SY.sSince=mx;lsSet('zsw',mx)}}
