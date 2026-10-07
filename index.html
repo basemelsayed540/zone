@@ -88,7 +88,7 @@ small{color:var(--mut);opacity:1}
 <div class="bar">اليوم: <select id="dsel" onchange="goDay(this.value)"></select><span id="gearw"><button class="s" id="gear" onclick="gearToggle(event)" title="إظهار / إخفاء الأعمدة">⚙</button><div id="gpop" onclick="event.stopPropagation()"></div></span> <small>(الأيام اللي فيها ملفات متسجلة بس. الاستيراد بيتسجل على تاريخ النهارده)</small> <small id="bk"></small></div><div class="bar" style="display:none"><button class="s" id="bdir" onclick="pickDir()">الحفظ التلقائي في فولدر</button> <small id="as"></small></div>
 <div class="row1"><button id="t1" class="tb on" onclick="tab('w')">الملف الحالي</button><button id="t2" class="tb" onclick="tab('t')">المنقول</button><button id="t3" class="tb" onclick="tab('b')">بومبو</button><button id="t4" class="tb" onclick="tab('g')">تصوير</button><button id="t5" class="tb" onclick="tab('s')">مقارنة الراسلين</button></div>
 <div class="bar"></div>
-<div id="mp"></div><div class="bar w2 w12" style="display:none">الراسل: <select id="sf" onchange="SF=this.value;draw()"></select></div><div class="row2"><button class="s" onclick="delDay()">🗑 حذف اليوم</button><span id="sum"></span><button class="s w3" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s w4" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s wbg" onclick="gPasteAsk()" style="display:none">📋 لصق</button><button class="s wns" id="bwr" onclick="wr()" title="عرض النص كامل">عرض النص كامل</button><button class="s wns" onclick="rzReset()" title="اسحب حافة رأس العمود لتغيير عرضه (دبل كليك يرجّعه)">إعادة ضبط الأعمدة</button></div><div class="bar"><small id="msg"></small></div><div class="wrap"><table id="out"></table></div><div id="cmpw"><div class="wrap sgw"><table id="sgt"></table></div><small>اضغط مرتين على خلية في عمود "اكتب الراسلين بإيدك" للكتابة، أو اختار الخلية واكتب. اسحب بالماوس لتحديد خلايا، واضغط على عنوان العمود لتحديده كله ثم Ctrl+C للنسخ. Delete بيمسح المحدد. كل التعديلات بتتحفظ في قاعدة البيانات.</small></div><div id="selbar" style="display:none"><b id="selcnt"></b><button onclick="copySel()">📋 نسخ</button><button class="s" id="bdel" onclick="delSel()">🗑 حذف المحدد (0)</button><button class="w1 w12" onclick="mvSel()">➡ نقل لتبويب المنقول</button></div>
+<div id="mp"></div><div class="bar w2 w12" style="display:none">الراسل: <select id="sf" onchange="SF=this.value;draw()"></select></div><div class="row2"><button class="s" onclick="delDay()">🗑 حذف اليوم</button><span id="sum"></span><button class="s w3" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s w4" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s wbg" onclick="gPasteAsk()" style="display:none">📋 لصق</button><button class="s wns" id="bwr" onclick="wr()" title="عرض النص كامل">عرض النص كامل</button><button class="s wns" onclick="rzReset()" title="اسحب حافة رأس العمود لتغيير عرضه (دبل كليك يرجّعه)">إعادة ضبط الأعمدة</button></div><div class="bar"><small id="msg"></small></div><div class="wrap"><table id="out"></table></div><div id="cmpw"><div class="wrap sgw"><table id="sgt"></table></div><small>اكتب في عمود "قائمة راسليني" كل الراسلين اللي بتشتغل معاهم (مرة واحدة، وتفضل محفوظة كل يوم في قاعدة البيانات). العمود التالت بيظهر الراسلين اللي في قايمتك ومش موجودين في شحنات اليوم المختار. اضغط مرتين على خلية للكتابة، واسحب بالماوس للتحديد، واضغط على عنوان العمود لتحديده ونسخه، وDelete بيمسح.</small></div><div id="selbar" style="display:none"><b id="selcnt"></b><button onclick="copySel()">📋 نسخ</button><button class="s" id="bdel" onclick="delSel()">🗑 حذف المحدد (0)</button><button class="w1 w12" onclick="mvSel()">➡ نقل لتبويب المنقول</button></div>
 <details class="w1"><summary>لصق عناوين فقط</summary><textarea id="in" placeholder="عنوان في كل سطر"></textarea><button onclick="paste()">إضافة لليوم</button></details>
 <details><summary>إضافة كلمة جديدة لجدول الزونات</summary><input id="nk" placeholder="الكلمة"> <input id="nz" placeholder="الزون"><button onclick="add()">إضافة</button> <small id="cn"></small><div id="kl"></div></details>
 <details><summary>إعدادات متقدمة</summary><button class="s" onclick="resetMaps()">نسيان إعدادات الأعمدة المحفوظة</button></details>
@@ -588,8 +588,9 @@ document.addEventListener('click',()=>{const p=$('gpop');if(p)p.style.display='n
 const nrmS=s=>String(s||'').replace(/[\u064B-\u065F\u0670\u0640\u200b-\u200f]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^\p{L}\p{N}]+/gu,' ').trim().toLowerCase().replace(/(^| )ال(?=\S{2})/g,'$1');
 const nrmK=s=>nrmS(s).split(' ').filter(Boolean).sort().join('');
 function cmpAll(){const m=new Map();[RW,RT,RB,RG].forEach(A=>A.forEach(r=>{const s=String(r&&r.sn!=null?r.sn:'').trim();if(!s||s=='لصق')return;const k=nrmK(s);if(k&&!m.has(k))m.set(k,s)}));return[...m.values()].sort((a,b)=>a.localeCompare(b,'ar'))}
-function cmpMissing(all,txt){const mn=[...new Set(String(txt||'').split(/[\n\t]+/).map(nrmK).filter(Boolean))];
- return all.filter(s=>{const k=nrmK(s);return!mn.some(m=>m==k||(m.length>=3&&k.length>=3&&(k.includes(m)||m.includes(k))))})}
+function cmpMissing(all,txt){const ak=all.map(nrmK),seen=new Set(),out=[];
+ String(txt||'').split(/[\n\t]+/).forEach(x=>{const nm=x.trim(),m=nrmK(nm);if(!m||seen.has(m))return;seen.add(m);
+  if(!ak.some(k=>m==k||(m.length>=3&&k.length>=3&&(k.includes(m)||m.includes(k)))))out.push(nm)});return out}
 /* --- الجدول --- */
 let MAN=[],MAND=null,SRL=false,ALLS=[],MISS=[],sgA=null,sgF={r:0,c:1},sgE=null,sgH=[],sgHr=[];
 const sgGet=(r,c)=>c==0?(ALLS[r]||''):c==1?(MAN[r]==null?'':String(MAN[r])):(MISS[r]||'');
@@ -597,15 +598,15 @@ const sgRows=()=>Math.max(30,ALLS.length,MAN.length+3,MISS.length);
 const sgSelR=()=>{const a=sgA||sgF;return{r1:Math.min(a.r,sgF.r),r2:Math.max(a.r,sgF.r),c1:Math.min(a.c,sgF.c),c2:Math.max(a.c,sgF.c)}};
 const sgCalc=()=>{ALLS=cmpAll();MISS=cmpMissing(ALLS,MAN.join('\n'))};
 const sgCell=(r,c)=>$('sgt').querySelector('td[data-r="'+r+'"][data-c="'+c+'"]');
-function sgSave(){const a=MAN.map(x=>x==null?'':String(x));while(a.length&&!a[a.length-1].trim())a.pop();db('put',a,'cmp:'+DAY).catch(()=>0)}
+function sgSave(){const a=MAN.map(x=>x==null?'':String(x));while(a.length&&!a[a.length-1].trim())a.pop();db('put',a,'cmp:roster').catch(()=>0)}
 const sgPush=()=>{sgH.push(JSON.stringify(MAN));if(sgH.length>60)sgH.shift();sgHr.length=0};
 async function drawS(){
- if(MAND!==DAY||SRL){SRL=false;MAND=DAY;let v=null;try{v=await db0('get','cmp:'+DAY)}catch(x){}
+ if(MAND!==true||SRL){SRL=false;MAND=true;let v=null;try{v=await db0('get','cmp:roster');if(v==null)v=await db0('get','cmp:'+DAY)}catch(x){}
   MAN=Array.isArray(v)?v.map(String):(typeof v=='string'?v.split(/\n/):[]);sgH=[];sgHr=[];sgA=null;sgF={r:0,c:1}}
  if(TAB!='s'||sgE)return;sgCalc();sgRender()}
 function sgRender(){const n=sgRows();
  let h='<colgroup><col style="width:46px"><col style="width:280px"><col style="width:280px"><col style="width:280px"></colgroup><tr><th class="rn"></th>'+
-  [['الراسلين في كل التبويبات',ALLS.length],['اكتب الراسلين بإيدك',MAN.filter(x=>String(x).trim()).length],['الراسلين الناقصين',MISS.length]].map((x,c)=>'<th onclick="sgCol('+c+')" title="اضغط لتحديد العمود كله">'+x[0]+' ('+x[1]+')</th>').join('')+'</tr>';
+  [['راسلين اليوم (من كل التبويبات)',ALLS.length],['قائمة راسليني (ثابتة كل يوم)',MAN.filter(x=>String(x).trim()).length],['ناقصين النهارده (ما بعتوش)',MISS.length]].map((x,c)=>'<th onclick="sgCol('+c+')" title="اضغط لتحديد العمود كله">'+x[0]+' ('+x[1]+')</th>').join('')+'</tr>';
  for(let r=0;r<n;r++){h+='<tr><td class="rn" onclick="sgRow('+r+')">'+(r+1)+'</td>';
   for(let c=0;c<3;c++){const v=sgGet(r,c);h+='<td data-r="'+r+'" data-c="'+c+'"'+(c==1?' class="ed"':'')+' onpointerdown="sgDown(event,'+r+','+c+')" ondblclick="sgEdit('+r+','+c+')" title="'+e(v)+'">'+e(v)+'</td>'}
   h+='</tr>'}
@@ -627,14 +628,14 @@ function sgEdit(r,c,seed){if(c!=1)return;if(sgE)sgCommit();sgF={r,c};sgA=null;sg
  inp.value=seed!=null?String(seed):orig;sgE={r,inp,orig};inp.addEventListener('input',sgLive);inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length);sgLive()}
 function sgLive(){if(!sgE)return;const t=MAN.slice();while(t.length<=sgE.r)t.push('');t[sgE.r]=sgE.inp.value;MISS=cmpMissing(ALLS,t.join('\n'));
  for(let r=0;r<sgRows();r++){const td=sgCell(r,2);if(td){const v=MISS[r]||'';if(td.textContent!==v){td.textContent=v;td.title=v}}}
- const T=$('sgt').querySelectorAll('th');if(T.length>3){T[2].textContent='اكتب الراسلين بإيدك ('+t.filter(x=>String(x).trim()).length+')';T[3].textContent='الراسلين الناقصين ('+MISS.length+')'}}
+ const T=$('sgt').querySelectorAll('th');if(T.length>3){T[2].textContent='قائمة راسليني (ثابتة كل يوم) ('+t.filter(x=>String(x).trim()).length+')';T[3].textContent='ناقصين النهارده (ما بعتوش) ('+MISS.length+')'}}
 function sgCommit(){const E=sgE;if(!E)return;sgE=null;const v=E.inp.value;if(v!==E.orig){sgPush();while(MAN.length<=E.r)MAN.push('');MAN[E.r]=v;sgSave()}sgCalc();sgRender()}
 function sgCancel(){sgE=null;sgCalc();sgRender()}
 function sgMove(dr,dc,ext){if(ext){if(!sgA)sgA={r:sgF.r,c:sgF.c}}else sgA=null;sgF={r:Math.max(0,Math.min(sgRows()-1,sgF.r+dr)),c:Math.max(0,Math.min(2,sgF.c+dc))};sgPaint()}
 function sgClear(){const g=sgSelR();if(g.c2<1||g.c1>1)return;let ch=false;for(let r=g.r1;r<=g.r2;r++)if(String(MAN[r]||'').length)ch=true;if(!ch)return;sgPush();for(let r=g.r1;r<=g.r2;r++)if(r<MAN.length)MAN[r]='';sgSave();sgCalc();sgRender()}
 function sgUndo(re){const from=re?sgHr:sgH,to=re?sgH:sgHr;if(!from.length)return;to.push(JSON.stringify(MAN));MAN=JSON.parse(from.pop());sgSave();sgCalc();sgRender()}
 function sgTSV(){const g=sgSelR(),o=[];for(let r=g.r1;r<=g.r2;r++){const row=[];for(let c=g.c1;c<=g.c2;c++)row.push(sgGet(r,c).replace(/[\t\r\n]+/g,' '));o.push(row.join('\t'))}return o.join('\n')}
-function sgPaste(ts){const g=sgSelR();if(g.c2<1||g.c1>1){toast('اللصق بيتم في عمود "اكتب الراسلين بإيدك" بس. اختار خلية فيه الأول');return}
+function sgPaste(ts){const g=sgSelR();if(g.c2<1||g.c1>1){toast('اللصق بيتم في عمود "قائمة راسليني" بس. اختار خلية فيه الأول');return}
  const L=String(ts).replace(/\r\n?/g,'\n').replace(/\n+$/,'').split('\n').map(l=>l.split('\t')[0].trim());sgPush();
  while(MAN.length<g.r1+L.length)MAN.push('');L.forEach((l,i)=>{MAN[g.r1+i]=l});sgSave();sgA={r:g.r1,c:1};sgF={r:g.r1+L.length-1,c:1};sgCalc();sgRender()}
 document.addEventListener('keydown',ev=>{if(TAB!='s')return;const t=ev.target,k=ev.key,ct=ev.ctrlKey||ev.metaKey,sh=ev.shiftKey;
@@ -782,7 +783,7 @@ async function pushSettings(){for(const k of Object.keys(SY.q)){const v=SY.q[k];
  await db0('put',SY.q,'sy:q').catch(()=>0)}
 async function applySetting(k,v){if(k=='kw'){if(Array.isArray(v)){lsSet('zs',v);await db0('put',v,'kw');load()}}
  else if(k=='lh'){if(v&&typeof v=='object'){Object.keys(LH).forEach(x=>delete LH[x]);Object.assign(LH,v);lsSet('lh',LH);await db0('put',LH,'lh')}}
- else if(/^(m2|cmp):/.test(k)){await db0('put',v,k);if(k=='cmp:'+DAY){SRL=true;if(TAB=='s')SY.redraw=true}}}
+ else if(/^(m2|cmp):/.test(k)){await db0('put',v,k);if(k=='cmp:roster'){SRL=true;if(TAB=='s')SY.redraw=true}}}
 async function pullSettings(){const r=await sbj('/rest/v1/app_settings?select=*'+(SY.sSince?'&updated_at=gt.'+encodeURIComponent(back(SY.sSince)):'')),a=await r.json();let mx=SY.sSince;
  for(const x of a){if(x.updated_at>mx)mx=x.updated_at;if(SY.q[x.key]!==undefined||SY.sv[x.key]==x.updated_at)continue;await applySetting(x.key,x.value);SY.sv[x.key]=x.updated_at}
  lsSet('zsv',SY.sv);if(mx!=SY.sSince){SY.sSince=mx;lsSet('zsw',mx)}}
