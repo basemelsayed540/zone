@@ -85,7 +85,7 @@ small{color:var(--mut);opacity:1}
 <h1>مستخرج الزون والشحنات (بدون إنترنت)</h1>
 <div id="app"><aside id="side"><button class="w1 w12" onclick="fi.click()">📂 فتح ملف Excel</button><input type="file" id="fi" multiple hidden accept=".xlsx,.xls,.xlsm,.xlsb,.csv,.ods" onchange="openF(Array.from(this.files));this.value=''">
 <button class="wns" onclick="ex()">📤 تصدير Excel</button><button class="w12" onclick="run()">🔍 استخراج الزونات</button><hr><button class="s" onclick="backup()">💾 نسخة احتياطية</button><button class="s" onclick="fr.click()">♻ استعادة</button><button class="w1 w12" onclick="mv()">➡ نقل للمنقول</button><input type="file" id="fr" hidden accept=".json" onchange="restore(this.files[0]);this.value=''"></aside><main id="main" data-tab="w">
-<div class="bar">اليوم: <select id="dsel" onchange="goDay(this.value)"></select><span id="gearw"><button class="s" id="gear" onclick="gearToggle(event)" title="إظهار / إخفاء الأعمدة">⚙</button><div id="gpop" onclick="event.stopPropagation()"></div></span> <small>(الأيام اللي فيها ملفات متسجلة بس. الاستيراد بيتسجل على تاريخ النهارده)</small> <small id="bk"></small></div><div class="bar" style="display:none"><button class="s" id="bdir" onclick="pickDir()">الحفظ التلقائي في فولدر</button> <small id="as"></small></div>
+<div class="bar">اليوم: <select id="dsel" onchange="goDay(this.value)"></select><button class="s" id="dbtn" onclick="askDaily()">＋ يومية</button> <span id="gearw"><button class="s" id="gear" onclick="gearToggle(event)" title="إظهار / إخفاء الأعمدة">⚙</button><div id="gpop" onclick="event.stopPropagation()"></div></span> <small>(الأيام اللي فيها ملفات متسجلة بس. الاستيراد بيتسجل على تاريخ النهارده)</small> <small id="bk"></small></div><div class="bar" style="display:none"><button class="s" id="bdir" onclick="pickDir()">الحفظ التلقائي في فولدر</button> <small id="as"></small></div>
 <div class="row1"><button id="t1" class="tb on" onclick="tab('w')">الملف الحالي</button><button id="t2" class="tb" onclick="tab('t')">المنقول</button><button id="t3" class="tb" onclick="tab('b')">بومبو</button><button id="t4" class="tb" onclick="tab('g')">تصوير</button><button id="t5" class="tb" onclick="tab('s')">مقارنة الراسلين</button></div>
 <div class="bar"></div>
 <div id="mp"></div><div class="bar w2 w12" style="display:none">الراسل: <select id="sf" onchange="SF=this.value;draw()"></select></div><div class="row2"><button class="s" onclick="delDay()">🗑 حذف اليوم</button><span id="sum"></span><button class="s w3" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s w4" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s wbg" onclick="gPasteAsk()" style="display:none">📋 لصق</button><button class="s wns" id="bwr" onclick="wr()" title="عرض النص كامل">عرض النص كامل</button><button class="s wns" onclick="rzReset()" title="اسحب حافة رأس العمود لتغيير عرضه (دبل كليك يرجّعه)">إعادة ضبط الأعمدة</button></div><div class="bar"><small id="msg"></small></div><div class="wrap"><table id="out"></table></div><div id="cmpw"><div class="wrap sgw"><table id="sgt"></table></div><small>اكتب في عمود "قائمة راسليني" كل الراسلين اللي بتشتغل معاهم (مرة واحدة، وتفضل محفوظة كل يوم في قاعدة البيانات). العمود التالت بيظهر الراسلين اللي في قايمتك ومش موجودين في شحنات اليوم المختار. اضغط مرتين على خلية للكتابة، واسحب بالماوس للتحديد، واضغط على عنوان العمود لتحديده ونسخه، وDelete بيمسح.</small></div><div id="selbar" style="display:none"><b id="selcnt"></b><button onclick="copySel()">📋 نسخ</button><button class="s" id="bdel" onclick="delSel()">🗑 حذف المحدد (0)</button><button class="w1 w12" onclick="mvSel()">➡ نقل لتبويب المنقول</button></div>
@@ -146,6 +146,10 @@ for(const k of K.concat(hq?[]:U2)){const m=k.ws.length;
   if(ok&&(m==1||ex>=1)&&ex<m){const sc=k.wt-10;if(!bs||sc>bs[0]||(sc==bs[0]&&p<bs[1]))bs=[sc,p,k,aw.slice(p,p+m).join(' ')]}}}
 if(bs)return{z:bs[2].z,k:bs[2].k+' ~ '+bs[3],f:1,cf:[]};return{z:'',cf:[]}}
 
+const isDay=k=>typeof k=='string'&&(/^\d{4}-\d\d-\d\d$/.test(k)||(k.startsWith('d:')&&k.length>2));
+const dName=k=>String(k).startsWith('d:')?String(k).slice(2):String(k);
+const dKey=n=>'d:'+String(n||'').replace(/[\u0000-\u001f]/g,' ').replace(/\s+/g,' ').trim().slice(0,60);
+const dfile=()=>dName(DAY).replace(/[\\/:*?"<>|]+/g,'-');
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const DB=new Promise((ok,no)=>{try{const q=indexedDB.open('zs2',1);q.onupgradeneeded=()=>q.result.createObjectStore('d');q.onsuccess=()=>ok(q.result);q.onerror=no}catch(e){no(e)}});
 const db0=(m,...a)=>DB.then(d=>new Promise((ok,no)=>{const r=d.transaction('d',m.startsWith('get')?'readonly':'readwrite').objectStore('d')[m](...a);r.onsuccess=()=>ok(r.result);r.onerror=no}));
@@ -157,16 +161,17 @@ const saveCWi=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}db
 const saveCW=()=>saveCWi('cw',CW);
 let SEL=new Set();const vis=x=>!((F!='all'&&x.s!=F)||(SF&&x.sn!=SF));
 const $=id=>document.getElementById(id),e=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-const save=()=>db0('put',{w:RW,t:RT,b:RB,g:RG},DAY).then(()=>{SY.dirty.add(DAY);saveDirty();kick(1200);bkNote();asched();return days()},()=>alert('المتصفح مانع الحفظ الدائم، البيانات هتفضل لحد ما تقفل الصفحة'));
-async function goDay(d){let v=null;if(d&&/^\d{4}-/.test(d)){DAY=d;v=await db('get',d).catch(()=>0)}else DAY=today();if(Array.isArray(v)){RW=v;RT=[];RB=[];RG=[]}else{RW=(v&&v.w)||[];RT=(v&&v.t)||[];RB=(v&&v.b)||[];RG=(v&&v.g)||[]}R=TAB=='w'?RW:TAB=='t'?RT:TAB=='b'?RB:RG;F='all';SF='';SEL.clear();gReset();draw();await days();if(SY.started&&d&&/^\d{4}-/.test(d)){SY.pullDay=DAY;kick(100)}}
+const save=()=>db0('put',{w:RW,t:RT,b:RB,g:RG,u:Date.now()},DAY).then(()=>{SY.dirty.add(DAY);saveDirty();kick(1200);bkNote();asched();return days()},()=>alert('المتصفح مانع الحفظ الدائم، البيانات هتفضل لحد ما تقفل الصفحة'));
+async function goDay(d){let v=null;if(d&&isDay(d)){DAY=d;v=await db('get',d).catch(()=>0)}else DAY=today();if(Array.isArray(v)){RW=v;RT=[];RB=[];RG=[]}else{RW=(v&&v.w)||[];RT=(v&&v.t)||[];RB=(v&&v.b)||[];RG=(v&&v.g)||[]}R=TAB=='w'?RW:TAB=='t'?RT:TAB=='b'?RB:RG;F='all';SF='';SEL.clear();gReset();draw();await days();if(SY.started&&d&&isDay(d)){SY.pullDay=DAY;kick(100)}}
 function tab(t){TAB=t;R=t=='w'?RW:t=='t'?RT:t=='b'?RB:RG;F='all';SF='';SEL.clear();gReset();draw()}
 const cnt=r=>Array.isArray(r)?r.length:((r.w||[]).length+(r.t||[]).length+(r.b||[]).length+(r.g||[]).length);
 async function days(){let k=[],v=[];try{k=(await db('getAllKeys'))||[];v=(await db('getAll'))||[]}catch(e){}
- const L=k.map((x,i)=>[x,v[i]]).filter(([x,r])=>typeof x=='string'&&/^\d{4}-\d\d-\d\d$/.test(x)&&r&&cnt(r)>0).sort((a,b)=>a[0]<b[0]?1:-1);
+ const L=k.map((x,i)=>[x,v[i]]).filter(([x,r])=>isDay(x)&&r&&(cnt(r)>0||x==DAY)).sort((a,b)=>{const ua=(a[1]&&a[1].u)||(/^\d/.test(a[0])?Date.parse(a[0]):0),ub=(b[1]&&b[1].u)||(/^\d/.test(b[0])?Date.parse(b[0]):0);return ub-ua});
+ if(DAY.startsWith('d:')&&!L.some(x=>x[0]==DAY))L.unshift([DAY,{w:[],t:[],b:[],g:[]}]);
  const wd=x=>{try{return new Date(x+'T12:00').toLocaleDateString('ar-EG-u-nu-latn',{weekday:'long'})}catch(e){return''}};
- $('dsel').innerHTML=L.length?L.map(([x,r])=>'<option value="'+x+'"'+(x==DAY?' selected':'')+'>'+wd(x)+' '+x+' ('+cnt(r)+' صف)</option>').join(''):'<option value="">لا توجد أيام محفوظة بعد</option>';return L}
-const toDay=async()=>{if(DAY!=today())await goDay(today())};
-async function init(){try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}try{const cv=await db('get','cw');if(fixCW(cv)&&!localStorage.getItem('cw')){CW=fixCW(cv)}}catch(e){}try{const a=await db('get','cwb');if(fixCWN(a)&&!localStorage.getItem('cwb'))CWB=fixCWN(a)}catch(e){}try{const a=await db('get','cwg');if(fixCWN(a)&&!localStorage.getItem('cwg'))CWG=fixCWN(a)}catch(e){}try{const lv=await db('get','lh');if(lv)Object.keys(lv).forEach(k=>{if(!(k in LH))LH[k]=lv[k]})}catch(e){}try{const v=await db('get','kw');if(v&&v.length&&!kwList().length)localStorage.setItem('zs',JSON.stringify(v))}catch(e){}load();const L=await days();await goDay(L.length?L[0][0]:null);bkNote();await initDir()}
+ $('dsel').innerHTML=L.length?L.map(([x,r])=>'<option value="'+e(x)+'"'+(x==DAY?' selected':'')+'>'+(x.startsWith('d:')?e(dName(x)):wd(x)+' '+x)+' ('+cnt(r)+' صف)</option>').join(''):'<option value="">لا توجد أيام محفوظة بعد</option>';return L}
+const toDay=async()=>{};
+async function init(){try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}try{const cv=await db('get','cw');if(fixCW(cv)&&!localStorage.getItem('cw')){CW=fixCW(cv)}}catch(e){}try{const a=await db('get','cwb');if(fixCWN(a)&&!localStorage.getItem('cwb'))CWB=fixCWN(a)}catch(e){}try{const a=await db('get','cwg');if(fixCWN(a)&&!localStorage.getItem('cwg'))CWG=fixCWN(a)}catch(e){}try{const lv=await db('get','lh');if(lv)Object.keys(lv).forEach(k=>{if(!(k in LH))LH[k]=lv[k]})}catch(e){}try{const v=await db('get','kw');if(v&&v.length&&!kwList().length)localStorage.setItem('zs',JSON.stringify(v))}catch(e){}load();const L=(await days()).filter(x=>cnt(x[1])>0);await goDay(L.length?L[0][0]:null);bkNote();await initDir();askDaily()}
 const dg=s=>String(s).replace(/[\u0660-\u0669]/g,c=>c.charCodeAt(0)-0x660).replace(/[\u06F0-\u06F9]/g,c=>c.charCodeAt(0)-0x6F0);
 function ph(v){if(v===''||v==null)return'';let s=dg(typeof v=='number'?Math.round(v):v).replace(/\D/g,'');if(s.length==10&&s[0]=='1')s='0'+s;if(s.length==12&&s.startsWith('201'))s='0'+s.slice(2);return s}
 const isPh=v=>/^01[0125]\d{8}$/.test(ph(v));
@@ -254,7 +259,7 @@ function goImp(){const p=PF[0],m={};const mf=missF();if(mf.length&&!confirm('⚠
  if(p.d.h>=0){Object.keys(m).forEach(f=>{if(!(f in FN)||m[f]<0)return;const hh=nh(p.d.hd[m[f]]||'');if(hh)LH[hh]=f});saveLH()}
  db('put',m,'m2:'+p.sig).catch(()=>0);p.d.map=mergeMap(m,p.d.map);PF.shift();panel();imp(p)}
 async function resetMaps(){if(!confirm('نسيان إعدادات الأعمدة المحفوظة لكل أشكال الملفات؟ (الكلمات والزونات مش هتتأثر)'))return;const k=(await db('getAllKeys').catch(()=>0))||[];for(const x of k)if(/^m2?:/.test(x))await db('delete',x);LH={};saveLH();alert('تم. هيظهر شريط مراجعة الأعمدة مع كل شكل ملف جديد.')}
-async function imp(p){await toDay();tab('w');const[n,dup]=build(p.d.D,p.d.map,p.snd);await save();draw();alert(p.snd+': اتضاف '+n+' صف'+(dup?' وتخطيت '+dup+' مكرر (نفس الكود)':'')+'\nاتسجلوا في يوم '+DAY)}
+async function imp(p){await toDay();tab('w');const[n,dup]=build(p.d.D,p.d.map,p.snd);await save();draw();alert(p.snd+': اتضاف '+n+' صف'+(dup?' وتخطيت '+dup+' مكرر (نفس الكود)':'')+'\nاتسجلوا في يومية: '+dName(DAY))}
 function zr(x){let r=cls(x.a);if(!r.z&&x.ar){const q=cls(x.ar);if(q.z&&!q.f){r=q;r.fa=1}}
  let s,o=null,n;if(!r.z){n='غير محدد';s='u'}else if(r.fa){n='من عمود المنطقة: '+r.z;s='r'}else if(r.f){n='تقريبي: '+r.k;s='r'}else if(r.cf.length){o=[r.z].concat(r.cf);n='تعارض: '+o.join(' / ');s='r'}else if(r.x){n='منطقة مقترحة: '+r.k;s='r'}else{n='تلقائي: '+r.k;s='a'}
  x.z=r.z;x.s=s;x.nt=n;x.o=o;x.pk=-1}
@@ -307,13 +312,13 @@ function bkNote(){const t=+localStorage.getItem('lastbk')||0,n=Math.round((Date.
  if(el.style)el.style.color=(!t||n>=3)&&(RW.length+RT.length+RB.length+RG.length||t)?'#c62828':''}
 async function bkObj(){const k=(await db('getAllKeys').catch(()=>0))||[],v=(await db('getAll').catch(()=>0))||[],o={ver:2,at:new Date().toISOString(),idb:{},ls:{}};k.forEach((x,i)=>{if(x!='dirh'&&!/^s[ny]:/.test(x))o.idb[x]=v[i]});
  ['zs','lh','cw','cwb','cwg'].forEach(x=>{try{const s=localStorage.getItem(x);if(s)o.ls[x]=JSON.parse(s)}catch(e){}});return o}
-const rowsOf=o=>Object.keys(o.idb||{}).filter(x=>/^\d{4}-\d\d-\d\d$/.test(x)).reduce((s,x)=>s+cnt(o.idb[x]),0);
-async function backup(){const o=await bkObj(),days=Object.keys(o.idb).filter(x=>/^\d{4}-\d\d-\d\d$/.test(x)).length;
+const rowsOf=o=>Object.keys(o.idb||{}).filter(isDay).reduce((s,x)=>s+cnt(o.idb[x]),0);
+async function backup(){const o=await bkObj(),days=Object.keys(o.idb).filter(isDay).length;
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:'application/json'}));a.download='zone_backup_'+today()+'.json';a.click();
  try{localStorage.setItem('lastbk',Date.now())}catch(e){}bkNote();$('msg').textContent='اتحفظت نسخة احتياطية ('+days+' يوم، '+kwList().length+' كلمة متعلّمة). احتفظ بالملف في مكان تاني (فلاشة أو Drive).'}
 async function restore(f){if(!f)return;let o;try{o=JSON.parse(await f.text())}catch(e){alert('الملف مش نسخة احتياطية صالحة');return}await restoreObj(o)}
 async function restoreObj(o){if(!o||!o.idb||typeof o.idb!='object'){alert('الملف مش نسخة احتياطية صالحة');return}
- const dk=Object.keys(o.idb).filter(x=>/^\d{4}-\d\d-\d\d$/.test(x)),bkw=o.idb.kw||o.ls&&o.ls.zs||[];
+ const dk=Object.keys(o.idb).filter(isDay),bkw=o.idb.kw||o.ls&&o.ls.zs||[];
  if(!confirm('استرجاع نسخة بتاريخ '+(o.at||'').slice(0,10)+':\n- '+dk.length+' يوم (أي يوم بنفس التاريخ هيتبدل بالنسخة)\n- '+bkw.length+' كلمة متعلّمة (بتتضاف للموجود)\n- إعدادات الأعمدة وأسماء الأعمدة المتعلّمة\nتكمل؟'))return;
  for(const k of Object.keys(o.idb)){if(k=='kw'||k=='lh'||k=='dirh')continue;await db('put',o.idb[k],k).catch(()=>0)}
  const c=kwList();bkw.forEach(t=>{if(!c.some(y=>y[0]==t[0]&&y[1]==t[1]))c.push(t)});kwSave(c);
@@ -342,6 +347,12 @@ async function pickDir(){if(!window.showDirectoryPicker){alert('المتصفح �
  if(DH&&!(await dirOk(false))&&await dirOk(true)){$('bdir').textContent='تغيير فولدر الحفظ التلقائي';await chkFolder();await autosave();return}
  try{DH=await showDirectoryPicker({id:'zonefinder',mode:'readwrite',startIn:'desktop'})}catch(e){return}
  ASD=false;db('put',DH,'dirh').catch(()=>0);$('bdir').textContent='تغيير فولدر الحفظ التلقائي';await chkFolder();await autosave()}
+async function dlFill(){const b=$('dlc');if(!b)return;const L=(await days()).filter(x=>x[0].startsWith('d:')||cnt(x[1])>0).slice(0,8);b.innerHTML=L.map(([x])=>'<button class="s" data-k="'+e(x)+'" onclick="dlPick(this.dataset.k)">'+e(x.startsWith('d:')?dName(x):x)+'</button>').join(' ')}
+function dlPick(k){const i=$('dn');if(i){i.value=dName(k);i.focus()}}
+async function dlGo(){const raw=($('dn').value||'').trim();if(!raw){$('dn').focus();return}let k;const L=await days();const nk=dKey(raw);if(/^\d{4}-\d\d-\d\d$/.test(raw))k=raw;else{const f=L.find(x=>x[0]==nk||(x[0].startsWith('d:')&&dName(x[0]).toLowerCase()==nk.slice(2).toLowerCase()));k=f?f[0]:nk}
+ if(k=='d:'||k.length<3)return;dlClose();await goDay(k)}
+function dlClose(){const o=$('dlO');if(o)o.remove()}
+function askDaily(){if($('dlO'))return;const o=document.createElement('div');o.className='ov';o.id='dlO';o.innerHTML='<div class="dlg" style="max-width:460px;padding:18px"><h3>اسم اليومية</h3><div style="font-size:13px;margin-bottom:8px">اكتب اسم اليومية. كل الاستيراد والكتابة هيتسجلوا تحت الاسم ده (مش بالتاريخ). لو الاسم موجود قبل كده هيفتحه.</div><input id="dn" style="width:100%;box-sizing:border-box;font-size:16px;padding:8px" maxlength="60" placeholder="مثال: يومية السبت"><div id="dlc" style="margin:8px 0;display:flex;flex-wrap:wrap;gap:6px"></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="w1" onclick="dlGo()">فتح / إنشاء</button><button class="s" onclick="dlClose()">استمرار على اليومية الحالية</button></div></div>';document.body.appendChild(o);const i=$('dn');i.value=dName(DAY);i.focus();i.select();i.addEventListener('keydown',ev=>{if(ev.key=='Enter'){ev.preventDefault();dlGo()}else if(ev.key=='Escape')dlClose()});dlFill()}
 async function initDir(){if(!window.showDirectoryPicker){const b=$('bdir');if(b&&b.style)b.style.display='none';AS('الحفظ التلقائي في فولدر بيشتغل في كروم وإيدج بس');return}
  try{DH=await db('get','dirh')||null}catch(e){}
  if(!DH){AS('الحفظ التلقائي مش متفعّل: اختار فولدر المشروع على سطح المكتب');return}
@@ -372,13 +383,13 @@ function cp(){const Q=V();if(!Q.length)return;const t=Q.map(x=>x.z).join('\n'),w
  const fb=()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();ok()};navigator.clipboard?navigator.clipboard.writeText(t).then(ok,fb):fb()}
 function ex(){if(TAB=='s')return;if(TAB=='b'||TAB=='g')return exN();const Q=V();if(!Q.length)return;if(SF&&!confirm('هيتصدّر الراسل "'+SF+'" بس ('+Q.length+' من '+R.length+' صف).\nعشان تصدّر الكل اختار "كل الراسلين".\nتكمل؟'))return;const H=['اسم العميل','العنوان','الزون','المنتج','الهاتف','هاتف بديل','المبلغ','الراسل','الكود','العدد'];
  const ws=XLSX.utils.aoa_to_sheet([H].concat(Q.map(x=>[x.n,x.a,x.z,x.p,x.ph,x.ph2,x.m===''?'':x.m,x.sn,x.c,x.q==null?'':x.q])));ws['!cols']=[22,60,18,30,14,14,10,18,16,8].map(w=>({wch:w}));
- const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};XLSX.utils.book_append_sheet(wb,ws,'shipments');XLSX.writeFile(wb,'shipments_'+DAY+(TAB=='t'?'_all':'_file')+'.xlsx')}
+ const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};XLSX.utils.book_append_sheet(wb,ws,'shipments');XLSX.writeFile(wb,'shipments_'+dfile()+(TAB=='t'?'_all':'_file')+'.xlsx')}
 function exN(){const A=gArr(),H=NC.map(c=>c[1]);
  const rows=A.map(r=>NC.map(c=>{const v=r[c[0]];return v==null?'':String(v)})).filter(l=>l.some(v=>v!==''));
  if(!rows.length){alert('مفيش بيانات في '+(TAB=='b'?'بومبو':'تصوير')+' للتصدير');return}
  const ws=XLSX.utils.aoa_to_sheet([H].concat(rows));ws['!cols']=[22,60,18,30,14,14,10,18,16,40].map(w=>({wch:w}));
- const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};const nm=TAB=='b'?'bombo':'tasweer';XLSX.utils.book_append_sheet(wb,ws,nm);XLSX.writeFile(wb,nm+'_'+DAY+'.xlsx');$('msg').textContent='اتصدّر '+rows.length+' صف في '+nm+'_'+DAY+'.xlsx'}
-async function delDay(){if((RW.length+RT.length+RB.length+RG.length)&&confirm('حذف بيانات يوم '+DAY+' نهائياً؟')){await db('delete',DAY).catch(()=>0);await dayGone(DAY);const L=await days();await goDay(L.length?L[0][0]:null)}}
+ const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};const nm=TAB=='b'?'bombo':'tasweer';XLSX.utils.book_append_sheet(wb,ws,nm);XLSX.writeFile(wb,nm+'_'+dfile()+'.xlsx');$('msg').textContent='اتصدّر '+rows.length+' صف في '+nm+'_'+dfile()+'.xlsx'}
+async function delDay(){if((RW.length+RT.length+RB.length+RG.length)&&confirm('حذف بيانات يومية "'+dName(DAY)+'" نهائياً؟')){await db('delete',DAY).catch(()=>0);await dayGone(DAY);const L=await days();await goDay(L.length?L[0][0]:null)}}
 function add(){const k=$('nk').value.trim(),z=$('nz').value.trim();if(!k||!z)return;const c=kwList();c.push([k,z]);kwSave(c);$('nk').value='';$('nz').value='';load()}
 
 /* ===== التبويبان 3 (بومبو) و 4 (تصوير) : جدول زي Google Sheets ===== */
@@ -712,7 +723,7 @@ async function getSnap(d){if(SY.snc[d])return SY.snc[d];let s=null;try{s=await d
 const putSnap=(d,s)=>db0('put',s,'sn:'+d).catch(()=>0);
 async function loadState(d){if(d==DAY)return{w:RW,t:RT,b:RB,g:RG};let v=null;try{v=await db0('get',d)}catch(e){}
  if(Array.isArray(v))return{w:v,t:[],b:[],g:[]};return{w:(v&&v.w)||[],t:(v&&v.t)||[],b:(v&&v.b)||[],g:(v&&v.g)||[]}}
-const persistDay=(d,s)=>db0('put',{w:s.w,t:s.t,b:s.b,g:s.g},d).catch(()=>0);
+const persistDay=(d,s)=>db0('put',{w:s.w,t:s.t,b:s.b,g:s.g,u:Date.now()},d).catch(()=>0);
 function softDraw(){if((typeof GED!='undefined'&&GED)||(document.activeElement&&(document.activeElement.tagName=='TEXTAREA'||document.activeElement.tagName=='INPUT')&&document.activeElement.type!='checkbox')){SY.redraw=true;return}SY.redraw=false;draw();days()}
 
 /* --- diff: what must be sent to the cloud --- */
@@ -765,14 +776,14 @@ async function mergeDay(d,ups,dels){const sn=await getSnap(d),st=await loadState
   await persistDay(d,st);if(live){SY.redraw=true}}
  await putSnap(d,sn);return{ch,lost}}
 
-async function fetchDay(d){const rows=[];for(let off=0;;off+=1000){const r=await sbj('/rest/v1/shipments?select=id,day,tab,pos,data,version&day=eq.'+d+'&order=pos.asc,id.asc',{headers:{Range:off+'-'+(off+999),'Range-Unit':'items'}});const a=await r.json();rows.push(...a);if(a.length<1000)break}return rows}
+async function fetchDay(d){const rows=[];for(let off=0;;off+=1000){const r=await sbj('/rest/v1/shipments?select=id,day,tab,pos,data,version&day=eq.'+encodeURIComponent(d)+'&order=pos.asc,id.asc',{headers:{Range:off+'-'+(off+999),'Range-Unit':'items'}});const a=await r.json();rows.push(...a);if(a.length<1000)break}return rows}
 async function fullDayPull(d){const rows=await fetchDay(d),sn=await getSnap(d),have=new Set(rows.map(x=>x.id));return mergeDay(d,rows,Object.keys(sn.rows).filter(id=>!have.has(id)))}
 async function pullInc(){const rows=[];
  for(let off=0;;off+=1000){const r=await sbj('/rest/v1/shipments?select=id,day,tab,pos,data,version,updated_at&order=updated_at.asc,id.asc'+(SY.since?'&updated_at=gt.'+encodeURIComponent(back(SY.since)):''),{headers:{Range:off+'-'+(off+999),'Range-Unit':'items'}});const a=await r.json();rows.push(...a);if(a.length<1000)break}
  if(!rows.length)return;const by={};rows.forEach(x=>{(by[x.day]=by[x.day]||[]).push(x)});
  for(const d of Object.keys(by))await mergeDay(d,by[d],[]);
  SY.since=rows[rows.length-1].updated_at;lsSet('zss',SY.since)}
-async function checkCount(){const sn=await getSnap(DAY),r=await sbj('/rest/v1/shipments?select=id&day=eq.'+DAY,{headers:{Prefer:'count=exact',Range:'0-0','Range-Unit':'items'}});
+async function checkCount(){const sn=await getSnap(DAY),r=await sbj('/rest/v1/shipments?select=id&day=eq.'+encodeURIComponent(DAY),{headers:{Prefer:'count=exact',Range:'0-0','Range-Unit':'items'}});
  const cr=r.headers.get('content-range'),m=cr&&/\/(\d+)$/.exec(cr);if(!m)return false;return+m[1]!=Object.keys(sn.rows).length}
 
 /* --- shared settings (learned keywords, learned headers, column mappings): last write wins --- */
@@ -790,7 +801,7 @@ async function pullSettings(){const r=await sbj('/rest/v1/app_settings?select=*'
 
 /* --- one-time upload of this device's existing local data (skips rows the cloud already has) --- */
 async function ensureImport(){if(lsGet('zsi',null)==SES.uid)return;
- const keys=(await db0('getAllKeys').catch(()=>[]))||[],ds=keys.filter(k=>/^\d{4}-\d\d-\d\d$/.test(k));let n=0;
+ const keys=(await db0('getAllKeys').catch(()=>[]))||[],ds=keys.filter(isDay);let n=0;
  for(const d of ds){const st=await loadState(d),tot=TABS.reduce((a,t)=>a+st[t].length,0);if(!tot)continue;const sn=await getSnap(d);if(Object.keys(sn.rows).length)continue;
   const rem=await fetchDay(d),pool=new Map();rem.forEach(x=>{const k=x.tab+'|'+sj(x.data);if(!pool.has(k))pool.set(k,[]);pool.get(k).push(x)});
   TABS.forEach(t=>st[t].forEach(r=>{if(r._id)return;const a=pool.get(t+'|'+sj(strip(r)));if(a&&a.length){const x=a.shift();r._id=x.id;sn.rows[x.id]={v:x.version,t:x.tab,p:x.pos,j:sj(x.data)}}}));
@@ -803,13 +814,13 @@ async function ensureImport(){if(lsGet('zsi',null)==SES.uid)return;
 async function syncCycle(){if(!SES||!SBOK())return;if(SY.busy){SY.again=true;return}SY.busy=true;SY.last=Date.now();setSt('sync');
  try{do{SY.again=false;
    await ensureImport();
-   for(const d of [...SY.dd]){await sbj('/rest/v1/shipments?day=eq.'+d,{method:'DELETE'});SY.dd.delete(d);saveDD()}
+   for(const d of [...SY.dd]){await sbj('/rest/v1/shipments?day=eq.'+encodeURIComponent(d),{method:'DELETE'});SY.dd.delete(d);saveDD()}
    for(const d of [...SY.dirty]){SY.dirty.delete(d);saveDirty();try{await pushDay(d)}catch(e){SY.dirty.add(d);saveDirty();throw e}}
    await pushSettings();await pullInc();
    if(SY.pullDay){const d=SY.pullDay;SY.pullDay=null;await fullDayPull(d)}
    if(await checkCount())await fullDayPull(DAY);
    await pullSettings();
-   if(SY.first){SY.first=false;const L=await days();if(!(RW.length+RT.length+RB.length+RG.length)&&L.length)await goDay(L[0][0])}
+   if(document.getElementById('dlO'))dlFill();
    if(SY.redraw)softDraw();else days();
   }while(SY.again);setSt('ok')}
  catch(e){if(e.net)setSt('off');else if(e.auth)setSt('auth');else setSt('err',e.message)}

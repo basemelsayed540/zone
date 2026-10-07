@@ -2,10 +2,11 @@
 -- Safe to re-run: uses IF NOT EXISTS / DROP POLICY IF EXISTS.
 
 -- 1) Tables -----------------------------------------------------------------
+-- Existing project? Run once: alter table public.shipments alter column day type text using day::text;
 
 create table if not exists public.shipments (
   id          uuid primary key default gen_random_uuid(),
-  day         date not null,                                  -- shipment day (YYYY-MM-DD)
+  day         text not null,                                  -- daily key: 'd:<name>' (or legacy YYYY-MM-DD)
   tab         text not null check (tab in ('w','t','b','g')), -- w=current, t=moved, b=bombo, g=tasweer
   pos         integer not null default 0,                     -- row order inside the tab
   data        jsonb not null default '{}'::jsonb,             -- the row fields
