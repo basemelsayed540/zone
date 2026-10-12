@@ -76,6 +76,11 @@ small{color:var(--mut);opacity:1}
 #sgt th{color:var(--t);position:sticky;top:0;z-index:2;background:color-mix(in srgb,var(--tc) 13%,var(--c));font-size:13px;cursor:pointer;user-select:none}
 #sgt .rn{width:46px;text-align:center;background:var(--bg);color:var(--mut);font-size:12px;cursor:pointer;user-select:none;padding:0}
 #sgt td{user-select:none;-webkit-user-select:none}#sgt td.ed{cursor:cell}
+@keyframes sgb{0%,100%{background:#d32f2f;color:#fff}50%{background:transparent;color:#d32f2f}}
+@keyframes sgg{0%,100%{box-shadow:inset 0 0 0 2px #2e7d32,0 0 10px 2px #43a047;background:#c8f7cc;color:#0b3d12}50%{box-shadow:none;background:transparent;color:inherit}}
+#sgt td.sgm{animation:sgb .9s infinite;font-weight:bold}#sgt th.sgmh{animation:sgb .9s infinite}
+#sgt td.sgn{animation:sgg 1.2s infinite;font-weight:bold}#sgt th.sgnh{background:#2e7d32;color:#fff;box-shadow:0 0 10px 2px #43a047}
+@media (prefers-reduced-motion:reduce){#sgt td.sgm,#sgt th.sgmh,#sgt td.sgn{animation:none}#sgt td.sgm{background:#d32f2f;color:#fff}#sgt td.sgn{background:#c8f7cc;color:#0b3d12}}
 #sgt td.sgr{background:color-mix(in srgb,var(--tc) 20%,transparent)}
 #sgt td.sgs{outline:2px solid var(--tc);outline-offset:-2px;background:color-mix(in srgb,var(--tc) 8%,var(--c))}
 #sgt td.sge{padding:0;outline:2px solid var(--tc);outline-offset:-2px}
@@ -472,8 +477,8 @@ async function exData(k){const H=['اسم العميل','العنوان','الز
  if(k=='t')return[f(RT),[22,60,18,30,14,14,10,18,16,8,40]];
  if(k=='b')return[g(RB,NC10,false),WN10];if(k=='g')return[g(RG,NC10,false),WN10];if(k=='q')return[g(RQ,NCQ,true),WNQ];
  if(MAND!==true){let v=null;try{v=await db0('get','cmp:roster');if(v==null)v=await db0('get','cmp:'+DAY)}catch(x){}MAN=Array.isArray(v)?v.map(String):(typeof v=='string'?v.split(/\n/):[]);MAND=true}
- sgCalc();const man=MAN.filter(x=>String(x).trim()),n=Math.max(ALLS.length,man.length,MISS.length),a=[['الراسلين من كل التبويبات','اكتب الراسلين بيدك','الراسلين الناقصين']];
- for(let i=0;i<n;i++)a.push([ALLS[i]||'',man[i]||'',MISS[i]||'']);return[a,[30,30,30]]}
+ sgCalc();const man=MAN.filter(x=>String(x).trim()),n=Math.max(ALLS.length,man.length,MISS.length,NEWS.length),a=[['الراسلين من كل التبويبات','اكتب الراسلين بيدك','الراسلين الناقصين','الراسلين الجدد']];
+ for(let i=0;i<n;i++)a.push([ALLS[i]||'',man[i]||'',MISS[i]||'',NEWS[i]||'']);return[a,[30,30,30,30]]}
 async function exRun(keys){const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};let tot=0,txt=[];
  for(const k of keys){const nm=EXN.find(x=>x[0]==k)[1],[aoa,w]=await exData(k),n=aoa.length-1;tot+=n;txt.push(nm+' ('+n+')');
   const ws=XLSX.utils.aoa_to_sheet(aoa);ws['!cols']=w.map(x=>({wch:x}));XLSX.utils.book_append_sheet(wb,ws,nm)}
@@ -710,11 +715,12 @@ function cmpMissing(all,txt){const ak=all.map(nrmK),seen=new Set(),out=[];
  String(txt||'').split(/[\n\t]+/).forEach(x=>{const nm=x.trim(),m=nrmK(nm);if(!m||seen.has(m))return;seen.add(m);
   if(!ak.some(k=>m==k||(m.length>=3&&k.length>=3&&(k.includes(m)||m.includes(k)))))out.push(nm)});return out}
 /* --- الجدول --- */
-let MAN=[],MAND=null,SRL=false,ALLS=[],MISS=[],sgA=null,sgF={r:0,c:1},sgE=null,sgH=[],sgHr=[];
-const sgGet=(r,c)=>c==0?(ALLS[r]||''):c==1?(MAN[r]==null?'':String(MAN[r])):(MISS[r]||'');
-const sgRows=()=>Math.max(30,ALLS.length,MAN.length+3,MISS.length);
+let MAN=[],MAND=null,SRL=false,ALLS=[],MISS=[],NEWS=[],sgA=null,sgF={r:0,c:1},sgE=null,sgH=[],sgHr=[];
+const sgGet=(r,c)=>c==0?(ALLS[r]||''):c==1?(MAN[r]==null?'':String(MAN[r])):c==2?(MISS[r]||''):(NEWS[r]||'');
+const sgRows=()=>Math.max(30,ALLS.length,MAN.length+3,MISS.length,NEWS.length);
 const sgSelR=()=>{const a=sgA||sgF;return{r1:Math.min(a.r,sgF.r),r2:Math.max(a.r,sgF.r),c1:Math.min(a.c,sgF.c),c2:Math.max(a.c,sgF.c)}};
-const sgCalc=()=>{ALLS=cmpAll();MISS=cmpMissing(ALLS,MAN.join('\n'))};
+const cmpNew=(all,txt)=>{const rk=String(txt||'').split(/[\n\t]+/).map(x=>nrmK(x.trim())).filter(Boolean);return all.filter(a=>{const k=nrmK(a);return k&&!rk.some(m=>m==k||(m.length>=3&&k.length>=3&&(k.includes(m)||m.includes(k))))})};
+const sgCalc=()=>{ALLS=cmpAll();MISS=cmpMissing(ALLS,MAN.join('\n'));NEWS=cmpNew(ALLS,MAN.join('\n'))};
 const sgCell=(r,c)=>$('sgt').querySelector('td[data-r="'+r+'"][data-c="'+c+'"]');
 function sgSave(){const a=MAN.map(x=>x==null?'':String(x));while(a.length&&!a[a.length-1].trim())a.pop();db('put',a,'cmp:roster').catch(()=>0)}
 const sgPush=()=>{sgH.push(JSON.stringify(MAN));if(sgH.length>60)sgH.shift();sgHr.length=0};
@@ -723,10 +729,10 @@ async function drawS(){
   MAN=Array.isArray(v)?v.map(String):(typeof v=='string'?v.split(/\n/):[]);sgH=[];sgHr=[];sgA=null;sgF={r:0,c:1}}
  if(TAB!='s'||sgE)return;sgCalc();sgRender()}
 function sgRender(){const n=sgRows();
- let h='<colgroup><col style="width:46px"><col style="width:280px"><col style="width:280px"><col style="width:280px"></colgroup><tr><th class="rn"></th>'+
-  [['راسلين اليوم (من كل التبويبات)',ALLS.length],['قائمة راسليني (ثابتة كل يوم)',MAN.filter(x=>String(x).trim()).length],['ناقصين النهارده (ما بعتوش)',MISS.length]].map((x,c)=>'<th onclick="sgCol('+c+')" title="اضغط لتحديد العمود كله">'+x[0]+' ('+x[1]+')</th>').join('')+'</tr>';
+ let h='<colgroup><col style="width:46px"><col style="width:280px"><col style="width:280px"><col style="width:280px"><col style="width:280px"></colgroup><tr><th class="rn"></th>'+
+  [['راسلين اليوم (من كل التبويبات)',ALLS.length],['قائمة راسليني (ثابتة كل يوم)',MAN.filter(x=>String(x).trim()).length],['ناقصين النهارده (ما بعتوش)',MISS.length],['راسلين جدد (مش في قائمتي)',NEWS.length]].map((x,c)=>'<th'+(c==2&&x[1]?' class="sgmh"':c==3&&x[1]?' class="sgnh"':'')+' onclick="sgCol('+c+')" title="اضغط لتحديد العمود كله">'+x[0]+' ('+x[1]+')</th>').join('')+'</tr>';
  for(let r=0;r<n;r++){h+='<tr><td class="rn" onclick="sgRow('+r+')">'+(r+1)+'</td>';
-  for(let c=0;c<3;c++){const v=sgGet(r,c);h+='<td data-r="'+r+'" data-c="'+c+'"'+(c==1?' class="ed"':'')+' onpointerdown="sgDown(event,'+r+','+c+')" ondblclick="sgEdit('+r+','+c+')" title="'+e(v)+'">'+e(v)+'</td>'}
+  for(let c=0;c<4;c++){const v=sgGet(r,c);h+='<td data-r="'+r+'" data-c="'+c+'"'+(c==1?' class="ed"':c==2&&v?' class="sgm"':c==3&&v?' class="sgn"':'')+' onpointerdown="sgDown(event,'+r+','+c+')" ondblclick="sgEdit('+r+','+c+')" title="'+e(v)+'">'+e(v)+'</td>'}
   h+='</tr>'}
  $('sgt').innerHTML=h;sgPaint()}
 function sgPaint(noscroll){const g=sgSelR(),multi=!!sgA&&(sgA.r!=sgF.r||sgA.c!=sgF.c);
@@ -740,16 +746,16 @@ function sgDown(ev,r,c){if(ev.button)return;if(sgE){if(sgE.r==r&&c==1)return;sgC
  const up=()=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',up)};
  document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up)}
 function sgCol(c){if(sgE)sgCommit();let last=0;for(let r=0;r<sgRows();r++)if(sgGet(r,c).trim())last=r;sgA={r:0,c};sgF={r:last,c};sgPaint(true)}
-function sgRow(r){if(sgE)sgCommit();sgA={r,c:0};sgF={r,c:2};sgPaint(true)}
+function sgRow(r){if(sgE)sgCommit();sgA={r,c:0};sgF={r,c:3};sgPaint(true)}
 function sgEdit(r,c,seed){if(c!=1)return;if(sgE)sgCommit();sgF={r,c};sgA=null;sgPaint();const td=sgCell(r,1);if(!td)return;
  const orig=sgGet(r,1);td.classList.add('sge');td.innerHTML='<input class="sgi" spellcheck="false" autocomplete="off">';const inp=td.firstChild;
  inp.value=seed!=null?String(seed):orig;sgE={r,inp,orig};inp.addEventListener('input',sgLive);inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length);sgLive()}
-function sgLive(){if(!sgE)return;const t=MAN.slice();while(t.length<=sgE.r)t.push('');t[sgE.r]=sgE.inp.value;MISS=cmpMissing(ALLS,t.join('\n'));
- for(let r=0;r<sgRows();r++){const td=sgCell(r,2);if(td){const v=MISS[r]||'';if(td.textContent!==v){td.textContent=v;td.title=v}}}
- const T=$('sgt').querySelectorAll('th');if(T.length>3){T[2].textContent='قائمة راسليني (ثابتة كل يوم) ('+t.filter(x=>String(x).trim()).length+')';T[3].textContent='ناقصين النهارده (ما بعتوش) ('+MISS.length+')'}}
+function sgLive(){if(!sgE)return;const t=MAN.slice();while(t.length<=sgE.r)t.push('');t[sgE.r]=sgE.inp.value;MISS=cmpMissing(ALLS,t.join('\n'));NEWS=cmpNew(ALLS,t.join('\n'));
+ for(let r=0;r<sgRows();r++)[2,3].forEach(c=>{const td=sgCell(r,c);if(td){const v=sgGet(r,c);if(td.textContent!==v){td.textContent=v;td.title=v}td.classList.toggle(c==2?'sgm':'sgn',!!v)}})
+ const T=$('sgt').querySelectorAll('th');if(T.length>3){T[2].textContent='قائمة راسليني (ثابتة كل يوم) ('+t.filter(x=>String(x).trim()).length+')';T[3].textContent='ناقصين النهارده (ما بعتوش) ('+MISS.length+')';if(T[4])T[4].textContent='راسلين جدد (مش في قائمتي) ('+NEWS.length+')';T[3].classList.toggle('sgmh',!!MISS.length);if(T[4])T[4].classList.toggle('sgnh',!!NEWS.length)}}
 function sgCommit(){const E=sgE;if(!E)return;sgE=null;const v=E.inp.value;if(v!==E.orig){sgPush();while(MAN.length<=E.r)MAN.push('');MAN[E.r]=v;sgSave()}sgCalc();sgRender()}
 function sgCancel(){sgE=null;sgCalc();sgRender()}
-function sgMove(dr,dc,ext){if(ext){if(!sgA)sgA={r:sgF.r,c:sgF.c}}else sgA=null;sgF={r:Math.max(0,Math.min(sgRows()-1,sgF.r+dr)),c:Math.max(0,Math.min(2,sgF.c+dc))};sgPaint()}
+function sgMove(dr,dc,ext){if(ext){if(!sgA)sgA={r:sgF.r,c:sgF.c}}else sgA=null;sgF={r:Math.max(0,Math.min(sgRows()-1,sgF.r+dr)),c:Math.max(0,Math.min(3,sgF.c+dc))};sgPaint()}
 function sgClear(){const g=sgSelR();if(g.c2<1||g.c1>1)return;let ch=false;for(let r=g.r1;r<=g.r2;r++)if(String(MAN[r]||'').length)ch=true;if(!ch)return;sgPush();for(let r=g.r1;r<=g.r2;r++)if(r<MAN.length)MAN[r]='';sgSave();sgCalc();sgRender()}
 function sgUndo(re){const from=re?sgHr:sgH,to=re?sgH:sgHr;if(!from.length)return;to.push(JSON.stringify(MAN));MAN=JSON.parse(from.pop());sgSave();sgCalc();sgRender()}
 function sgTSV(){const g=sgSelR(),o=[];for(let r=g.r1;r<=g.r2;r++){const row=[];for(let c=g.c1;c<=g.c2;c++)row.push(sgGet(r,c).replace(/[\t\r\n]+/g,' '));o.push(row.join('\t'))}return o.join('\n')}
@@ -763,7 +769,7 @@ document.addEventListener('keydown',ev=>{if(TAB!='s')return;const t=ev.target,k=
  if(t&&(t.tagName=='INPUT'||t.tagName=='SELECT'||t.tagName=='TEXTAREA'))return;
  if(ct&&!sh&&(k=='z'||k=='Z')){ev.preventDefault();return sgUndo(false)}
  if(ct&&(k=='y'||k=='Y'||(sh&&(k=='z'||k=='Z')))){ev.preventDefault();return sgUndo(true)}
- if(ct&&!sh&&(k=='a'||k=='A')){ev.preventDefault();sgA={r:0,c:0};sgF={r:Math.max(0,sgRows()-1),c:2};return sgPaint(true)}
+ if(ct&&!sh&&(k=='a'||k=='A')){ev.preventDefault();sgA={r:0,c:0};sgF={r:Math.max(0,sgRows()-1),c:3};return sgPaint(true)}
  if(ct&&(k=='c'||k=='C'||k=='x'||k=='X'||k=='v'||k=='V'))return;
  if(k=='F2'||k=='Enter'){ev.preventDefault();return sgEdit(sgF.r,sgF.c)}
  if(k=='ArrowLeft'){ev.preventDefault();return sgMove(0,1,sh)}
