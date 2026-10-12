@@ -33,7 +33,8 @@ table{border-collapse:separate;border-spacing:0;background:transparent}
 .rz:hover,.rz.on{background:rgba(34,197,94,.45)}
 tr.sl td{outline-color:var(--g)}
 #selbar{border-radius:18px;border:1px solid rgba(34,197,94,.45);box-shadow:0 8px 28px rgba(0,0,0,.18)}
-.dlg{border-radius:22px;border:1px solid var(--b)}.dlg h3{color:var(--t)}
+.dlg{border-radius:22px;border:1px solid var(--b)}
+.mpf{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;margin:8px 0}.mpf .fr{display:flex;flex-direction:column;gap:5px;min-width:130px;flex:1 1 130px;max-width:190px}.mpf .fr select{width:100%}.mpf .fr label{text-align:center}.mpf .fr small{word-break:break-word}.dlg h3{color:var(--t)}
 .mp,details{border-radius:14px}
 details{background:var(--c);border:1px solid var(--b);padding:8px 14px;margin:8px 0}summary{cursor:pointer;font-weight:600}
 small{color:var(--mut);opacity:1}
@@ -256,8 +257,8 @@ function panel(){const o=$('mp');if(!PF.length){o.innerHTML='';return}
  const p=PF[0],n=Math.max(...p.d.D.slice(0,20).map(r=>r.length),(p.d.hd||[]).length),col=j=>XLSX.utils.encode_col(j)+': '+e(cl(p.d.hd[j]||'').slice(0,32)||'(بدون اسم)');
  const sel=f=>'<select id="s0'+f+'" style="background:'+FC[f]+';color:#111;font-weight:bold;border:2px solid '+FC[f]+'" onchange="smpU(\''+f+'\')"><option value="">— بدون —</option>'+[...Array(n).keys()].map(j=>'<option value="'+j+'"'+(p.d.map[f]===j?' selected':'')+'>'+col(j)+'</option>').join('')+'</select>';
  const hr=['<option value="a"'+(p.hv=='a'?' selected':'')+'>تلقائي</option>','<option value="-1"'+(p.hv=='-1'?' selected':'')+'>بدون رأس جدول</option>'].concat([0,1,2,3,4].map(i=>'<option value="'+i+'"'+(p.hv==String(i)?' selected':'')+'>الصف '+(i+1)+'</option>')).join('');
- setTimeout(warnU,0);o.innerHTML='<div class="ov"><div class="dlg"><h3>تحديد الأعمدة: '+e(p.f)+'</h3><div style="margin:6px 0"><button onclick="goImp()">استيراد</button><button class="s" onclick="PF.shift();panel()">إلغاء</button>'+(PF.length>1?' <small>(وفي '+(PF.length-1)+' ملف تاني مستني)</small>':'')+'</div><div>الراسل: <input id="sd0" value="'+e(p.snd)+'"> &nbsp; رأس الجدول: <select id="hr0" onchange="reHr()">'+hr+'</select> <small>(الورقة: '+e(p.sn||'')+' | '+p.d.D.length+' صف بيانات'+(p.d.h>=0?'، الرأس في الصف '+(p.d.h+1):'، من غير رأس')+')</small></div><small>معاينة الملف كله ('+p.M.length+' صف) زي ما هو في Excel، اسحب للتمرير. الأعمدة الملونة هي اللي هتتستورد.</small><div id="wn0"></div><div class="pvw" id="pv0">'+pvh(p)+'</div>'
- +Object.keys(FN).map(f=>'<div class="fr"><label style="background:'+FC[f]+';color:#111;padding:3px 10px;border-radius:6px">'+FN[f]+'</label>'+sel(f)+' <small id="x0'+f+'">'+e(smp(p,p.d.map[f]))+'</small></div>').join('')
+ setTimeout(warnU,0);o.innerHTML='<div class="ov"><div class="dlg"><h3>تحديد الأعمدة: '+e(p.f)+'</h3><div style="margin:6px 0"><button onclick="goImp()">استيراد</button><button class="s" onclick="PF.shift();panel()">إلغاء</button>'+(PF.length>1?' <small>(وفي '+(PF.length-1)+' ملف تاني مستني)</small>':'')+'</div><div>الراسل: <input id="sd0" value="'+e(p.snd)+'"> &nbsp; رأس الجدول: <select id="hr0" onchange="reHr()">'+hr+'</select> <small>(الورقة: '+e(p.sn||'')+' | '+p.d.D.length+' صف بيانات'+(p.d.h>=0?'، الرأس في الصف '+(p.d.h+1):'، من غير رأس')+')</small></div><small>معاينة الملف كله ('+p.M.length+' صف) زي ما هو في Excel، اسحب للتمرير. الأعمدة الملونة هي اللي هتتستورد.</small><div id="wn0"></div>'
+ +'<div class="mpf">'+Object.keys(FN).map(f=>'<div class="fr"><label style="background:'+FC[f]+';color:#111;padding:3px 10px;border-radius:6px">'+FN[f]+'</label>'+sel(f)+' <small id="x0'+f+'">'+e(smp(p,p.d.map[f]))+'</small></div>').join('')+'</div><div class="pvw" id="pv0">'+pvh(p)+'</div>'
  +'<div><label><input type="checkbox" id="au0"'+(p.auto?' checked':'')+'> استيراد تلقائي لهذا الشكل من غير النافذة (تقدر ترجعها من "نسيان الإعدادات")</label></div>'
  +'</div></div>'}
 const mergeMap=(sv,dm)=>{const o={};Object.keys(FN).concat('area').forEach(f=>{if(sv[f]===undefined){if(dm[f]!=null)o[f]=dm[f]}else if(sv[f]>=0)o[f]=sv[f]});
