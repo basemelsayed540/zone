@@ -85,7 +85,7 @@ small{color:var(--mut);opacity:1}
 </head><body>
 <h1>مستخرج الزون والشحنات (بدون إنترنت)</h1>
 <div id="app"><aside id="side"><button class="w1 w12" onclick="fi.click()">📂 فتح ملف Excel</button><input type="file" id="fi" multiple hidden accept=".xlsx,.xls,.xlsm,.xlsb,.csv,.ods" onchange="openF(Array.from(this.files));this.value=''">
-<button class="wns" id="exb" onclick="ex()">📤 تصدير Excel</button><button class="w13" onclick="runBtn()">🔍 استخراج الزونات</button><hr><button class="s" onclick="backup()">💾 نسخة احتياطية</button><button class="s" onclick="fr.click()">♻ استعادة</button><button class="w1 w12" onclick="mv()">➡ نقل للشيتات</button><input type="file" id="fr" hidden accept=".json" onchange="restore(this.files[0]);this.value=''"></aside><main id="main" data-tab="w">
+<button id="exb" onclick="exOpen()">📤 تصدير Excel</button><button class="w13" onclick="runBtn()">🔍 استخراج الزونات</button><hr><button class="s" onclick="backup()">💾 نسخة احتياطية</button><button class="s" onclick="fr.click()">♻ استعادة</button><button class="w1 w12" onclick="mv()">➡ نقل للشيتات</button><input type="file" id="fr" hidden accept=".json" onchange="restore(this.files[0]);this.value=''"></aside><main id="main" data-tab="w">
 <div class="bar">اليوم: <select id="dsel" onchange="goDay(this.value)"></select><button class="s" id="dbtn" onclick="askDaily()">＋ يومية</button> <span id="gearw"><button class="s" id="gear" onclick="gearToggle(event)" title="إظهار / إخفاء الأعمدة">⚙</button><div id="gpop" onclick="event.stopPropagation()"></div></span> <small>(اليوميات اللي فيها بيانات. الاستيراد والكتابة بيتسجلوا على اليومية المختارة)</small> <small id="bk"></small></div><div class="bar" style="display:none"><button class="s" id="bdir" onclick="pickDir()">الحفظ التلقائي في فولدر</button> <small id="as"></small></div>
 <div class="row1"><button id="t1" class="tb on" onclick="tab('w')">الملف الحالي</button><button id="t2" class="tb" onclick="tab('t')">الشيتات</button><button id="t3" class="tb" onclick="tab('b')">بومبو</button><button id="t4" class="tb" onclick="tab('g')">تصوير</button><button id="t6" class="tb" onclick="tab('q')">القيد</button><button id="t5" class="tb" onclick="tab('s')">مقارنة الراسلين</button></div>
 <div class="bar"></div>
@@ -285,7 +285,7 @@ function draw(){const BG=GT(TAB);
  if(BG)gTrim();
  const sn=BG?[]:[...new Set(RT.map(x=>x.sn))];if(!BG&&SF&&!sn.includes(SF))SF='';
  if(!BG)$('sf').innerHTML='<option value="">كل الراسلين ('+RT.length+')</option>'+sn.map(s=>'<option value="'+e(s)+'"'+(s==SF?' selected':'')+'>'+e(s)+' ('+RT.filter(x=>x.sn==s).length+')</option>').join('');
- if($('exb'))$('exb').textContent=TAB=='w'?'📤 تصدير الكل':'📤 تصدير Excel';$('t1').textContent='الملف الحالي ('+RW.length+')';$('t2').textContent='الشيتات ('+RT.length+')';$('t3').textContent='بومبو ('+RB.length+')';$('t4').textContent='تصوير ('+RG.length+')';$('t6').textContent='القيد ('+RQ.length+')';
+ $('t1').textContent='الملف الحالي ('+RW.length+')';$('t2').textContent='الشيتات ('+RT.length+')';$('t3').textContent='بومبو ('+RB.length+')';$('t4').textContent='تصوير ('+RG.length+')';$('t6').textContent='القيد ('+RQ.length+')';
  $('t1').className='tb'+(TAB=='w'?' on':'');$('t2').className='tb'+(TAB=='t'?' on':'');$('t3').className='tb'+(TAB=='b'?' on':'');$('t4').className='tb'+(TAB=='g'?' on':'');$('t6').className='tb'+(TAB=='q'?' on':'');$('t5').className='tb'+(TAB=='s'?' on':'');
  if($('out').style)$('out').style.setProperty('--p',TAB=='w'?'#2e7d32':TAB=='t'?'#e65100':TAB=='b'?'#6d28d9':TAB=='q'?'#b45309':'#0e7490');
  if(document.querySelectorAll){document.querySelectorAll('.w1,.w2,.w3,.w4,.w12,.w13,.wbg,.wns').forEach(b=>{const c=b.classList;
@@ -387,9 +387,7 @@ function mvSel(){if(TAB!='w'||!SEL.size)return;const Q=RW.filter(x=>SEL.has(x)),
  RT=RT.concat(Q);RW=RW.filter(x=>!SEL.has(x));R=RW;SEL.clear();save();draw();$('msg').textContent='اتنقل '+Q.length+' شحنة للشيتات (إجمالي الشيتات: '+RT.length+')'}
 function cp(){const Q=V();if(!Q.length)return;const t=Q.map(x=>x.z).join('\n'),w=Q.filter(x=>x.s=='r'||x.s=='u'||x.s=='n').length;const ok=()=>alert('تم نسخ '+Q.length+' سطر بنفس ترتيب الصفوف'+(SF?' (الراسل: '+SF+' فقط)':'')+'.'+(w?'\nتنبيه: '+w+' صف لسه للمراجعة/غير محدد/لم يُستخرج.':''));
  const fb=()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();ok()};navigator.clipboard?navigator.clipboard.writeText(t).then(ok,fb):fb()}
-function ex(){if(TAB=='s')return;if(TAB=='w')return exAll();if(GT(TAB))return exN();const Q=V();if(!Q.length)return;if(SF&&!confirm('هيتصدّر الراسل "'+SF+'" بس ('+Q.length+' من '+R.length+' صف).\nعشان تصدّر الكل اختار "كل الراسلين".\nتكمل؟'))return;const H=['اسم العميل','العنوان','الزون','المنتج','الهاتف','هاتف بديل','المبلغ','الراسل','الكود','العدد'];
- const ws=XLSX.utils.aoa_to_sheet([H].concat(Q.map(x=>[x.n,x.a,x.z,x.p,x.ph,x.ph2,x.m===''?'':x.m,x.sn,x.c,x.q==null?'':x.q])));ws['!cols']=[22,60,18,30,14,14,10,18,16,8].map(w=>({wch:w}));
- const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};XLSX.utils.book_append_sheet(wb,ws,'الشيتات');XLSX.writeFile(wb,'shipments_'+dfile()+(TAB=='t'?'_all':'_file')+'.xlsx')}
+function ex(){if(GT(TAB))return exN();exOpen()}
 function exN(){const A=gArr(),H=NC.map(c=>c[1]);
  const rows=A.map(r=>NC.map(c=>exVal(c[0],r[c[0]],TAB=='q'))).filter(l=>l.some(v=>v!==''));
  if(!rows.length){alert('مفيش بيانات في '+(TAB=='b'?'بومبو':TAB=='g'?'تصوير':'القيد')+' للتصدير');return}
@@ -459,14 +457,26 @@ const qSt=new Map();
 function qStyAttr(v){if(!v)return '';let a=qSt.get(v);if(a!=null)return a;const [sz,fc,b,bg]=v.split('|');let c='';if(sz)c+='font-size:'+sz+'pt;';if(fc)c+='color:#'+fc+';';if(b)c+='font-weight:bold;';if(bg)c+='--cb:#'+bg+';';a=c?' style="'+c+'"'+(bg?' data-cb="1"':''):'';qSt.set(v,a);return a}
 const WN10=[22,60,18,30,14,14,10,18,16,40],WNQ=[22,60,18,30,14,14,10,18,16,14,14,10,12,30,12,10,10,8,10,12],QNUM=['m','net','shp','cn','cm'];
 const exVal=(k,v,q)=>{if(v==null)return '';v=String(v);return q&&QNUM.includes(k)&&/^-?\d+(\.\d+)?$/.test(v.trim())?Number(v):v};
-function exSheets(){const out=[],H=['اسم العميل','العنوان','الزون','المنتج','الهاتف','هاتف بديل','المبلغ','الراسل','الكود','العدد'];
- if(RT.length)out.push(['الشيتات',[H].concat(RT.map(x=>[x.n,x.a,x.z,x.p,x.ph,x.ph2,x.m===''?'':x.m,x.sn,x.c,x.q==null?'':x.q])),[22,60,18,30,14,14,10,18,16,8]]);
- const g=(nm,A,cols,w,q)=>{const rows=A.map(r=>cols.map(c=>exVal(c[0],r[c[0]],q))).filter(l=>l.some(v=>v!==''));if(rows.length)out.push([nm,[cols.map(c=>c[1])].concat(rows),w])};
- g('تصوير',RG,NC10,WN10,false);g('بومبو',RB,NC10,WN10,false);g('القيد',RQ,NCQ,WNQ,true);return out}
-function exAll(){const S=exSheets();if(!S.length){alert('مفيش بيانات للتصدير');return}
- const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};
- S.forEach(([nm,aoa,w])=>{const ws=XLSX.utils.aoa_to_sheet(aoa);ws['!cols']=w.map(x=>({wch:x}));XLSX.utils.book_append_sheet(wb,ws,nm)});
- const fn='all_'+dfile()+'.xlsx';XLSX.writeFile(wb,fn);$('msg').textContent='اتصدّر '+S.map(x=>x[0]+' ('+(x[1].length-1)+')').join(' + ')+' في '+fn}
+const EXN=[['w','الملف الحالي','current'],['t','الشيتات','sheets'],['b','بومبو','bombo'],['g','تصوير','tasweer'],['q','القيد','qayd'],['s','مقارنة الراسلين','compare']];
+async function exData(k){const H=['اسم العميل','العنوان','الزون','المنتج','الهاتف','هاتف بديل','المبلغ','الراسل','الكود','العدد'];
+ const f=A=>[H].concat(A.map(x=>[x.n,x.a,x.z,x.p,x.ph,x.ph2,x.m===''||x.m==null?'':x.m,x.sn,x.c,x.q==null?'':x.q]));
+ const g=(A,cols,q)=>[cols.map(c=>c[1])].concat(A.map(r=>cols.map(c=>exVal(c[0],r[c[0]],q))).filter(l=>l.some(v=>v!=='')));
+ if(k=='w')return[f(RW),[22,60,18,30,14,14,10,18,16,8]];
+ if(k=='t')return[f(RT),[22,60,18,30,14,14,10,18,16,8]];
+ if(k=='b')return[g(RB,NC10,false),WN10];if(k=='g')return[g(RG,NC10,false),WN10];if(k=='q')return[g(RQ,NCQ,true),WNQ];
+ if(MAND!==true){let v=null;try{v=await db0('get','cmp:roster');if(v==null)v=await db0('get','cmp:'+DAY)}catch(x){}MAN=Array.isArray(v)?v.map(String):(typeof v=='string'?v.split(/\n/):[]);MAND=true}
+ sgCalc();const man=MAN.filter(x=>String(x).trim()),n=Math.max(ALLS.length,man.length,MISS.length),a=[['الراسلين من كل التبويبات','اكتب الراسلين بيدك','الراسلين الناقصين']];
+ for(let i=0;i<n;i++)a.push([ALLS[i]||'',man[i]||'',MISS[i]||'']);return[a,[30,30,30]]}
+async function exRun(keys){const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};let tot=0,txt=[];
+ for(const k of keys){const nm=EXN.find(x=>x[0]==k)[1],[aoa,w]=await exData(k),n=aoa.length-1;tot+=n;txt.push(nm+' ('+n+')');
+  const ws=XLSX.utils.aoa_to_sheet(aoa);ws['!cols']=w.map(x=>({wch:x}));XLSX.utils.book_append_sheet(wb,ws,nm)}
+ if(!tot){alert('مفيش بيانات للتصدير');return}
+ const fn=(keys.length==1?EXN.find(x=>x[0]==keys[0])[2]:'all')+'_'+dfile()+'.xlsx';XLSX.writeFile(wb,fn);$('msg').textContent='اتصدّر '+txt.join(' + ')+' في '+fn;exClose()}
+function exClose(){const o=$('exO');if(o)o.remove()}
+function exOpen(){if($('exO'))return;if(GED)gCommit();const cnt={w:RW.length,t:RT.length,b:RB.length,g:RG.length,q:RQ.length},o=document.createElement('div');o.className='ov';o.id='exO';
+ o.innerHTML='<div class="dlg" style="max-width:420px;padding:18px"><h3>تصدير Excel</h3><button class="w1" style="width:100%;font-size:16px;padding:10px" onclick="exRun(EXN.map(x=>x[0]))">📦 تصدير الكل (ملف واحد بكل التبويبات)</button><div style="margin:12px 0 6px;font-size:13px">أو تصدير تبويب واحد:</div><div style="display:flex;flex-direction:column;gap:6px">'
+ +EXN.map(x=>'<button class="s" onclick="exRun([\''+x[0]+'\'])">'+x[1]+(cnt[x[0]]!=null?' ('+cnt[x[0]]+')':'')+'</button>').join('')+'</div><div style="margin-top:12px"><button class="s" onclick="exClose()">إغلاق</button></div></div>';
+ o.addEventListener('click',ev=>{if(ev.target===o)exClose()});document.body.appendChild(o)}
 /* ===== التبويبان 3 (بومبو) و 4 (تصوير) : جدول زي Google Sheets ===== */
 let NC;const NC10=[['n','اسم العميل'],['a','العنوان'],['z','الزون'],['p','المنتج'],['ph','الهاتف'],['ph2','هاتف بديل'],['m','المبلغ'],['sn','الراسل'],['c','كود الشحنة'],['nn','ملاحظات']];
 NC=NC10;
