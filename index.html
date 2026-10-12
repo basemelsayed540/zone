@@ -85,7 +85,7 @@ small{color:var(--mut);opacity:1}
 </head><body>
 <h1>مستخرج الزون والشحنات (بدون إنترنت)</h1>
 <div id="app"><aside id="side"><button class="w1 w12" onclick="fi.click()">📂 فتح ملف Excel</button><input type="file" id="fi" multiple hidden accept=".xlsx,.xls,.xlsm,.xlsb,.csv,.ods" onchange="openF(Array.from(this.files));this.value=''">
-<button class="wns" id="exb" onclick="ex()">📤 تصدير Excel</button><button class="w12" onclick="run()">🔍 استخراج الزونات</button><hr><button class="s" onclick="backup()">💾 نسخة احتياطية</button><button class="s" onclick="fr.click()">♻ استعادة</button><button class="w1 w12" onclick="mv()">➡ نقل للشيتات</button><input type="file" id="fr" hidden accept=".json" onchange="restore(this.files[0]);this.value=''"></aside><main id="main" data-tab="w">
+<button class="wns" id="exb" onclick="ex()">📤 تصدير Excel</button><button class="w13" onclick="runBtn()">🔍 استخراج الزونات</button><hr><button class="s" onclick="backup()">💾 نسخة احتياطية</button><button class="s" onclick="fr.click()">♻ استعادة</button><button class="w1 w12" onclick="mv()">➡ نقل للشيتات</button><input type="file" id="fr" hidden accept=".json" onchange="restore(this.files[0]);this.value=''"></aside><main id="main" data-tab="w">
 <div class="bar">اليوم: <select id="dsel" onchange="goDay(this.value)"></select><button class="s" id="dbtn" onclick="askDaily()">＋ يومية</button> <span id="gearw"><button class="s" id="gear" onclick="gearToggle(event)" title="إظهار / إخفاء الأعمدة">⚙</button><div id="gpop" onclick="event.stopPropagation()"></div></span> <small>(اليوميات اللي فيها بيانات. الاستيراد والكتابة بيتسجلوا على اليومية المختارة)</small> <small id="bk"></small></div><div class="bar" style="display:none"><button class="s" id="bdir" onclick="pickDir()">الحفظ التلقائي في فولدر</button> <small id="as"></small></div>
 <div class="row1"><button id="t1" class="tb on" onclick="tab('w')">الملف الحالي</button><button id="t2" class="tb" onclick="tab('t')">الشيتات</button><button id="t3" class="tb" onclick="tab('b')">بومبو</button><button id="t4" class="tb" onclick="tab('g')">تصوير</button><button id="t6" class="tb" onclick="tab('q')">القيد</button><button id="t5" class="tb" onclick="tab('s')">مقارنة الراسلين</button></div>
 <div class="bar"></div>
@@ -265,6 +265,9 @@ function zr(x){let r=cls(x.a);if(!r.z&&x.ar){const q=cls(x.ar);if(q.z&&!q.f){r=q
  let s,o=null,n;if(!r.z){n='غير محدد';s='u'}else if(r.fa){n='من عمود المنطقة: '+r.z;s='r'}else if(r.f){n='تقريبي: '+r.k;s='r'}else if(r.cf.length){o=[r.z].concat(r.cf);n='تعارض: '+o.join(' / ');s='r'}else if(r.x){n='منطقة مقترحة: '+r.k;s='r'}else{n='تلقائي: '+r.k;s='a'}
  x.z=r.z;x.s=s;x.nt=n;x.o=o;x.pk=-1}
 function run(){load();R.forEach(x=>{if(x.pk===9)return;if(x.a)zr(x);else{const t={a:x.n,ar:''};if(x.n)zr(t);if(t.z){x.z=t.z;x.s='r';x.o=t.o;x.nt='من حقل الاسم (مفيش عنوان): '+t.nt}else{x.z='';x.s='u';x.nt='مفيش عنوان';x.o=null}}});save();draw()}
+const runBtn=()=>GT(TAB)?runG():run();
+function runG(){load();let f=0,nz=0,sk=0,na=0;gArr().forEach(r=>{if(!r||!r.a||!String(r.a).trim()){na++;return}if(String(r.z==null?'':r.z).trim()){sk++;return}const c=cls(String(r.a));if(c&&c.z){r.z=c.z;f++}else nz++});
+ if(f)gRender();else draw();$('msg').textContent='استخراج الزونات: اتملى '+f+' زون'+(nz?' | '+nz+' عنوان مالقيتش ليه زون':'')+(sk?' | '+sk+' صف الزون فيه مكتوب فاتسابوا':'')+(na?' | '+na+' صف من غير عنوان':'')}
 function pick(i,j){const x=R[i];x.z=x.o[j];x.pk=j;x.s='a';x.nt='تعارض (اختيار يدوي)';save();draw()}
 function sz(i,v){const x=R[i];x.z=v.trim();x.pk=x.z?9:-1;x.o=null;x.s=x.z?'a':'u';x.nt=x.z?'يدوي':'غير محدد';const k=$('kw'+i);if(x.z&&k&&k.value.trim())learn(i);else{save();draw()}}
 const kwList=()=>{try{return JSON.parse(localStorage.getItem('zs')||'[]')}catch(e){return[]}};
@@ -285,13 +288,14 @@ function draw(){const BG=GT(TAB);
  if($('exb'))$('exb').textContent=TAB=='w'?'📤 تصدير الكل':'📤 تصدير Excel';$('t1').textContent='الملف الحالي ('+RW.length+')';$('t2').textContent='الشيتات ('+RT.length+')';$('t3').textContent='بومبو ('+RB.length+')';$('t4').textContent='تصوير ('+RG.length+')';$('t6').textContent='القيد ('+RQ.length+')';
  $('t1').className='tb'+(TAB=='w'?' on':'');$('t2').className='tb'+(TAB=='t'?' on':'');$('t3').className='tb'+(TAB=='b'?' on':'');$('t4').className='tb'+(TAB=='g'?' on':'');$('t6').className='tb'+(TAB=='q'?' on':'');$('t5').className='tb'+(TAB=='s'?' on':'');
  if($('out').style)$('out').style.setProperty('--p',TAB=='w'?'#2e7d32':TAB=='t'?'#e65100':TAB=='b'?'#6d28d9':TAB=='q'?'#b45309':'#0e7490');
- if(document.querySelectorAll){document.querySelectorAll('.w1,.w2,.w3,.w4,.w12,.wbg,.wns').forEach(b=>{const c=b.classList;
+ if(document.querySelectorAll){document.querySelectorAll('.w1,.w2,.w3,.w4,.w12,.w13,.wbg,.wns').forEach(b=>{const c=b.classList;
   let v=true;
   if(c.contains('w1')&&TAB!='w')v=false;
   if(c.contains('w2')&&TAB!='t')v=false;
   if(c.contains('w3')&&TAB!='b')v=false;
   if(c.contains('w4')&&TAB!='g'&&TAB!='q')v=false;
   if(c.contains('w12')&&(BG||TAB=='s'))v=false;
+  if(c.contains('w13')&&TAB=='s')v=false;
   if(c.contains('wns')&&TAB=='s')v=false;
   if(c.contains('wbg')&&!BG)v=false;
   b.style.display=v?'':'none'})}
