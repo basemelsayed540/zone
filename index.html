@@ -266,8 +266,8 @@ function zr(x){let r=cls(x.a);if(!r.z&&x.ar){const q=cls(x.ar);if(q.z&&!q.f){r=q
  x.z=r.z;x.s=s;x.nt=n;x.o=o;x.pk=-1}
 function run(){load();R.forEach(x=>{if(x.pk===9)return;if(x.a)zr(x);else{const t={a:x.n,ar:''};if(x.n)zr(t);if(t.z){x.z=t.z;x.s='r';x.o=t.o;x.nt='من حقل الاسم (مفيش عنوان): '+t.nt}else{x.z='';x.s='u';x.nt='مفيش عنوان';x.o=null}}});save();draw()}
 const runBtn=()=>GT(TAB)?runG():run();
-function runG(){load();let f=0,nz=0,sk=0,na=0;gArr().forEach(r=>{if(!r||!r.a||!String(r.a).trim()){na++;return}if(String(r.z==null?'':r.z).trim()){sk++;return}const c=cls(String(r.a));if(c&&c.z){r.z=c.z;f++}else nz++});
- if(f)gRender();else draw();$('msg').textContent='استخراج الزونات: اتملى '+f+' زون'+(nz?' | '+nz+' عنوان مالقيتش ليه زون':'')+(sk?' | '+sk+' صف الزون فيه مكتوب فاتسابوا':'')+(na?' | '+na+' صف من غير عنوان':'')}
+function runG(){load();let f=0,nz=0,na=0,ch=0;gArr().forEach(r=>{if(!r||!r.a||!String(r.a).trim()){na++;return}const c=cls(String(r.a));if(c&&c.z){const old=String(r.z==null?'':r.z).trim();if(old&&old!==c.z)ch++;r.z=c.z;f++}else nz++});
+ if(f)gRender();else draw();$('msg').textContent='استخراج الزونات: اتكتب '+f+' زون'+(ch?' (منهم '+ch+' اتغيّر عن اللي كان مكتوب)':'')+(nz?' | '+nz+' عنوان مالقيتش ليه زون (الزون سابته زي ما هو)':'')+(na?' | '+na+' صف من غير عنوان':'')}
 function pick(i,j){const x=R[i];x.z=x.o[j];x.pk=j;x.s='a';x.nt='تعارض (اختيار يدوي)';save();draw()}
 function sz(i,v){const x=R[i];x.z=v.trim();x.pk=x.z?9:-1;x.o=null;x.s=x.z?'a':'u';x.nt=x.z?'يدوي':'غير محدد';const k=$('kw'+i);if(x.z&&k&&k.value.trim())learn(i);else{save();draw()}}
 const kwList=()=>{try{return JSON.parse(localStorage.getItem('zs')||'[]')}catch(e){return[]}};
