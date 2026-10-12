@@ -596,7 +596,11 @@ function gCommit(){const G=GED;if(!G)return;GED=null;
  const v=String(G.inp.value),A=gArr(),row=A[G.r],ov=gVal(row,G.f);
  if(ov===v){draw();return}
  pushH();if(!row)A[G.r]=gBlank();
- A[G.r][G.f]=v;gRender()}
+ A[G.r][G.f]=v;gLearn(A[G.r],G.f);gRender()}
+function gLearn(x,f){if(f!='z'&&f!='nn'||!x)return;const z=cl(x.z),kw=cl(x.nn);if(!z||!kw||!x.a)return;
+ const a=W(String(x.a)),w=W(kw);if(!w.length||!a.some((_,p)=>w.every((t,q)=>a[p+q]==t)))return;
+ const c=kwList();if(c.some(t=>t[0]==kw&&t[1]==z))return;c.push([kw,z]);kwSave(c);load();
+ $('msg').textContent='اتعلمت: "'+kw+'" = '+z}
 function gEscape(){if(!GED)return;GED=null;draw()}
 function pushH(){GH.push(JSON.stringify(gArr()));if(GH.length>60)GH.shift();GHr.length=0}
 function gUndo(){if(!GH.length){$('msg').textContent='مفيش حاجة للتراجع';return}GED=null;
