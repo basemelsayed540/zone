@@ -465,11 +465,11 @@ function qStyAttr(v){if(!v)return '';let a=qSt.get(v);if(a!=null)return a;const 
 const WN10=[22,60,18,30,14,14,10,18,16,40],WNQ=[22,60,18,30,14,14,10,18,16,14,14,10,12,30,12,10,10,8,10,12],QNUM=['m','net','shp','cn','cm'];
 const exVal=(k,v,q)=>{if(v==null)return '';v=String(v);return q&&QNUM.includes(k)&&/^-?\d+(\.\d+)?$/.test(v.trim())?Number(v):v};
 const EXN=[['w','الملف الحالي','current'],['t','الشيتات','sheets'],['b','بومبو','bombo'],['g','تصوير','tasweer'],['q','القيد','qayd'],['s','مقارنة الراسلين','compare']];
-async function exData(k){const H=['اسم العميل','العنوان','الزون','المنتج','الهاتف','هاتف بديل','المبلغ','الراسل','الكود','العدد'];
- const f=A=>[H].concat(A.map(x=>[x.n,x.a,x.z,x.p,x.ph,x.ph2,x.m===''||x.m==null?'':x.m,x.sn,x.c,x.q==null?'':x.q]));
+async function exData(k){const H=['اسم العميل','العنوان','الزون','المنتج','الهاتف','هاتف بديل','المبلغ','الراسل','الكود','العدد','ملاحظات'];
+ const f=A=>[H].concat(A.map(x=>[x.n,x.a,x.z,x.p,x.ph,x.ph2,x.m===''||x.m==null?'':x.m,x.sn,x.c,x.q==null?'':x.q,x.nt==null?'':x.nt]));
  const g=(A,cols,q)=>[cols.map(c=>c[1])].concat(A.map(r=>cols.map(c=>exVal(c[0],r[c[0]],q))).filter(l=>l.some(v=>v!=='')));
- if(k=='w')return[f(RW),[22,60,18,30,14,14,10,18,16,8]];
- if(k=='t')return[f(RT),[22,60,18,30,14,14,10,18,16,8]];
+ if(k=='w')return[f(RW),[22,60,18,30,14,14,10,18,16,8,40]];
+ if(k=='t')return[f(RT),[22,60,18,30,14,14,10,18,16,8,40]];
  if(k=='b')return[g(RB,NC10,false),WN10];if(k=='g')return[g(RG,NC10,false),WN10];if(k=='q')return[g(RQ,NCQ,true),WNQ];
  if(MAND!==true){let v=null;try{v=await db0('get','cmp:roster');if(v==null)v=await db0('get','cmp:'+DAY)}catch(x){}MAN=Array.isArray(v)?v.map(String):(typeof v=='string'?v.split(/\n/):[]);MAND=true}
  sgCalc();const man=MAN.filter(x=>String(x).trim()),n=Math.max(ALLS.length,man.length,MISS.length),a=[['الراسلين من كل التبويبات','اكتب الراسلين بيدك','الراسلين الناقصين']];
