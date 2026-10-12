@@ -484,7 +484,7 @@ const gSet=v=>{if(TAB=='w')RW=v;else if(TAB=='t')RT=v;else if(TAB=='b')RB=v;else
 const gBlank=()=>{const o={};NC.forEach(c=>o[c[0]]='');return o};
 const gVal=(r,f)=>r&&r[f]!=null?String(r[f]):'';
 const gBlankRow=r=>!r||NC.every(c=>gVal(r,c[0])==='');
-const gTot=()=>Math.max(30,gArr().length+GEA);
+const gTot=()=>Math.max(30,gArr().length+30+GEA);
 function gTrim(){const A=gArr();let n=A.length;while(n>0&&gBlankRow(A[n-1]))n--;if(n!==A.length)gSet(A.slice(0,n))}
 const gReset=()=>{GE={r:0,c:0};GA=null;GED=null;GEA=0;GH=[];GHr=[]};
 let GE={r:0,c:0},GA=null,GED=null,GEA=0,GH=[],GHr=[];
