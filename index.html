@@ -71,6 +71,7 @@ small{color:var(--mut);opacity:1}
 #main .f.on,#main .o.on{background:var(--tc);border-color:var(--tc)}
 #main button:not(.s):not(.f):not(.o):not(.tb){background:var(--tc)}
 #out td[data-g]{user-select:none;-webkit-user-select:none}#out td.gce{user-select:text;-webkit-user-select:text}
+#out .gfh{position:absolute;left:-1px;bottom:-1px;width:9px;height:9px;background:var(--g);border:1px solid var(--c);cursor:crosshair;z-index:3;touch-action:none}#out td.gfp{outline:2px dashed var(--g);outline-offset:-2px;background:color-mix(in srgb,var(--g) 15%,transparent)}
 #out td.gcr{background:color-mix(in srgb,var(--tc) 20%,transparent)}
 #out th[onclick]{cursor:pointer}
 #gearw{position:relative;display:inline-block}
@@ -531,7 +532,18 @@ const cellEl=(r,c)=>($('out')||document).querySelector('td[data-r="'+r+'"][data-
 function gPaint(full,noscroll){const t=$('out');if(!t)return;if(full){draw();return}
  const g=gSelR(),multi=!!GA&&(GA.r!=GE.r||GA.c!=GE.c);
  t.querySelectorAll('td[data-g]').forEach(td=>{const r=+td.dataset.r,c=+td.dataset.g;td.classList.toggle('gcs',r==GE.r&&c==GE.c);td.classList.toggle('gcr',multi&&r>=g.r1&&r<=g.r2&&c>=g.c1&&c<=g.c2)});
- const on=t.querySelector('td.gcs');if(!noscroll&&on&&on.scrollIntoView)on.scrollIntoView({block:'nearest',inline:'nearest'})}
+ const on=t.querySelector('td.gcs');if(!noscroll&&on&&on.scrollIntoView)on.scrollIntoView({block:'nearest',inline:'nearest'});gHandle()}
+function gHandle(){const t=$('out');if(!t)return;t.querySelectorAll('.gfh').forEach(x=>x.remove());if(GED)return;const g=gSelR(),td=cellEl(g.r2,g.c2);if(!td)return;
+ const h=document.createElement('span');h.className='gfh';h.title='اسحب لتحت لتكرار الخلايا';td.style.position='relative';td.appendChild(h);
+ h.addEventListener('pointerdown',ev=>{if(ev.button)return;ev.preventDefault();ev.stopPropagation();gFillDrag(g)})}
+function gFillDrag(g){let tgt=g.r2;const rows=()=>$('out').querySelectorAll('td.gfp').forEach(x=>x.classList.remove('gfp'));
+ const mv=m=>{if(m.clientY>innerHeight-40)scrollBy(0,18);else if(m.clientY<40)scrollBy(0,-18);const el=document.elementFromPoint(m.clientX,m.clientY),td=el&&el.closest&&el.closest('td[data-g]');if(!td)return;const r=Math.max(+td.dataset.r,g.r2);
+  if(r!=tgt){tgt=r;rows();for(let i=g.r2+1;i<=tgt;i++)for(let c=g.c1;c<=g.c2;c++){const x=cellEl(i,c);if(x)x.classList.add('gfp')}}};
+ const up=()=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',up);rows();if(tgt>g.r2)gFillTo(g,tgt)};
+ document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up)}
+function gFillTo(g,tgt){const A=gArr(),n=g.r2-g.r1+1;pushH();let k=0;
+ for(let i=g.r2+1;i<=tgt;i++){if(gHid(i))continue;if(!A[i])A[i]=gBlank();const sr=A[g.r1+((i-g.r2-1)%n)];for(let c=g.c1;c<=g.c2;c++){const f=NC[c][0];A[i][f]=gVal(sr,f)}k++}
+ GA={r:g.r1,c:g.c1};GE={r:tgt,c:g.c2};gRender();$('msg').textContent='اتكررت الخلايا في '+k+' صف'}
 function drawN(){const A=gArr(),CWi=gCW(),tot=gTot(),HD=['<input type="checkbox" id="sa" onchange="tgAll(this.checked)">','#'].concat(NC.map(c=>c[1]));
  let h='<colgroup>'+CWi.map(w=>'<col style="width:'+w+'px">').join('')+'</colgroup><tr>'+HD.map((x,j)=>'<th'+(j>=2?' onclick="gColSel('+(j-2)+',event)" title="اضغط لتحديد العمود كله"':'')+'>'+x+'<span class="rz" onpointerdown="rz(event,'+j+')" ondblclick="rzd('+j+')"></span></th>').join('')+'</tr>';
  for(let i=0;i<tot;i++){const r=A[i],sl=r&&SEL.has(r);
