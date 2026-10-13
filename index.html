@@ -509,7 +509,7 @@ let NC;const NC10=[['n','اسم العميل'],['a','العنوان'],['z','ال
 NC=NC10;
 const NCQ=[['n','اسم العميل'],['a','العنوان'],['z','الزون'],['p','المنتج'],['ph','الهاتف'],['ph2','هاتف بديل'],['m','المبلغ'],['sn','الراسل'],['c','كود الشحنة'],['ag','المندوب'],['ag2','مندوب اخر'],['st','الحالة'],['rs','السبب'],['nn','ملاحظات'],['dt','التاريخ'],['net','الصافي'],['shp','الشحن'],['cn','عدد'],['cl','تقفيل'],['cm','عمولة المندوب']];
 const GT=t=>t=='b'||t=='g'||t=='q';
-const ACI=[0,1,2,3,7],NW=[44,44,150,260,110,150,120,120,80,120,110,200],NCO=[22,60,18,30,14,14,10,18,16,40];
+const ACI=[0,1,2,3,7],ACK=['n','a','z','p','sn','ag','ag2','st','rs','nn'],NW=[44,44,150,260,110,150,120,120,80,120,110,200],NCO=[22,60,18,30,14,14,10,18,16,40];
 const NWQ=[44,44,150,260,110,150,120,120,120,80,110,110,90,140,160,100,90,90,70,80,100,120];
 const fixCWN=v=>Array.isArray(v)&&v.length==12?v.slice():null;
 const fixCWQ=v=>Array.isArray(v)&&v.length==22?v.slice():null;
@@ -590,7 +590,7 @@ function gEdit(r,c,seed){if(GED){if(GED.r==r&&GED.c==c)return;gCommit()}
  const inp=td.querySelector('.gi');GED={r,c,f,inp,td,ses:null,lock:false,mode:seed!=null?'enter':'edit'};
  inp.value=seed!=null?String(seed):v;inp.setSelectionRange(inp.value.length,inp.value.length);
  const self=()=>GED&&GED.inp===inp;
- inp.addEventListener('input',()=>{if(!self())return;if(GED.ses||GED.lock){GED.ses=null;GED.lock=true;gShowSug(null)}else gCompute()});
+ inp.addEventListener('input',()=>{if(!self())return;if(GED.lock||inp.selectionStart!=inp.value.length){GED.ses=null;gShowSug(null)}else gCompute()});
  inp.addEventListener('keyup',e=>{if(!self())return;
   if(e.key=='ArrowLeft'||e.key=='ArrowRight'||e.key=='Home'||e.key=='End')GED.mode='edit';
   gPos()});
@@ -610,7 +610,7 @@ function acSug(j,cur){const t=acNorm(cur);if(!t)return null;
   return{v:x.v,tail:x.v.slice(q),n:x.c}}
  return null}
 function gCompute(){const G=GED;if(!G)return;
- if(ACI.indexOf(G.c)<0){G.ses=null;gShowSug(null);return}
+ if(!ACK.includes(NC[G.c][0])){G.ses=null;gShowSug(null);return}
  G.ses=acSug(G.c,String(G.inp.value));gShowSug(G.ses)}
 function gShowSug(s){const G=GED;if(!G)return;const sp=G.td.querySelector('.gs');if(!sp)return;
  if(!s||!s.tail){sp.textContent='';sp.style.display='none';return}
