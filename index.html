@@ -72,6 +72,7 @@ small{color:var(--mut);opacity:1}
 #main button:not(.s):not(.f):not(.o):not(.tb){background:var(--tc)}
 #out td[data-g]{user-select:none;-webkit-user-select:none}#out td.gce{user-select:text;-webkit-user-select:text}
 #out .gfh{position:absolute;left:-1px;bottom:-1px;width:9px;height:9px;background:var(--g);border:1px solid var(--c);cursor:crosshair;z-index:3;touch-action:none}#out td.gfp{outline:2px dashed var(--g);outline-offset:-2px;background:color-mix(in srgb,var(--g) 15%,transparent)}
+#out tr.dup td{background:#dcfce7;color:#14532d}@media(prefers-color-scheme:dark){#out tr.dup td{background:#1d3a2a;color:#d1fae5}}
 #out td.gcr{background:color-mix(in srgb,var(--tc) 20%,transparent)}
 #out th[onclick]{cursor:pointer}
 #gearw{position:relative;display:inline-block}
@@ -189,6 +190,8 @@ async function days(){let k=[],v=[];try{k=(await db('getAllKeys'))||[];v=(await 
  $('dsel').innerHTML=L.length?L.map(([x,r])=>'<option value="'+e(x)+'"'+(x==DAY?' selected':'')+'>'+(x.startsWith('d:')?e(dName(x)):wd(x)+' '+x)+' ('+cnt(r)+' صف)</option>').join(''):'<option value="">لا توجد أيام محفوظة بعد</option>';return L}
 const toDay=async()=>{};
 async function init(){try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}try{const cv=await db('get','cw');if(fixCW(cv)&&!localStorage.getItem('cw')){CW=fixCW(cv)}}catch(e){}try{const a=await db('get','cwb');if(fixCWN(a)&&!localStorage.getItem('cwb'))CWB=fixCWN(a)}catch(e){}try{const a=await db('get','cwg');if(fixCWN(a)&&!localStorage.getItem('cwg'))CWG=fixCWN(a)}catch(e){}try{const a=await db('get','cwq');if(fixCWQ(a)&&!localStorage.getItem('cwq'))CWQ=fixCWQ(a)}catch(e){}try{const lv=await db('get','lh');if(lv)Object.keys(lv).forEach(k=>{if(!(k in LH))LH[k]=lv[k]})}catch(e){}try{const v=await db('get','kw');if(v&&v.length&&!kwList().length)localStorage.setItem('zs',JSON.stringify(v))}catch(e){}load();const L=(await days()).filter(x=>cnt(x[1])>0);await goDay(L.length?L[0][0]:null);bkNote();await initDir();askDaily()}
+const phk=v=>{let d=String(v==null?'':v).replace(/[\u0660-\u0669]/g,c=>c.charCodeAt(0)-0x660).replace(/[\u06F0-\u06F9]/g,c=>c.charCodeAt(0)-0x6F0).replace(/\D/g,'');return d.length<7?'':d.length>10?d.slice(-10):d};
+function dupPh(A){const m=new Map();A.forEach(r=>{const k=r&&phk(r.ph);if(k)m.set(k,(m.get(k)||0)+1)});const d=new Set();m.forEach((n,k)=>{if(n>1)d.add(k)});return d}
 const dg=s=>String(s).replace(/[\u0660-\u0669]/g,c=>c.charCodeAt(0)-0x660).replace(/[\u06F0-\u06F9]/g,c=>c.charCodeAt(0)-0x6F0);
 function ph(v){if(v===''||v==null)return'';let s=dg(typeof v=='number'?Math.round(v):v).replace(/\D/g,'');if(s.length==10&&s[0]=='1')s='0'+s;if(s.length==12&&s.startsWith('201'))s='0'+s.slice(2);return s}
 const isPh=v=>/^01[0125]\d{8}$/.test(ph(v));
@@ -326,9 +329,10 @@ function draw(){const BG=GT(TAB);
  const c=s=>V().filter(x=>x.s==s).length,nn=c('n');
  $('sum').innerHTML=BG?'':([['all','الإجمالي '+V().length],['a','تلقائي '+c('a')],['r','مراجعة '+c('r')],['u','غير محدد '+c('u')]].concat(nn?[['n','لم يُستخرج '+nn]]:[]).map(([k,l])=>'<button class="f'+(F==k?' on':'')+'" onclick="F=\''+k+'\';draw()">'+l+'</button>').join(''));
  if(BG){drawN();return}
+ const DUP=dupPh(R);
  $('out').innerHTML='<colgroup>'+CW.map(w=>'<col style="width:'+w+'px">').join('')+'</colgroup><tr>'+['<input type="checkbox" id="sa" onchange="tgAll(this.checked)">','#','اسم العميل','العنوان','الزون','المنتج','الهاتف','هاتف بديل','المبلغ','الراسل','الكود','العدد','ملاحظات الشحنة','الملاحظة'].map((h,j)=>'<th>'+h+'<span class="rz" onpointerdown="rz(event,'+j+')" ondblclick="rzd('+j+')"></span></th>').join('')+'</tr>'+R.map((x,i)=>{if(!vis(x))return'';
   const nt=x.o?'تعارض: '+x.o.map((z,j)=>'<button class="o'+(x.pk==j?' on':'')+'" onclick="pick('+i+','+j+')">'+e(z)+'</button>').join(''):(x.s=='u'||x.pk==9)?'<input id="kw'+i+'" placeholder="جزء من العنوان للتعلّم" value="'+e(x.kw||'')+'" onchange="learn('+i+')"> <small>'+e(x.nt)+'</small>':e(x.nt);
-  return'<tr class="'+x.s+(SEL.has(x)?' sl':'')+'"><td><input type="checkbox"'+(SEL.has(x)?' checked':'')+' onclick="tg('+i+',this.checked,this,event)"></td><td>'+(i+1)+'</td><td title="'+e(x.n)+'">'+e(x.n)+'</td><td title="'+e(x.a)+'">'+e(x.a)+'</td><td><input value="'+e(x.z)+'" onchange="sz('+i+',this.value)"></td><td title="'+e(x.p)+'">'+e(x.p)+'</td><td>'+e(x.ph)+'</td><td>'+e(x.ph2)+'</td><td>'+e(x.m)+'</td><td title="'+e(x.sn)+'">'+e(x.sn)+'</td><td title="'+e(x.c)+'">'+e(x.c)+'</td><td>'+(x.q==null?'':x.q)+'</td><td title="'+e(x.nn||'')+'">'+e(x.nn||'')+'</td><td class="nt">'+nt+'</td></tr>'}).join('');if($('out').style)$('out').style.width=CW.reduce((x,y)=>x+y,0)+'px';updSel();applyCols()}
+  return'<tr class="'+x.s+(SEL.has(x)?' sl':'')+(DUP.has(phk(x.ph))?' dup':'')+'"><td><input type="checkbox"'+(SEL.has(x)?' checked':'')+' onclick="tg('+i+',this.checked,this,event)"></td><td>'+(i+1)+'</td><td title="'+e(x.n)+'">'+e(x.n)+'</td><td title="'+e(x.a)+'">'+e(x.a)+'</td><td><input value="'+e(x.z)+'" onchange="sz('+i+',this.value)"></td><td title="'+e(x.p)+'">'+e(x.p)+'</td><td>'+e(x.ph)+'</td><td>'+e(x.ph2)+'</td><td>'+e(x.m)+'</td><td title="'+e(x.sn)+'">'+e(x.sn)+'</td><td title="'+e(x.c)+'">'+e(x.c)+'</td><td>'+(x.q==null?'':x.q)+'</td><td title="'+e(x.nn||'')+'">'+e(x.nn||'')+'</td><td class="nt">'+nt+'</td></tr>'}).join('');if($('out').style)$('out').style.width=CW.reduce((x,y)=>x+y,0)+'px';updSel();applyCols()}
 function rz(ev,j){ev.preventDefault();ev.stopPropagation();const el=ev.target,Wc=gCW(),x0=ev.clientX,w0=Wc[j];if(el.setPointerCapture)el.setPointerCapture(ev.pointerId);el.classList.add('on');
  const mv=m=>{Wc[j]=Math.max(40,Math.min(900,w0+(x0-m.clientX)));const c=document.querySelectorAll('#out col')[j];if(c)c.style.width=Wc[j]+'px';$('out').style.width=Wc.reduce((x,y)=>x+y,0)+'px'};
  const up=()=>{el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up);el.classList.remove('on');saveCWi(cwKey(),gCW());applyCols()};
@@ -544,11 +548,11 @@ function gFillDrag(g){let tgt=g.r2;const rows=()=>$('out').querySelectorAll('td.
 function gFillTo(g,tgt){const A=gArr(),n=g.r2-g.r1+1;pushH();let k=0;
  for(let i=g.r2+1;i<=tgt;i++){if(gHid(i))continue;if(!A[i])A[i]=gBlank();const sr=A[g.r1+((i-g.r2-1)%n)];for(let c=g.c1;c<=g.c2;c++){const f=NC[c][0];A[i][f]=gVal(sr,f)}k++}
  GA={r:g.r1,c:g.c1};GE={r:tgt,c:g.c2};gRender();$('msg').textContent='اتكررت الخلايا في '+k+' صف'}
-function drawN(){const A=gArr(),CWi=gCW(),tot=gTot(),HD=['<input type="checkbox" id="sa" onchange="tgAll(this.checked)">','#'].concat(NC.map(c=>c[1]));
+function drawN(){const A=gArr(),DUPG=dupPh(A),CWi=gCW(),tot=gTot(),HD=['<input type="checkbox" id="sa" onchange="tgAll(this.checked)">','#'].concat(NC.map(c=>c[1]));
  let h='<colgroup>'+CWi.map(w=>'<col style="width:'+w+'px">').join('')+'</colgroup><tr>'+HD.map((x,j)=>'<th'+(j>=2?' onclick="gColSel('+(j-2)+',event)" title="اضغط لتحديد العمود كله"':'')+'>'+x+'<span class="rz" onpointerdown="rz(event,'+j+')" ondblclick="rzd('+j+')"></span></th>').join('')+'</tr>';
  for(let i=0;i<tot;i++){const r=A[i],sl=r&&SEL.has(r);
-  const hd=SF&&!(r&&snk(r.sn)==SF);
-  h+='<tr'+((sl||hd)?' class="'+(sl?'sl':'')+(hd?' sfh':'')+'"':'')+'><td><input type="checkbox"'+(sl?' checked':'')+' onclick="tg('+i+',this.checked,this,event)"></td><td>'+(i+1)+'</td>';
+  const hd=SF&&!(r&&snk(r.sn)==SF),dp=r&&DUPG.has(phk(r.ph));
+  h+='<tr'+((sl||hd||dp)?' class="'+(sl?'sl':'')+(hd?' sfh':'')+(dp?' dup':'')+'"':'')+'><td><input type="checkbox"'+(sl?' checked':'')+' onclick="tg('+i+',this.checked,this,event)"></td><td>'+(i+1)+'</td>';
   for(let j=0;j<NC.length;j++){const v=gVal(r,NC[j][0]);
    h+='<td data-g="'+j+'" data-r="'+i+'"'+(TAB=='q'&&r&&r.sty?qStyAttr(r.sty[j]):'')+' onpointerdown="gSel(event,'+i+','+j+')" ondblclick="gEdit('+i+','+j+')" title="'+e(v)+'">'+e(v)+'</td>'}
   h+='</tr>'}
