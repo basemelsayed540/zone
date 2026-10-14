@@ -247,7 +247,7 @@ function build(D,map,snd){const g=(r,f)=>{for(const j of[map[f]].concat((map.alt
 function readWb(buf,name){const wb=XLSX.read(buf,{type:'array',cellDates:true});let best=null;
  wb.SheetNames.forEach(sn=>{const M=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,raw:true,defval:''});const k=M.filter(r=>r.some(c=>c!=='')).length;if(!best||k>best.k)best={k,M,sn}});
  return best}
-async function openF(fs){fs=Array.from(fs);await toDay();for(const f of fs){try{const ab=await f.arrayBuffer();if(await tryQayd(ab,f.name))continue;const b=readWb(ab,f.name);if(!b||b.k<2){alert('الملف فاضي: '+f.name);continue}
+async function openF(fs){fs=Array.from(fs);await toDay();for(const f of fs){try{const ab=await f.arrayBuffer();const b=readWb(ab,f.name);if(!b||b.k<2){alert('الملف فاضي: '+f.name);continue}
   let d=detect(b.M);const sig=(d.h>=0?d.hd.join('|'):'n'+(d.D[0]||[]).length)+'#'+b.sn,snd=f.name.replace(/\.[^.]+$/,'').replace(/_+/g,' ').trim(),sv=await db('get','m2:'+sig).catch(()=>0);
   let hv='a';if(sv&&sv.hr!=null&&sv.hr!=='a'){hv=String(sv.hr);d=detect(b.M,+sv.hr)}
   const p={f:f.name,snd,d,sig,M:b.M,sn:b.sn,hv,auto:!!(sv&&sv.auto)};
@@ -472,10 +472,9 @@ async function tryQayd(ab,name){let sn=[];try{sn=XLSX.read(ab,{type:'array',book
   if(m[0]!=null&&m[11]!=null){hr=r;col=m;break}}
  if(hr<0)return false;
  let ST=null,stNote='';try{ST=xlsbStyles(new Uint8Array(ab),'ALL')}catch(er){console.warn('styles',er);stNote='\nمقدرتش أقرا الألوان والأحجام من الملف، اتنسخت البيانات بس.'}
- const seen=new Set(RQ.map(r=>NCQ.map(q=>gVal(r,q[0])).join('\u0001')));let tot=0,add=0,dup=0;
+ let tot=0,add=0,dup=0;
  for(let r=hr+1;r<=rg.e.r;r++){const sx=ws[XLSX.utils.encode_cell({r,c:col[11]})];if(!sx||String(sx.v==null?'':sx.v).trim()!=='قيد')continue;tot++;
   const o={};NCQ.forEach((q,j)=>{o[q[0]]=col[j]==null?'':qCellText(ws[XLSX.utils.encode_cell({r,c:col[j]})])});
-  const key=NCQ.map(q=>o[q[0]]).join('\u0001');if(seen.has(key)){dup++;continue}seen.add(key);
   if(ST){const sy=NCQ.map((q,j)=>col[j]==null?'':ST(r,col[j])||'');if(sy.some(x=>x))o.sty=sy}
   RQ.push(o);add++}
  if(!tot){alert('ورقة ALL مفيهاش صفوف حالتها "قيد"');return true}
