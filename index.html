@@ -1,5 +1,6 @@
 <!DOCTYPE html><html lang="ar" dir="rtl"><head>
-<meta http-equiv="Cache-Control" content="no-cache, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>مستخرج الزون والشحنات</title>
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><meta charset="utf-8"><meta name="description" content="تطبيق لإدارة وتوزيع شحنات التوصيل واستخراج الزونات وإدارة اليوميات ومقارنة الراسلين وتصدير الشيتات.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>"><meta name="viewport" content="width=device-width,initial-scale=1"><title>مستخرج الزون والشحنات</title>
 <style>:root{color-scheme:light dark;--bg:#f6f7f9;--c:#fff;--t:#1d2733;--b:#d5dbe3;--p:#1f4e78}@media(prefers-color-scheme:dark){:root{--bg:#161b22;--c:#1f2630;--t:#e6edf3;--b:#38414d;--p:#6ea8dc}}
 body{font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--t);margin:0;padding:14px}h1{color:var(--p);font-size:21px;margin:4px 0 10px}
 textarea,input,select{box-sizing:border-box;background:var(--c);color:var(--t);border:1px solid var(--b);border-radius:6px;padding:6px;font:inherit}textarea{width:100%;height:110px}
@@ -99,6 +100,617 @@ small{color:var(--mut);opacity:1}
 #out tr.sfh{display:none}#side{max-height:calc(100vh - 20px)}#sfl{flex:1 1 auto;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:3px;margin-top:4px;padding-top:6px;border-top:1px solid var(--b)}.sfh2{font-size:12px;opacity:.7}.sfi{display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:right;padding:5px 8px;font-size:13px;border-radius:8px}.sfi span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sfi b{font-size:12px;background:#0001;border-radius:10px;padding:0 7px}.sfi.on,.sfi.on:hover{background:#16a34a;color:#fff;border-color:#16a34a}.sfi.on b{background:#fff3}@media(max-width:800px){#sfl{width:100%;max-height:220px}}
 </style>
 <style>#out td[data-cb]{background:var(--cb)}#out td.gcr[data-cb]{background:color-mix(in srgb,var(--tc) 35%,var(--cb))}#out td.gcs[data-cb]{background:color-mix(in srgb,var(--g) 22%,var(--cb))}</style>
+<style id="ui3">500;600;700;800&display=swap');
+
+:root {
+  color-scheme: light dark;
+  --bg: #f8fafc;
+  --c: #ffffff;
+  --t: #0f172a;
+  --b: #cbd5e1;
+  --mut: #64748b;
+  --tc: #15803d;
+  --p: var(--tc);
+  --g: var(--tc);
+  --hv: color-mix(in srgb, var(--tc) 10%, transparent);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0f19;
+    --c: #161e2e;
+    --t: #f8fafc;
+    --b: #334155;
+    --mut: #94a3b8;
+    --tc: #22c55e;
+    --p: var(--tc);
+    --g: var(--tc);
+    --hv: color-mix(in srgb, var(--tc) 15%, transparent);
+  }
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Cairo', Tahoma, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--t);
+  margin: 0;
+  padding: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+h1 {
+  background: var(--c);
+  border: 1px solid var(--b);
+  border-right: 5px solid var(--tc);
+  border-radius: 14px;
+  padding: 12px 20px;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--t);
+  margin: 0 0 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.03);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+h1::before {
+  content: "⚡";
+  font-size: 20px;
+}
+button {
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  height: 36px;
+  padding: 0 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: var(--tc,var(--p));
+  color: #ffffff;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  white-space: nowrap;
+}
+button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--tc) 30%, transparent);
+}
+button:active {
+  transform: translateY(0) scale(0.99);
+  filter: brightness(0.95);
+}
+button.s, .f, .o {
+  background: var(--c);
+  color: var(--t);
+  border: 1px solid var(--b);
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+button.s:hover {
+  background: var(--hv);
+  border-color: var(--tc);
+  color: var(--tc);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--tc) 20%, transparent);
+}
+.f:hover, .o:hover {
+  transform: none;
+}
+.row1 {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  border-bottom: 2px solid var(--tc);
+  padding-bottom: 0;
+  margin-bottom: 12px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.tb {
+  background: color-mix(in srgb, var(--c) 80%, var(--bg));
+  color: var(--mut);
+  border: 1.5px solid var(--b);
+  border-bottom: none;
+  font-size: 14px;
+  font-weight: 700;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 12px 12px 0 0;
+  margin: 0;
+  box-shadow: none !important;
+  transform: none !important;
+}
+.tb:hover {
+  color: var(--t);
+  background: var(--c);
+  border-color: color-mix(in srgb, var(--tc) 50%, var(--b));
+}
+.tb.on {
+  background: var(--tc,var(--p));
+  color: #ffffff;
+  border-color: var(--tc);
+  box-shadow: 0 -2px 10px color-mix(in srgb, var(--tc) 25%, transparent) !important;
+}
+#t1 { --tc: #15803d; }
+#t2 { --tc: #ea580c; }
+#t3 { --tc: #7c3aed; }
+#t4 { --tc: #0891b2; }
+#t6 { --tc: #d97706; }
+#t5 { --tc: #be185d; }
+#main { --tc: #15803d; }
+#main[data-tab=w] { --tc: #15803d; }
+#main[data-tab=t] { --tc: #ea580c; }
+#main[data-tab=b] { --tc: #7c3aed; }
+#main[data-tab=g] { --tc: #0891b2; }
+#main[data-tab=q] { --tc: #d97706; }
+#main[data-tab=s] { --tc: #be185d; }
+#main {
+  --g: var(--tc);
+  --p: var(--tc);
+  --hv: color-mix(in srgb, var(--tc) 11%, transparent);
+}
+#main .f.on, #main .o.on {
+  background: var(--tc,var(--p));
+  color: #fff;
+  border-color: var(--tc);
+}
+#main button:not(.s):not(.f):not(.o):not(.tb) {
+  background: var(--tc,var(--p));
+}
+.f {
+  height: 30px;
+  padding: 0 13px;
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: 20px;
+  color: var(--mut);
+  background: var(--c);
+  border: 1px solid var(--b);
+}
+.f:hover {
+  border-color: var(--tc);
+  color: var(--t);
+  background: var(--hv);
+}
+.f.on {
+  background: var(--tc,var(--p));
+  color: #fff;
+  border-color: var(--tc);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--tc) 30%, transparent);
+}
+.o {
+  height: 24px;
+  padding: 0 9px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: 6px;
+  margin: 2px;
+  background: color-mix(in srgb, var(--tc) 8%, var(--c));
+  color: var(--tc);
+  border: 1px solid color-mix(in srgb, var(--tc) 30%, transparent);
+}
+.o:hover, .o.on {
+  background: var(--tc,var(--p));
+  color: #fff;
+  border-color: var(--tc);
+}
+#app {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+#side {
+  flex: 0 0 185px;
+  position: sticky;
+  top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--c);
+  border: 1px solid var(--b);
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,.03);
+  max-height: calc(100vh - 24px);
+}
+#side button {
+  width: 100%;
+  margin: 0;
+  height: 38px;
+  border-radius: 10px;
+  justify-content: flex-start;
+  padding: 0 12px;
+}
+#side hr {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid var(--b);
+  margin: 4px 0;
+}
+#main {
+  flex: 1;
+  min-width: 0;
+}
+@media (max-width: 768px) {
+  #app {
+    flex-direction: column;
+  }
+  #side {
+    position: static;
+    flex: none;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  #side button {
+    width: auto;
+  }
+}
+.bar {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.row2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  white-space: nowrap;
+  margin: 8px 0 10px;
+  padding-bottom: 4px;
+}
+.row2 button {
+  margin: 0;
+  flex: none;
+}
+#sum {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+textarea, input, select {
+  box-sizing: border-box;
+  background: var(--c);
+  color: var(--t);
+  border: 1px solid var(--b);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 13.5px;
+  height: 36px;
+  transition: all 0.15s ease;
+}
+textarea {
+  width: 100%;
+  height: 110px;
+  padding: 10px;
+}
+input:focus, select:focus, textarea:focus {
+  outline: 0;
+  border-color: var(--tc);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tc) 20%, transparent);
+}
+select {
+  padding-left: 24px;
+  cursor: pointer;
+}
+.wrap {
+  overflow-x: auto;
+  background: var(--c);
+  border: 2px solid var(--tc);
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(0,0,0,.04);
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  background: transparent;
+  min-width: 100%;
+}
+td, th {
+  padding: 6px 9px;
+  text-align: right;
+  font-size: 13px;
+  vertical-align: middle;
+}
+th {
+  background: color-mix(in srgb, var(--tc) 10%, var(--c));
+  color: var(--t);
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+  border: none;
+  border-bottom: 2px solid color-mix(in srgb, var(--tc) 40%, var(--b));
+  position: relative;
+  user-select: none;
+}
+td {
+  border: none;
+  border-top: 1px solid var(--b);
+  white-space: nowrap;
+}
+td input {
+  width: 100%;
+  height: 28px;
+  padding: 2px 8px;
+  font-size: 12.5px;
+  border-radius: 6px;
+}
+#out {
+  table-layout: fixed;
+  width: 1560px;
+  min-width: 0;
+}
+#out td, #out th {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#out td.nt {
+  white-space: normal;
+}
+#out.wr td {
+  white-space: normal;
+  word-break: break-word;
+}
+#out tr:hover td {
+  background: var(--hv);
+}
+#out td input[type=checkbox], #out th input[type=checkbox] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--tc);
+  vertical-align: middle;
+}
+.rz {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  cursor: col-resize;
+  touch-action: none;
+}
+.rz:hover, .rz.on {
+  background: color-mix(in srgb, var(--tc) 40%, transparent);
+}
+.a { background: rgba(22, 163, 74, 0.08); }
+.r { background: rgba(234, 88, 12, 0.1); }
+.u { background: rgba(225, 29, 72, 0.09); }
+.e { opacity: .5; }
+tr.sl td {
+  outline: 2px solid var(--tc);
+  outline-offset: -2px;
+  background: color-mix(in srgb, var(--tc) 15%, var(--c)) !important;
+}
+#selbar {
+  position: sticky;
+  bottom: 12px;
+  margin-top: 12px;
+  background: color-mix(in srgb, var(--c) 94%, transparent);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid var(--tc);
+  border-radius: 14px;
+  padding: 8px 16px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.16);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+#selbar b {
+  margin-left: 12px;
+  font-weight: 700;
+  font-size: 14px;
+}
+#bdel {
+  background: #ef4444 !important;
+  color: #fff !important;
+  border-color: #dc2626 !important;
+}
+#bdel:hover {
+  background: #dc2626 !important;
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4) !important;
+}
+.ov {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dlg {
+  background: var(--c);
+  max-width: 1100px;
+  width: 95%;
+  max-height: 92vh;
+  overflow: auto;
+  border-radius: 18px;
+  padding: 20px;
+  border: 1px solid var(--b);
+  box-shadow: 0 16px 40px rgba(0,0,0,.25);
+}
+.dlg h3 {
+  margin: 0 0 12px;
+  color: var(--t);
+  font-size: 18px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--b);
+  padding-bottom: 8px;
+}
+.pvw {
+  overflow: auto;
+  max-height: 55vh;
+  border: 1px solid var(--b);
+  border-radius: 10px;
+  margin: 10px 0;
+  background: var(--bg);
+}
+.pv {
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.pv th {
+  background: color-mix(in srgb, var(--c) 80%, var(--b));
+  color: var(--t);
+  font-weight: 600;
+  border: 1px solid var(--b);
+  padding: 4px 8px;
+}
+.pv td {
+  border: 1px solid var(--b);
+  padding: 4px 8px;
+  white-space: nowrap;
+  max-width: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 50px;
+}
+.pv tr.hr td {
+  font-weight: bold;
+  background: #e0f2fe !important;
+  color: #0369a1;
+}
+.pv tr.sk td { opacity: .5; }
+.gcs {
+  outline: 2px solid var(--tc) !important;
+  outline-offset: -2px;
+  background: var(--hv) !important;
+}
+#out td.gce { padding: 0; }
+#out td[data-g] { cursor: cell; user-select: none; }
+#out td.gcr { background: color-mix(in srgb, var(--tc) 18%, transparent) !important; }
+#gearw { position: relative; display: inline-block; }
+#gear {
+  margin: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 16px;
+}
+#gpop {
+  display: none;
+  position: absolute;
+  top: 115%;
+  right: 0;
+  z-index: 50;
+  background: var(--c);
+  border: 1px solid var(--b);
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.2);
+  min-width: 250px;
+}
+#gpop label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 6px 0;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 13px;
+}
+#gpop .gh {
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--b);
+}
+#sfl {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--b);
+}
+.sfh2 {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--mut);
+  margin-bottom: 2px;
+}
+.sfi {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  text-align: right;
+  padding: 6px 10px;
+  font-size: 13px;
+  height: 32px !important;
+  border-radius: 8px !important;
+  width: 100% !important;
+  background: var(--c);
+  border: 1px solid var(--b);
+  color: var(--t);
+}
+.sfi span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sfi b {
+  font-size: 11.5px;
+  background: color-mix(in srgb, var(--t) 8%, transparent);
+  border-radius: 10px;
+  padding: 1px 7px;
+}
+.sfi.on, .sfi.on:hover {
+  background: var(--tc) !important;
+  color: #fff !important;
+  border-color: var(--tc) !important;
+}
+.sfi.on b {
+  background: rgba(255,255,255,0.25) !important;
+  color: #fff;
+}
+details {
+  background: var(--c);
+  border: 1px solid var(--b);
+  border-radius: 12px;
+  padding: 10px 16px;
+  margin: 10px 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+summary {
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--t);
+  outline: none;
+}
+small {
+  color: var(--mut);
+  font-size: 12px;
+}
+#msg {
+  font-weight: 600;
+  color: var(--tc);
+}
+#out tr.sfh { display: none; }
+.eye,.pvh button{height:auto!important;min-height:0}
+input[type=checkbox],input[type=radio]{height:auto;width:auto;padding:0}
+</style>
 </head><body>
 <h1>مستخرج الزون والشحنات (بدون إنترنت)</h1>
 <div id="app"><aside id="side"><button class="w1 w12" onclick="fi.click()">📂 فتح ملف Excel</button><input type="file" id="fi" multiple hidden accept=".xlsx,.xls,.xlsm,.xlsb,.csv,.ods" onchange="openF(Array.from(this.files));this.value=''">
@@ -317,7 +929,7 @@ function draw(){const BG=GT(TAB);
  sfDraw();
  $('t1').textContent='الملف الحالي ('+RW.length+')';$('t2').textContent='الشيتات ('+RT.length+')';$('t3').textContent='بومبو ('+RB.length+')';$('t4').textContent='تصوير ('+RG.length+')';$('t6').textContent='القيد ('+RQ.length+')';document.querySelectorAll('button[onclick="mv()"]').forEach(b=>b.classList.toggle('blk',RW.length>0));
  $('t1').className='tb'+(TAB=='w'?' on':'');$('t2').className='tb'+(TAB=='t'?' on':'');$('t3').className='tb'+(TAB=='b'?' on':'');$('t4').className='tb'+(TAB=='g'?' on':'');$('t6').className='tb'+(TAB=='q'?' on':'');$('t5').className='tb'+(TAB=='s'?' on':'');
- if($('out').style)$('out').style.setProperty('--p',TAB=='w'?'#2e7d32':TAB=='t'?'#e65100':TAB=='b'?'#6d28d9':TAB=='q'?'#b45309':'#0e7490');
+ if($('out').style)$('out').style.setProperty('--p',TAB=='w'?'#15803d':TAB=='t'?'#ea580c':TAB=='b'?'#7c3aed':TAB=='q'?'#d97706':'#0891b2');
  if(document.querySelectorAll){document.querySelectorAll('.w1,.w2,.w3,.w4,.w12,.w13,.wbg,.wns,.wq').forEach(b=>{const c=b.classList;
   let v=true;
   if(c.contains('w1')&&TAB!='w')v=false;
@@ -507,8 +1119,8 @@ async function exRun(keys){const wb=XLSX.utils.book_new();wb.Workbook={Views:[{R
  const fn=(keys.length==1?EXN.find(x=>x[0]==keys[0])[2]:'all')+'_'+dfile()+'.xlsx';XLSX.writeFile(wb,fn);$('msg').textContent='اتصدّر '+txt.join(' + ')+' في '+fn;exClose()}
 function exClose(){const o=$('exO');if(o)o.remove()}
 function exOpen(){if($('exO'))return;if(GED)gCommit();const cnt={w:RW.length,t:RT.length,b:RB.length,g:RG.length,q:RQ.length},o=document.createElement('div');o.className='ov';o.id='exO';
- o.innerHTML='<div class="dlg" style="max-width:420px;padding:18px"><h3>تصدير Excel</h3><button class="w1" style="width:100%;font-size:16px;padding:10px" onclick="exRun(EXN.map(x=>x[0]))">📦 تصدير الكل (ملف واحد بكل التبويبات)</button><div style="margin:12px 0 6px;font-size:13px">أو تصدير تبويب واحد:</div><div style="display:flex;flex-direction:column;gap:6px">'
- +EXN.map(x=>'<button class="s" onclick="exRun([\''+x[0]+'\'])">'+x[1]+(cnt[x[0]]!=null?' ('+cnt[x[0]]+')':'')+'</button>').join('')+'</div><div style="margin-top:12px"><button class="s" onclick="exClose()">إغلاق</button></div></div>';
+ o.innerHTML='<div class="dlg" style="max-width:440px;padding:20px"><h3>تصدير Excel</h3><button class="w1" style="width:100%;font-size:15px;height:42px;margin-bottom:12px" onclick="exRun(EXN.map(x=>x[0]))">📦 تصدير الكل (ملف واحد بكل التبويبات)</button><div style="margin:12px 0 8px;font-size:13px;font-weight:600;color:var(--mut)">أو تصدير تبويب واحد:</div><div style="display:flex;flex-direction:column;gap:6px">'
+ +EXN.map(x=>'<button class="s" style="height:36px;justify-content:space-between" onclick="exRun([\''+x[0]+'\'])"><span>'+x[1]+'</span><span style="font-size:12px;opacity:.7">'+(cnt[x[0]]!=null?cnt[x[0]]+' صف':'')+'</span></button>').join('')+'</div><div style="margin-top:14px;text-align:left"><button class="s" onclick="exClose()">إغلاق</button></div></div>';
  o.addEventListener('click',ev=>{if(ev.target===o)exClose()});document.body.appendChild(o)}
 /* ===== التبويبان 3 (بومبو) و 4 (تصوير) : جدول زي Google Sheets ===== */
 let NC;const NC10=[['n','اسم العميل'],['a','العنوان'],['z','الزون'],['p','المنتج'],['ph','الهاتف'],['ph2','هاتف بديل'],['m','المبلغ'],['sn','الراسل'],['c','كود الشحنة'],['nn','ملاحظات'],['cn','العدد']];
