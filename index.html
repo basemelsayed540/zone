@@ -910,7 +910,7 @@ const SFL=[];let SFQ='';
 function sfDraw(){const o=$('sfl');if(!o)return;if(TAB=='s'){o.style.display='none';return}o.style.display='';
  const m=new Map();R.forEach(x=>{const nm=String(x&&x.sn!=null?x.sn:'').trim();if(!nm||nm=='لصق')return;const k=snk(nm);if(!k)return;const e2=m.get(k);if(e2)e2.n++;else m.set(k,{k,nm,n:1})});
  if(SF&&!m.has(SF))SF='';
- const AL=[...m.values()].sort((a,b)=>b.n-a.n||a.nm.localeCompare(b.nm,'ar')),qn=acNorm(SFQ),L=qn?AL.filter(x=>acNorm(x.nm).includes(qn)):AL;SFL.length=0;L.forEach(x=>SFL.push(x.k));
+ const AL=[...m.values()],qn=acNorm(SFQ),L=qn?AL.filter(x=>acNorm(x.nm).includes(qn)):AL;SFL.length=0;L.forEach(x=>SFL.push(x.k));
  if(!$('sfq')){o.innerHTML='<div class="sfh2">الراسلين</div><input id="sfq" type="search" placeholder="🔍 ابحث عن راسل" autocomplete="off" oninput="SFQ=this.value;sfDraw()" style="width:100%;margin:2px 0 4px"><div id="sfls" style="display:flex;flex-direction:column;gap:3px"></div>'}
  if($('sfq').value!==SFQ)$('sfq').value=SFQ;
  $('sfls').innerHTML='<button class="sfi'+(SF?'':' on')+'" onclick="sfSet(-1)"><span>كل الراسلين</span><b>'+AL.length+'</b></button>'+L.map((x,i)=>'<button class="s sfi'+(x.k==SF?' on':'')+'" onclick="sfSet('+i+')" title="'+e(x.nm)+'"><span>'+e(x.nm)+'</span><b>'+x.n+'</b></button>').join('')}
