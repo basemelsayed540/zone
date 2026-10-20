@@ -100,7 +100,7 @@ small{color:var(--mut);opacity:1}
 #out tr.sfh{display:none}#side{max-height:calc(100vh - 20px)}#sfl{flex:1 1 auto;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:3px;margin-top:4px;padding-top:6px;border-top:1px solid var(--b)}.sfh2{font-size:12px;opacity:.7}.sfi{display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:right;padding:5px 8px;font-size:13px;border-radius:8px}.sfi span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sfi b{font-size:12px;background:#0001;border-radius:10px;padding:0 7px}.sfi.on,.sfi.on:hover{background:#16a34a;color:#fff;border-color:#16a34a}.sfi.on b{background:#fff3}@media(max-width:800px){#sfl{width:100%;max-height:220px}}
 </style>
 <style>#out td[data-cb]{background:var(--cb)}#out td.gcr[data-cb]{background:color-mix(in srgb,var(--tc) 35%,var(--cb))}#out td.gcs[data-cb]{background:color-mix(in srgb,var(--g) 22%,var(--cb))}</style>
-<style id="ui3">:root{--tc:var(--p)}500;600;700;800&display=swap');
+<style id="ui3">.spb{position:relative;display:inline-flex;align-items:center;justify-content:center;min-width:210px;height:28px;border:1px solid var(--b);border-radius:14px;overflow:hidden;vertical-align:middle;margin:0 6px;background:var(--c);font-size:12.5px}.spb i{position:absolute;top:0;bottom:0;right:0;width:0;background:#3b82f666;transition:width .4s}.spb b{position:relative;padding:0 10px;font-weight:700;white-space:nowrap}.spb.ok i{background:#22c55e88;width:100%!important}.spb.er{border-color:#dc2626}.spb.er i{background:#ef444477}.spb.of i{background:#f59e0b77}:root{--tc:var(--p)}500;600;700;800&display=swap');
 
 :root {
   color-scheme: light dark;
@@ -720,7 +720,7 @@ input[type=checkbox],input[type=radio]{height:auto;width:auto;padding:0}
 <h1>مستخرج الزون والشحنات (بدون إنترنت)</h1>
 <div id="app"><aside id="side"><button class="w1 w12" onclick="fi.click()">📂 فتح ملف Excel</button><input type="file" id="fi" multiple hidden accept=".xlsx,.xls,.xlsm,.xlsb,.csv,.ods" onchange="openF(Array.from(this.files));this.value=''">
 <button id="exb" onclick="exOpen()">📤 تصدير Excel</button><button class="w13" onclick="runBtn()">🔍 استخراج الزونات</button><hr><button class="s" onclick="backup()">💾 نسخة احتياطية</button><button class="s" onclick="fr.click()">♻ استعادة</button><input type="file" id="fr" hidden accept=".json" onchange="restore(this.files[0]);this.value=''"><div id="sfl"></div></aside><main id="main" data-tab="w">
-<div class="bar">اليوم: <select id="dsel" onchange="goDay(this.value)"></select><button class="s" id="dbtn" onclick="askDaily()">＋ يومية</button> <span id="gearw"><button class="s" id="gear" onclick="gearToggle(event)" title="إظهار / إخفاء الأعمدة">⚙</button><div id="gpop" onclick="event.stopPropagation()"></div></span> <small>(اليوميات اللي فيها بيانات. الاستيراد والكتابة بيتسجلوا على اليومية المختارة)</small> <small id="bk"></small></div><div class="bar" style="display:none"><button class="s" id="bdir" onclick="pickDir()">الحفظ التلقائي في فولدر</button> <small id="as"></small></div>
+<div class="bar">اليوم: <select id="dsel" onchange="goDay(this.value)"></select><button class="s" id="dbtn" onclick="askDaily()">＋ يومية</button><span id="spb" class="spb" style="display:none"><i></i><b></b></span> <span id="gearw"><button class="s" id="gear" onclick="gearToggle(event)" title="إظهار / إخفاء الأعمدة">⚙</button><div id="gpop" onclick="event.stopPropagation()"></div></span> <small>(اليوميات اللي فيها بيانات. الاستيراد والكتابة بيتسجلوا على اليومية المختارة)</small> <small id="bk"></small></div><div class="bar" style="display:none"><button class="s" id="bdir" onclick="pickDir()">الحفظ التلقائي في فولدر</button> <small id="as"></small></div>
 <div class="row1"><button id="t1" class="tb on" onclick="tab('w')">الملف الحالي</button><button id="t2" class="tb" onclick="tab('t')">الشيتات</button><button id="t3" class="tb" onclick="tab('b')">بومبو</button><button id="t4" class="tb" onclick="tab('g')">تصوير</button><button id="t6" class="tb" onclick="tab('q')">القيد</button><button id="t5" class="tb" onclick="tab('s')">مقارنة الراسلين</button></div>
 <div class="bar"></div>
 <div id="mp"></div><div class="row2"><span id="sum"></span><button class="s w3" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s w4" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s wbg" onclick="gPasteAsk()" style="display:none">📋 لصق</button><span class="wbg" style="display:none"><input id="tq" type="search" placeholder="🔍 بحث: اسم العميل / هاتف / هاتف بديل" autocomplete="off" oninput="tqSet(this.value)" style="width:260px;max-width:100%"> <small id="tqc"></small></span><button class="s wq" onclick="$('fq').click()" style="display:none">📥 رفع ملف (ALL ← قيد)</button><input type="file" id="fq" accept=".xlsx,.xlsb,.xls,.xlsm,.csv" style="display:none" onchange="qUp(this)"><button class="s wns" id="bwr" onclick="wr()" title="عرض النص كامل">عرض النص كامل</button><button class="s wns" onclick="rzReset()" title="اسحب حافة رأس العمود لتغيير عرضه (دبل كليك يرجّعه)">إعادة ضبط الأعمدة</button><button class="s w1 w12" onclick="mv()">➡ نقل للشيتات</button></div><div class="bar"><small id="msg"></small></div><div class="wrap"><table id="out"></table></div><div id="cmpw"><div class="wrap sgw"><table id="sgt"></table></div><small>اكتب في عمود "قائمة راسليني" كل الراسلين اللي بتشتغل معاهم (مرة واحدة، وتفضل محفوظة كل يوم في قاعدة البيانات). العمود التالت بيظهر الراسلين اللي في قايمتك ومش موجودين في شحنات اليوم المختار. اضغط مرتين على خلية للكتابة، واسحب بالماوس للتحديد، واضغط على عنوان العمود لتحديده ونسخه، وDelete بيمسح.</small></div><div id="selbar" style="display:none"><b id="selcnt"></b><button onclick="copySel()">📋 نسخ</button><button class="s" id="bdel" onclick="delSel()">🗑 حذف المحدد (0)</button><button class="w1 w12" onclick="mvSel()">➡ نقل لتبويب الشيتات</button></div>
@@ -805,7 +805,7 @@ async function days(){let k=[],v=[];try{k=(await db('getAllKeys'))||[];v=(await 
  const L=k.map((x,i)=>[x,v[i]]).filter(([x,r])=>isDay(x)&&r&&(cnt(r)>0||x==DAY)).sort((a,b)=>{const ua=(a[1]&&a[1].u)||(/^\d/.test(a[0])?Date.parse(a[0]):0),ub=(b[1]&&b[1].u)||(/^\d/.test(b[0])?Date.parse(b[0]):0);return ub-ua});
  if(DAY.startsWith('d:')&&!L.some(x=>x[0]==DAY))L.unshift([DAY,{w:[],t:[],b:[],g:[],q:[]}]);
  const wd=x=>{try{return new Date(x+'T12:00').toLocaleDateString('ar-EG-u-nu-latn',{weekday:'long'})}catch(e){return''}};
- $('dsel').innerHTML=L.length?L.map(([x,r])=>'<option value="'+e(x)+'"'+(x==DAY?' selected':'')+'>'+(x.startsWith('d:')?e(dName(x)):wd(x)+' '+x)+' ('+cnt(r)+' صف)</option>').join(''):'<option value="">لا توجد أيام محفوظة بعد</option>';return L}
+ $('dsel').innerHTML=L.length?L.map(([x,r])=>'<option value="'+e(x)+'"'+(x==DAY?' selected':'')+'>'+(x.startsWith('d:')?e(dName(x)):wd(x)+' '+x)+' ('+cnt(r)+' صف)</option>').join(''):'<option value="">لا توجد أيام محفوظة بعد</option>';spUpd();return L}
 const toDay=async()=>{};
 async function init(){try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}try{const cv=await db('get','cw');if(fixCW(cv)&&!localStorage.getItem('cw')){CW=fixCW(cv)}}catch(e){}try{const a=await db('get','cwb');if(fixCWN(a)&&!localStorage.getItem('cwb'))CWB=fixCWN(a)}catch(e){}try{const a=await db('get','cwg');if(fixCWN(a)&&!localStorage.getItem('cwg'))CWG=fixCWN(a)}catch(e){}try{const a=await db('get','cwq');if(fixCWQ(a)&&!localStorage.getItem('cwq'))CWQ=fixCWQ(a)}catch(e){}try{const lv=await db('get','lh');if(lv)Object.keys(lv).forEach(k=>{if(!(k in LH))LH[k]=lv[k]})}catch(e){}try{const v=await db('get','kw');if(v&&v.length&&!kwList().length)localStorage.setItem('zs',JSON.stringify(v))}catch(e){}load();const L=(await days()).filter(x=>cnt(x[1])>0);await goDay(L.length?L[0][0]:null);bkNote();await initDir()}
 const phk=v=>{let d=String(v==null?'':v).replace(/[\u0660-\u0669]/g,c=>c.charCodeAt(0)-0x660).replace(/[\u06F0-\u06F9]/g,c=>c.charCodeAt(0)-0x6F0).replace(/\D/g,'');return d.length<7?'':d.length>10?d.slice(-10):d};
@@ -1474,11 +1474,11 @@ async function doLogin(){const m=document.getElementById('lgM'),em=document.getE
  m.textContent='...';let r;try{r=await fetch(SBU+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:SBK,'Content-Type':'application/json'},body:JSON.stringify({email:em,password:pw})})}catch(e){m.textContent='مفيش اتصال بالإنترنت';return}
  if(!r.ok){m.textContent=(r.status==400||r.status==401)?'الإيميل أو كلمة السر غلط':'خطأ في تسجيل الدخول ('+r.status+')';return}
  putSes(sesFrom(await r.json()));document.getElementById('lgO').style.display='none';document.getElementById('lgP').value='';await startApp()}
-function signOut(){putSes(null);location.reload()}
+function signOut(){const b=document.getElementById('spb');if(b&&b.style.display!='none'&&!b.classList.contains('ok')&&!confirm('⚠ البيانات لسه ما اترفعتش بالكامل للسحابة (بص على شريط التحميل جنب اليومية). لو خرجت دلوقتي هتفضل على الجهاز ده بس. تخرج برضه؟'))return;putSes(null);location.reload()}
 function setSt(s,msg){let b=document.getElementById('syb');
  if(!b){b=document.createElement('div');b.id='syb';b.style.cssText='position:fixed;bottom:8px;left:8px;z-index:50;background:var(--c);border:1px solid var(--b);border-radius:8px;padding:4px 10px;font-size:12px;display:flex;gap:8px;align-items:center;max-width:70vw';b.innerHTML='<span id="sys"></span><button class="s" style="margin:0;padding:2px 8px" onclick="signOut()">خروج</button>';document.body.appendChild(b)}
  const T={ok:'☁ متزامن',sync:'⟳ بيزامن...',off:'⚠ غير متصل. التعديلات محفوظة على الجهاز وهتترفع لما النت يرجع',auth:'🔒 محتاج تسجيل دخول',err:'⚠ خطأ في المزامنة: '+(msg||'')};
- document.getElementById('sys').textContent=(T[s]||'')+(SES&&SES.email?' · '+SES.email:'');b.style.borderColor=s=='ok'||s=='sync'?'var(--b)':'#e0a030'}
+ document.getElementById('sys').textContent=(T[s]||'')+(SES&&SES.email?' · '+SES.email:'');SY.stt=s;SY.sm=msg||'';if(typeof spUpd=='function')spUpd();b.style.borderColor=s=='ok'||s=='sync'?'var(--b)':'#e0a030'}
 const toast=t=>{try{$('msg').textContent=t}catch(e){}};
 
 /* --- local snapshot of what the cloud has (also acts as the offline queue) --- */
@@ -1505,9 +1505,14 @@ function plan(st,sn){const seen=new Set(),ins=[],upd=[],del=[];let fresh=false;
 async function pushDay(d){const st=await loadState(d),sn=await getSnap(d),pl=plan(st,sn);
  if(pl.fresh)await persistDay(d,st);
  if(!pl.ins.length&&!pl.upd.length&&!pl.del.length)return;
- for(let i=0;i<pl.ins.length;i+=200){const b=pl.ins.slice(i,i+200);
-  const r=await sbj('/rest/v1/shipments?on_conflict=id',{method:'POST',headers:{Prefer:'resolution=ignore-duplicates,return=representation'},body:JSON.stringify(b.map(x=>({id:x.id,day:d,tab:x.t,pos:x.p,data:x.data})))});
-  const got=new Map((await r.json()).map(x=>[x.id,x.version]));b.forEach(x=>{sn.rows[x.id]={v:got.get(x.id)||0,t:x.t,p:x.p,j:x.j}});await putSnap(d,sn)}
+ const badRows=[];
+ const postRows=async b=>{try{
+   const r=await sbj('/rest/v1/shipments?on_conflict=id',{method:'POST',headers:{Prefer:'resolution=ignore-duplicates,return=representation'},body:JSON.stringify(b.map(x=>({id:x.id,day:d,tab:x.t,pos:x.p,data:x.data})))});
+   const got=new Map((await r.json()).map(x=>[x.id,x.version]));b.forEach(x=>{sn.rows[x.id]={v:got.get(x.id)||0,t:x.t,p:x.p,j:x.j}})}
+  catch(e){if(!e.http)throw e;
+   if(b.length==1||badRows.length>=20){b.forEach(x=>badRows.push({id:x.id,msg:e.message}));return}
+   const h=b.length>>1;await postRows(b.slice(0,h));await postRows(b.slice(h))}};
+ for(let i=0;i<pl.ins.length;i+=200){await postRows(pl.ins.slice(i,i+200));await putSnap(d,sn);spUpd()}
  const conf=[];let k=0;
  const work=async()=>{while(k<pl.upd.length){const x=pl.upd[k++];
   const r=await sbj('/rest/v1/shipments?id=eq.'+x.id+'&version=eq.'+x.v,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({tab:x.t,pos:x.p,data:x.data})});
@@ -1517,7 +1522,8 @@ async function pushDay(d){const st=await loadState(d),sn=await getSnap(d),pl=pla
   else for(const x of pl.del)await sbj('/rest/v1/shipments?id=eq.'+x.id+'&version=eq.'+x.v,{method:'DELETE'});
   pl.del.forEach(x=>{delete sn.rows[x.id]});await putSnap(d,sn)}
  if(conf.length){const r=await sbj('/rest/v1/shipments?select=id,day,tab,pos,data,version&id=in.('+conf.join(',')+')');const a=await r.json(),have=new Set(a.map(x=>x.id));
-  const res=await mergeDay(d,a,conf.filter(id=>!have.has(id)));toast('⚠ '+conf.length+' صف اتعدّل من مستخدم تاني في نفس الوقت، اتحدّثوا بآخر نسخة'+(res.lost?'':''))}}
+  const res=await mergeDay(d,a,conf.filter(id=>!have.has(id)));toast('⚠ '+conf.length+' صف اتعدّل من مستخدم تاني في نفس الوقت، اتحدّثوا بآخر نسخة'+(res.lost?'':''))}
+ if(badRows.length)throw Object.assign(new Error(badRows.length+' صف رفضتهم قاعدة البيانات: '+badRows[0].msg),{http:400})}
 
 /* --- merge what the cloud has into the local day --- */
 async function mergeDay(d,ups,dels){const sn=await getSnap(d),st=await loadState(d),live=d==DAY;
@@ -1573,6 +1579,28 @@ async function ensureImport(){if(lsGet('zsi',null)==SES.uid)return;
  for(const k of keys.filter(isSK)){if(rk.has(k))continue;const v=await db0('get',k).catch(()=>0);if(v!=null)SY.q[k]=v}
  await db0('put',SY.q,'sy:q').catch(()=>0);saveDirty();lsSet('zsi',SES.uid);if(n)toast('اتجهّزت بيانات الجهاز ('+n+' صف) للرفع للقاعدة المشتركة')}
 
+/* --- sync progress bar: counts rows the cloud confirmed, then double-checks the cloud count --- */
+const SPB={t:0};
+async function spCalc(){const st={w:RW,t:RT,b:RB,g:RG,q:RQ},sn=await getSnap(DAY),seen=new Set();let tot=0,ok=0,del=0;
+ for(const t of TABS)for(const r of st[t]){tot++;const s=r._id&&sn.rows[r._id];if(s&&s.t==t&&s.j==sj(strip(r)))ok++;if(r._id)seen.add(r._id)}
+ for(const id in sn.rows)if(!seen.has(id))del++;return{tot,ok,del}}
+function spUpd(){clearTimeout(SPB.t);SPB.t=setTimeout(spDraw,250)}
+async function spDraw(){const el=document.getElementById('spb');if(!el)return;
+ if(!SES||!SBOK()){el.style.display='none';return}
+ const c=await spCalc(),pend=c.tot-c.ok+c.del,pct=c.tot?Math.floor(c.ok*100/c.tot):100,v=SY.vok&&SY.vok.day==DAY&&SY.vok.tot==c.tot,i=el.querySelector('i'),b=el.querySelector('b');
+ let cls='',tx='',tt='';
+ if(SY.stt=='err'){cls='er';tx='⚠ '+(pend||'')+' '+(pend?'صف ما اترفعوش':'خطأ في المزامنة');tt=SY.sm||''}
+ else if(SY.stt=='off'){cls='of';tx='⚠ غير متصل'+(pend?' · '+pend+' صف مستني':'');tt='التعديلات محفوظة على الجهاز وهتترفع لما النت يرجع'}
+ else if(SY.stt=='auth'){cls='of';tx='🔒 محتاج تسجيل دخول'}
+ else if(pend==0&&v){cls='ok';tx='✓ 100% اترفع وتأكدنا من السحابة ('+c.tot+' صف)';tt='عدد الصفوف في السحابة = عدد الصفوف عندك'}
+ else if(pend==0){tx='⟳ بنتأكد من السحابة...'}
+ else{tx='⟳ بيترفع '+pct+'% ('+c.ok+'/'+c.tot+(c.del?' + '+c.del+' حذف':'')+')'}
+ el.style.display='';el.className='spb '+cls;i.style.width=(cls=='ok'?100:pct)+'%';b.textContent=tx;el.title=tt}
+async function verifyDay(){const c=await spCalc();if(c.ok!=c.tot||c.del||SY.dirty.has(DAY)){SY.vok=null;return}
+ const r=await sbj('/rest/v1/shipments?select=id&day=eq.'+encodeURIComponent(DAY),{headers:{Prefer:'count=exact',Range:'0-0','Range-Unit':'items'}}),cr=r.headers.get('content-range'),m=cr&&/\/(\d+)$/.exec(cr);
+ SY.vok=m&&+m[1]==c.tot?{day:DAY,tot:c.tot}:null}
+window.addEventListener('beforeunload',ev=>{const b=document.getElementById('spb');if(SES&&b&&b.style.display!='none'&&!b.classList.contains('ok')&&(SY.dirty.size||b.className.indexOf('er')>0)){ev.preventDefault();ev.returnValue=''}});
+
 /* --- the sync loop --- */
 async function syncCycle(){if(!SES||!SBOK())return;if(SY.busy){SY.again=true;return}SY.busy=true;SY.last=Date.now();setSt('sync');
  try{do{SY.again=false;
@@ -1582,6 +1610,7 @@ async function syncCycle(){if(!SES||!SBOK())return;if(SY.busy){SY.again=true;ret
    await pushSettings();await pullInc();
    if(SY.pullDay){const d=SY.pullDay;SY.pullDay=null;await fullDayPull(d)}
    if(await checkCount())await fullDayPull(DAY);
+   await verifyDay();
    await pullSettings();
    if(document.getElementById('dlO'))dlFill();
    if(SY.redraw)softDraw();else days();
