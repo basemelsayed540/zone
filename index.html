@@ -1184,7 +1184,7 @@ function drawN(){const A=gArr(),DUPG=dupPh(A),CWi=gCW(),tot=gTot(),HD=['<input t
   h+='</tr>'}
  $('out').innerHTML=h;if($('out').style)$('out').style.width=CWi.reduce((x,y)=>x+y,0)+'px';
  {const tc=$('tqc');if(tc)tc.textContent=TQ?A.filter(r=>r&&!gBlankRow(r)&&rowOk(r)).length+' نتيجة':''}
- applyCols();gPaint(false);updSel()}
+ applyCols();gPaint(false,NOSC);updSel()}
 function gSel(ev,r,c){const t=ev.target;if(t&&(t.tagName=='INPUT'||(t.closest&&t.closest('.rz'))))return;if(ev.button)return;
  if(GED)gCommit();
  if(ev.shiftKey){if(!GA)GA={r:GE.r,c:GE.c};GE={r,c};gPaint();return}
@@ -1395,7 +1395,7 @@ function sgDown(ev,r,c){if(ev.button)return;if(sgE){if(sgE.r==r&&c==1)return;sgC
  if(ev.shiftKey){if(!sgA)sgA={r:sgF.r,c:sgF.c};sgF={r,c};sgPaint();return}
  sgA={r,c};sgF={r,c};sgPaint();
  if(ev.pointerType=='touch')return;
- const mv=m=>{if(m.clientY>innerHeight-40)scrollBy(0,18);else if(m.clientY<40)scrollBy(0,-18);const el=document.elementFromPoint(m.clientX,m.clientY),td=el&&el.closest&&el.closest('td[data-r]');if(!td)return;const rr=+td.dataset.r,cc=+td.dataset.c;if(rr!=sgF.r||cc!=sgF.c){sgF={r:rr,c:cc};sgPaint(true)}};
+ const mv=m=>{if(m.buttons===0){up();return}if(m.clientY>innerHeight-40)scrollBy(0,18);else if(m.clientY<40)scrollBy(0,-18);const el=document.elementFromPoint(m.clientX,m.clientY),td=el&&el.closest&&el.closest('td[data-r]');if(!td)return;const rr=+td.dataset.r,cc=+td.dataset.c;if(rr!=sgF.r||cc!=sgF.c){sgF={r:rr,c:cc};sgPaint(true)}};
  const up=()=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',up)};
  document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up)}
 function sgCol(c){if(sgE)sgCommit();let last=0;for(let r=0;r<sgRows();r++)if(sgGet(r,c).trim())last=r;sgA={r:0,c};sgF={r:last,c};sgPaint(true)}
@@ -1490,7 +1490,8 @@ const putSnap=(d,s)=>db0('put',s,'sn:'+d).catch(()=>0);
 async function loadState(d){if(d==DAY)return{w:RW,t:RT,b:RB,g:RG,q:RQ};let v=null;try{v=await db0('get',d)}catch(e){}
  if(Array.isArray(v))return{w:v,t:[],b:[],g:[],q:[]};return{w:(v&&v.w)||[],t:(v&&v.t)||[],b:(v&&v.b)||[],g:(v&&v.g)||[],q:(v&&v.q)||[]}}
 const persistDay=(d,s)=>db0('put',{w:s.w,t:s.t,b:s.b,g:s.g,q:s.q||[],u:Date.now()},d).catch(()=>0);
-function softDraw(){if((typeof GED!='undefined'&&GED)||(document.activeElement&&(document.activeElement.tagName=='TEXTAREA'||document.activeElement.tagName=='INPUT')&&document.activeElement.type!='checkbox')){SY.redraw=true;return}SY.redraw=false;draw();days()}
+let NOSC=false;
+function softDraw(){if((typeof GED!='undefined'&&GED)||(document.activeElement&&(document.activeElement.tagName=='TEXTAREA'||document.activeElement.tagName=='INPUT')&&document.activeElement.type!='checkbox')){SY.redraw=true;return}SY.redraw=false;const sy=scrollY,sx=scrollX,wr=document.querySelector('.wrap'),wt=wr?wr.scrollTop:0,wl=wr?wr.scrollLeft:0;NOSC=true;try{draw()}finally{NOSC=false}scrollTo(sx,sy);if(wr){wr.scrollTop=wt;wr.scrollLeft=wl}days()}
 
 /* --- diff: what must be sent to the cloud --- */
 function plan(st,sn){const seen=new Set(),ins=[],upd=[],del=[];let fresh=false;
