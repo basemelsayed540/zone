@@ -1030,7 +1030,7 @@ function updSel(){$('bdel').textContent='🗑 حذف المحدد ('+SEL.size+')
 let LAST=null;
 function tg(i,c,el,ev){if(!R[i])return;if(ev&&ev.shiftKey&&LAST!=null&&LAST!=i){const a=Math.min(LAST,i),b=Math.max(LAST,i);for(let k=a;k<=b;k++){const y=R[k];if(vis(y))c?SEL.add(y):SEL.delete(y)}LAST=i;draw();return}LAST=i;const x=R[i];c?SEL.add(x):SEL.delete(x);const tr=el&&el.closest&&el.closest('tr');if(tr)tr.classList.toggle('sl',c);updSel()}
 function tgAll(c){R.filter(vis).forEach(x=>c?SEL.add(x):SEL.delete(x));draw()}
-function delSel(){if(!SEL.size){alert('حدد شحنات الأول بعلامة ✓ على الصف');return}const k=SEL.size,tn=TAB=='w'?'الملف الحالي':TAB=='t'?'الشيتات':TAB=='b'?'بومبو':TAB=='g'?'تصوير':'القيد';if(!confirm('حذف '+k+(TAB=='w'||TAB=='t'?' شحنة':' صف')+' نهائياً من '+tn+'؟'))return;
+function delSel(){if(!SEL.size){alert('حدد شحنات الأول بعلامة ✓ على الصف');return}const k=SEL.size,tn=TAB=='w'?'الملف الحالي':TAB=='t'?'الشيتات':TAB=='k'?'الشيخ':TAB=='b'?'بومبو':TAB=='g'?'تصوير':'القيد';if(!confirm('حذف '+k+(TAB=='w'||TAB=='t'||TAB=='k'?' شحنة':' صف')+' نهائياً من '+tn+'؟'))return;
  SY.okDel=Date.now();const A=gArr(),B=A.filter(x=>!SEL.has(x));gSet(B);SEL.clear();save();draw();$('msg').textContent='اتحذف '+k+(TAB=='w'||TAB=='t'?' شحنة':' صف')}
 function mv(){if(TAB!='w'||!RW.length){alert('مفيش بيانات في الملف الحالي للنقل');return}
  const c=s=>RW.filter(x=>x.s==s).length,n=c('n'),r=c('r'),u=c('u');
@@ -1156,8 +1156,8 @@ try{const v=fixCWN(JSON.parse(localStorage.getItem('cwb')||'null'));if(v)CWB=v}c
 try{const v=fixCWN(JSON.parse(localStorage.getItem('cwg')||'null'));if(v)CWG=v}catch(e){}
 const gCW=()=>TAB=='b'?CWB:TAB=='g'?CWG:TAB=='q'?CWQ:CW;
 const cwKey=()=>TAB=='b'?'cwb':TAB=='g'?'cwg':TAB=='q'?'cwq':'cw';
-const gArr=()=>TAB=='w'?RW:TAB=='t'?RT:TAB=='b'?RB:TAB=='g'?RG:RQ;
-const gSet=v=>{if(TAB=='w')RW=v;else if(TAB=='t')RT=v;else if(TAB=='b')RB=v;else if(TAB=='g')RG=v;else RQ=v;R=v};
+const gArr=()=>TAB=='w'?RW:TAB=='t'?RT:TAB=='k'?RK:TAB=='b'?RB:TAB=='g'?RG:RQ;
+const gSet=v=>{if(TAB=='w')RW=v;else if(TAB=='t')RT=v;else if(TAB=='k')RK=v;else if(TAB=='b')RB=v;else if(TAB=='g')RG=v;else RQ=v;R=v};
 const gBlank=()=>{const o={};NC.forEach(c=>o[c[0]]='');return o};
 const gVal=(r,f)=>r&&r[f]!=null?String(r[f]):'';
 const gBlankRow=r=>!r||NC.every(c=>gVal(r,c[0])==='');
