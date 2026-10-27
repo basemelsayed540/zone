@@ -726,7 +726,7 @@ input[type=checkbox],input[type=radio]{height:auto;width:auto;padding:0}
 <div id="mp"></div><div class="row2"><span id="sum"></span><button class="s w3" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s w4" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s wbg" onclick="gPasteAsk()" style="display:none">📋 لصق</button><span class="wbg" style="display:none"><input id="tq" type="search" placeholder="🔍 بحث: اسم العميل / هاتف / هاتف بديل" autocomplete="off" oninput="tqSet(this.value)" style="width:260px;max-width:100%"> <small id="tqc"></small></span><button class="s wq" onclick="$('fq').click()" style="display:none">📥 رفع ملف (ALL ← قيد)</button><input type="file" id="fq" accept=".xlsx,.xlsb,.xls,.xlsm,.csv" style="display:none" onchange="qUp(this)"><button class="s wns" id="bwr" onclick="wr()" title="عرض النص كامل">عرض النص كامل</button><button class="s wns" onclick="rzReset()" title="اسحب حافة رأس العمود لتغيير عرضه (دبل كليك يرجّعه)">إعادة ضبط الأعمدة</button><button class="s w1 w12" onclick="mv()">➡ نقل للشيتات</button></div><div class="bar"><small id="msg"></small></div><div class="wrap"><table id="out"></table></div><div id="cmpw"><div class="wrap sgw"><table id="sgt"></table></div><small>اكتب في عمود "قائمة راسليني" كل الراسلين اللي بتشتغل معاهم (مرة واحدة، وتفضل محفوظة كل يوم في قاعدة البيانات). العمود التالت بيظهر الراسلين اللي في قايمتك ومش موجودين في شحنات اليوم المختار. اضغط مرتين على خلية للكتابة، واسحب بالماوس للتحديد، واضغط على عنوان العمود لتحديده ونسخه، وDelete بيمسح.</small></div><div id="selbar" style="display:none"><b id="selcnt"></b><button onclick="copySel()">📋 نسخ</button><button class="s" id="bdel" onclick="delSel()">🗑 حذف المحدد (0)</button><button class="w1 w12" onclick="mvSel()">➡ نقل لتبويب الشيتات</button></div>
 <details class="w1"><summary>لصق عناوين فقط</summary><textarea id="in" placeholder="عنوان في كل سطر"></textarea><button onclick="paste()">إضافة لليوم</button></details>
 <details><summary>إضافة كلمة جديدة لجدول الزونات</summary><input id="nk" placeholder="الكلمة"> <input id="nz" placeholder="الزون"><button onclick="add()">إضافة</button> <small id="cn"></small><div id="kl"></div></details>
-<details><summary>إعدادات متقدمة</summary><button class="s" onclick="resetMaps()">نسيان إعدادات الأعمدة المحفوظة</button></details>
+<details><summary>إعدادات متقدمة</summary><button class="s" onclick="trashRestore()">♻ استرجاع من سلة المحذوفات</button><button class="s" onclick="resetMaps()">نسيان إعدادات الأعمدة المحفوظة</button></details>
 <small>أخضر تلقائي | أصفر مراجعة | أحمر غير محدد. كل شيء بيتحفظ في المتصفح حسب اليوم.</small>
 </main></div>
 <div id="gp" class="ov" style="display:none"><div class="dlg" style="max-width:640px"><h3>لصق من Excel / Google Sheets</h3><textarea id="gpt" style="width:100%;height:130px" placeholder="حدد الخلايا في Excel أو Sheets، انسخ (Ctrl+C)، ثم الصق هنا (Ctrl+V)"></textarea><div style="margin-top:8px"><button onclick="gPasteOk()">✅ لصق</button><button class="s" onclick="$('gp').style.display='none'">إلغاء</button> <small>اللصق بيبدأ من الخلية المحددة وبيضيف صفوف لو لزم.</small></div></div></div>
@@ -901,6 +901,13 @@ const mergeMap=(sv,dm)=>{const o={};Object.keys(FN).concat('area').forEach(f=>{i
 function goImp(){const p=PF[0],m={};const mf=missF();if(mf.length&&!confirm('⚠ ما حددتش عمود لـ:\n• '+mf.map(f=>FN[f]).join('\n• ')+'\n\nتكمل الاستيراد من غيرهم؟\n(اضغط إلغاء للرجوع وتحديدهم)'))return;Object.keys(FN).forEach(f=>{const s=$('s0'+f);m[f]=s&&s.value!==''?+s.value:-1});m.area=p.d.map.area!=null?p.d.map.area:-1;m.auto=!!$('au0').checked;m.hr=p.hv;p.snd=cl($('sd0').value)||p.snd;
  if(p.d.h>=0){Object.keys(m).forEach(f=>{if(!(f in FN)||m[f]<0)return;const hh=nh(p.d.hd[m[f]]||'');if(hh)LH[hh]=f});saveLH()}
  db('put',m,'m2:'+p.sig).catch(()=>0);p.d.map=mergeMap(m,p.d.map);if(isSh(p)){const sv=$('s0send');if(sv&&sv.value!=='')p.d.map.send=+sv.value}PF.shift();panel();imp(p)}
+async function trashRestore(){const ks=((await db0('getAllKeys').catch(()=>[]))||[]).filter(k=>/^tr:/.test(k));if(!ks.length){alert('سلة المحذوفات فاضية');return}
+ let n=0;for(const k of ks){const t=await db0('get',k).catch(()=>0);if(!t||!t.rows)continue;
+  const st=await loadState(t.day),have=new Set();TABS.forEach(x=>st[x].forEach(r=>have.add(r._id)));
+  t.rows.forEach(o=>{if(o.r&&!have.has(o.r._id)&&st[o.t]){st[o.t].push(o.r);n++}});
+  if(t.day==DAY)await save();else{await persistDay(t.day,st);SY.dirty.add(t.day);saveDirty()}
+  await db0('delete',k).catch(()=>0)}
+ draw();kick(300);alert('اترجّع '+n+' صف من سلة المحذوفات')}
 async function resetMaps(){if(!confirm('نسيان إعدادات الأعمدة المحفوظة لكل أشكال الملفات؟ (الكلمات والزونات مش هتتأثر)'))return;const k=(await db('getAllKeys').catch(()=>0))||[];for(const x of k)if(/^m2?:/.test(x))await db('delete',x);LH={};saveLH();alert('تم. هيظهر شريط مراجعة الأعمدة مع كل شكل ملف جديد.')}
 async function imp(p){await toDay();const sh=/الشيخ/.test(String(p.f||'')),tt=sh?'k':'w';if(sh&&p.d.map.send==null)detSend(p);tab(tt);const[n,dup]=build(p.d.D,p.d.map,p.snd,sh?RK:RW,sh&&p.d.map.send!=null?p.d.map.send:-1);await save();draw();alert(p.snd+': اتضاف '+n+' صف'+(sh?' في تبويب الشيخ':'')+(dup?' وتخطيت '+dup+' مكرر (نفس الكود)':'')+'\nاتسجلوا في يومية: '+dName(DAY))}
 function zr(x){let r=cls(x.a);if(!r.z&&x.ar){const q=cls(x.ar);if(q.z&&!q.f){r=q;r.fa=1}}
@@ -976,7 +983,7 @@ async function backup(){const o=await bkObj(),days=Object.keys(o.idb).filter(isD
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:'application/json'}));a.download='zone_backup_'+today()+'.json';a.click();
  try{localStorage.setItem('lastbk',Date.now())}catch(e){}bkNote();$('msg').textContent='اتحفظت نسخة احتياطية ('+days+' يوم، '+kwList().length+' كلمة متعلّمة). احتفظ بالملف في مكان تاني (فلاشة أو Drive).'}
 async function restore(f){if(!f)return;let o;try{o=JSON.parse(await f.text())}catch(e){alert('الملف مش نسخة احتياطية صالحة');return}await restoreObj(o)}
-async function restoreObj(o){if(!o||!o.idb||typeof o.idb!='object'){alert('الملف مش نسخة احتياطية صالحة');return}
+async function restoreObj(o){SY.okDel=Date.now();if(!o||!o.idb||typeof o.idb!='object'){alert('الملف مش نسخة احتياطية صالحة');return}
  const dk=Object.keys(o.idb).filter(isDay),bkw=o.idb.kw||o.ls&&o.ls.zs||[];
  if(!confirm('استرجاع نسخة بتاريخ '+(o.at||'').slice(0,10)+':\n- '+dk.length+' يوم (أي يوم بنفس التاريخ هيتبدل بالنسخة)\n- '+bkw.length+' كلمة متعلّمة (بتتضاف للموجود)\n- إعدادات الأعمدة وأسماء الأعمدة المتعلّمة\nتكمل؟'))return;
  for(const k of Object.keys(o.idb)){if(k=='kw'||k=='lh'||k=='dirh')continue;await db('put',o.idb[k],k).catch(()=>0)}
@@ -1024,7 +1031,7 @@ let LAST=null;
 function tg(i,c,el,ev){if(!R[i])return;if(ev&&ev.shiftKey&&LAST!=null&&LAST!=i){const a=Math.min(LAST,i),b=Math.max(LAST,i);for(let k=a;k<=b;k++){const y=R[k];if(vis(y))c?SEL.add(y):SEL.delete(y)}LAST=i;draw();return}LAST=i;const x=R[i];c?SEL.add(x):SEL.delete(x);const tr=el&&el.closest&&el.closest('tr');if(tr)tr.classList.toggle('sl',c);updSel()}
 function tgAll(c){R.filter(vis).forEach(x=>c?SEL.add(x):SEL.delete(x));draw()}
 function delSel(){if(!SEL.size){alert('حدد شحنات الأول بعلامة ✓ على الصف');return}const k=SEL.size,tn=TAB=='w'?'الملف الحالي':TAB=='t'?'الشيتات':TAB=='b'?'بومبو':TAB=='g'?'تصوير':'القيد';if(!confirm('حذف '+k+(TAB=='w'||TAB=='t'?' شحنة':' صف')+' نهائياً من '+tn+'؟'))return;
- const A=gArr(),B=A.filter(x=>!SEL.has(x));gSet(B);SEL.clear();save();draw();$('msg').textContent='اتحذف '+k+(TAB=='w'||TAB=='t'?' شحنة':' صف')}
+ SY.okDel=Date.now();const A=gArr(),B=A.filter(x=>!SEL.has(x));gSet(B);SEL.clear();save();draw();$('msg').textContent='اتحذف '+k+(TAB=='w'||TAB=='t'?' شحنة':' صف')}
 function mv(){if(TAB!='w'||!RW.length){alert('مفيش بيانات في الملف الحالي للنقل');return}
  const c=s=>RW.filter(x=>x.s==s).length,n=c('n'),r=c('r'),u=c('u');
  if(n&&!confirm('تنبيه: لسه ما ضغطتش "استخراج الزونات" ('+n+' صف من '+RW.length+' من غير استخراج).\nتنقل برضه؟'))return;
@@ -1444,7 +1451,8 @@ document.addEventListener('paste',ev=>{if(TAB!='s'||sgE)return;const t=ev.target
 const TABS=['w','t','k','b','g','q'];
 const CFG=(typeof window!='undefined'&&window.ZONE_CONFIG)||{},SBU=String(CFG.SUPABASE_URL||'').replace(/\/+$/,''),SBK=String(CFG.SUPABASE_KEY||'');
 const SBOK=()=>!!SBU&&!!SBK&&!/PASTE_/.test(SBK);
-const SY={dirty:new Set(),dd:new Set(),q:{},sv:{},snc:{},busy:false,again:false,started:false,since:'',sSince:'',redraw:false,pullDay:null,first:true,kt:0,last:0};
+const APPV=2;
+const SY={okDel:0,vg:0,dirty:new Set(),dd:new Set(),q:{},sv:{},snc:{},busy:false,again:false,started:false,since:'',sSince:'',redraw:false,pullDay:null,first:true,kt:0,last:0};
 const lsGet=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
 const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 const saveDirty=()=>lsSet('zsd',[...SY.dirty]),saveDD=()=>lsSet('zsx',[...SY.dd]);
@@ -1506,7 +1514,7 @@ function plan(st,sn){const seen=new Set(),ins=[],upd=[],del=[];let fresh=false;
    P[i]=np;prev=np}
   A.forEach((r,i)=>{const data=strip(r),j=sj(data),s=sn.rows[r._id];
    if(!s)ins.push({id:r._id,t,p:P[i],j,data});else if(s.t!=t||s.p!=P[i]||s.j!=j)upd.push({id:r._id,v:s.v,t,p:P[i],j,data})})}
- for(const id in sn.rows)if(!seen.has(id))del.push({id,v:sn.rows[id].v});
+ for(const id in sn.rows)if(!seen.has(id)&&TABS.includes(sn.rows[id].t))del.push({id,v:sn.rows[id].v});
  return{ins,upd,del,fresh}}
 
 async function pushDay(d){const st=await loadState(d),sn=await getSnap(d),pl=plan(st,sn);
@@ -1525,6 +1533,9 @@ async function pushDay(d){const st=await loadState(d),sn=await getSnap(d),pl=pla
   const r=await sbj('/rest/v1/shipments?id=eq.'+x.id+'&version=eq.'+x.v,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({tab:x.t,pos:x.p,data:x.data})});
   const a=await r.json();if(a.length)sn.rows[x.id]={v:a[0].version,t:x.t,p:x.p,j:x.j};else conf.push(x.id)}};
  const rs=await Promise.allSettled([work(),work(),work(),work()]);await putSnap(d,sn);const bad=rs.find(x=>x.status=='rejected');if(bad)throw bad.reason;
+ if(pl.del.length>20&&!(SY.okDel&&Date.now()-SY.okDel<180000)){
+  if(confirm('⚠ التطبيق عايز يمسح '+pl.del.length+' صف من السحابة (يومية "'+dName(d)+'") وانت ما طلبتش حذف.\nده ممكن يكون خطأ.\nإلغاء = ما يتمسحش حاجة ويرجّع الصفوف من السحابة.\nموافق = يمسحهم فعلاً.')===false){pl.del.forEach(x=>{delete sn.rows[x.id]});pl.del.length=0;await putSnap(d,sn);SY.pullDay=d}
+ }
  if(pl.del.length){if(pl.del.length>10){for(let i=0;i<pl.del.length;i+=100)await sbj('/rest/v1/shipments?id=in.('+pl.del.slice(i,i+100).map(x=>x.id).join(',')+')',{method:'DELETE'})}
   else for(const x of pl.del)await sbj('/rest/v1/shipments?id=eq.'+x.id+'&version=eq.'+x.v,{method:'DELETE'});
   pl.del.forEach(x=>{delete sn.rows[x.id]});await putSnap(d,sn)}
@@ -1536,10 +1547,15 @@ async function pushDay(d){const st=await loadState(d),sn=await getSnap(d),pl=pla
 async function mergeDay(d,ups,dels){const sn=await getSnap(d),st=await loadState(d),live=d==DAY;
  const loc=new Map();TABS.forEach(t=>st[t].forEach(r=>{if(r._id)loc.set(r._id,{r,t})}));
  const drop=new Set(),add={w:[],t:[],k:[],b:[],g:[],q:[]};let ch=false,lost=0;const mk=x=>Object.assign({},x.data,{_id:x.id});
- for(const id of dels||[]){const s=sn.rows[id];if(!s)continue;const L=loc.get(id);
+ dels=dels||[];
+ {const cand=dels.filter(id=>{const s=sn.rows[id],L=loc.get(id);return s&&L&&sj(strip(L.r))==s.j&&TABS.includes(s.t)});
+  if(cand.length>20){const keep=!confirm('⚠ جهاز تاني (أو السحابة) مسح '+cand.length+' صف من يومية "'+dName(d)+'".\nلو ده مش مقصود اضغط إلغاء: هتحتفظ بالصفوف وهتتعاد للسحابة.\nموافق = تمسحهم من هنا كمان (هيتحفظوا في سلة المحذوفات).');
+   if(keep){const ks=new Set(cand);cand.forEach(id=>{delete sn.rows[id]});SY.dirty.add(d);saveDirty();dels=dels.filter(id=>!ks.has(id))}
+   else{try{await db0('put',{at:Date.now(),day:d,rows:cand.map(id=>({t:loc.get(id).t,r:loc.get(id).r}))},'tr:'+Date.now())}catch(e){}}}}
+ for(const id of dels){const s=sn.rows[id];if(!s)continue;const L=loc.get(id);
   if(L&&sj(strip(L.r))!=s.j){delete sn.rows[id];continue}
   if(L){drop.add(L.r);ch=true}delete sn.rows[id]}
- for(const x of ups){const s=sn.rows[x.id],L=loc.get(x.id),ns={v:x.version,t:x.tab,p:x.pos,j:sj(x.data)};
+ for(const x of ups){if(!TABS.includes(x.tab)){SY.unk=true;continue}const s=sn.rows[x.id],L=loc.get(x.id),ns={v:x.version,t:x.tab,p:x.pos,j:sj(x.data)};
   if(!s){sn.rows[x.id]=ns;if(!L){add[x.tab].push(mk(x));ch=true}continue}
   if(x.version<=s.v)continue;
   if(L){if(sj(strip(L.r))!=s.j||L.t!=s.t)lost++;
@@ -1609,8 +1625,12 @@ async function verifyDay(){const c=await spCalc();if(c.ok!=c.tot||c.del||SY.dirt
 window.addEventListener('beforeunload',ev=>{const b=document.getElementById('spb');if(SES&&b&&b.style.display!='none'&&!b.classList.contains('ok')&&(SY.dirty.size||b.className.indexOf('er')>0)){ev.preventDefault();ev.returnValue=''}});
 
 /* --- the sync loop --- */
+async function verGuard(){if(Date.now()-SY.vg<60000)return;const r=await sbj('/rest/v1/app_settings?select=value&key=eq.min_ver'),a=await r.json(),mv=a[0]?+a[0].value||0:0;
+ if(mv>APPV){if(!SY.staleMsg){SY.staleMsg=1;setTimeout(()=>alert('⚠ النسخة دي قديمة ومش هتزامن عشان ما تمسحش بيانات.\nاقفل الصفحة وافتحها تاني (Refresh قوي).'),50)}throw Object.assign(new Error('النسخة قديمة، اعمل Refresh قوي'),{stale:true})}
+ if(mv<APPV)await sbj('/rest/v1/app_settings?on_conflict=key',{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify({key:'min_ver',value:APPV})});SY.vg=Date.now()}
 async function syncCycle(){if(!SES||!SBOK())return;if(SY.busy){SY.again=true;return}SY.busy=true;SY.last=Date.now();setSt('sync');
  try{do{SY.again=false;
+   await verGuard();
    await ensureImport();
    for(const d of [...SY.dd]){await sbj('/rest/v1/shipments?day=eq.'+encodeURIComponent(d),{method:'DELETE'});SY.dd.delete(d);saveDD()}
    for(const d of [...SY.dirty]){SY.dirty.delete(d);saveDirty();try{await pushDay(d)}catch(e){SY.dirty.add(d);saveDirty();throw e}}
@@ -1621,7 +1641,7 @@ async function syncCycle(){if(!SES||!SBOK())return;if(SY.busy){SY.again=true;ret
    await pullSettings();
    if(document.getElementById('dlO'))dlFill();
    if(SY.redraw)softDraw();else days();
-  }while(SY.again);setSt('ok')}
+  }while(SY.again);if(SY.unk){SY.unk=false;setSt('err','فيه بيانات من نسخة أحدث من التطبيق، اعمل Refresh قوي')}else setSt('ok')}
  catch(e){if(e.net)setSt('off');else if(e.auth)setSt('auth');else setSt('err',e.message)}
  finally{SY.busy=false}}
 const kick=(ms=800)=>{clearTimeout(SY.kt);SY.kt=setTimeout(syncCycle,ms)};
