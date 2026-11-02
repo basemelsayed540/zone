@@ -858,6 +858,7 @@ function detect(M0,force){const rows=M0.map(r=>r.map(x=>x==null?'':cc(x)));let h
 function build(D,map,snd,T,sc){T=T||RW;sc=sc==null?-1:sc;const g=(r,f)=>{for(const j of[map[f]].concat((map.alt||{})[f]||[])){if(j==null||j<0)continue;const v=r[j];if(v!==''&&v!=null)return v}return''};
  const seen=new Set(RW.concat(RT,RK).map(x=>x.c).filter(Boolean)),cur={};let n=0,dup=0;
  D.forEach(r=>{const P=phf(g(r,'phone')),P2=phf(g(r,'phone2')).concat(P.slice(1));const x={n:cl(g(r,'name')),a:cl(g(r,'addr')),z:'',p:cl(g(r,'prod')),ph:P[0]||'',ph2:P2.find(q=>q!=P[0])||'',m:(v=>isNaN(v)?'':Math.round(v/5)*5)(num(g(r,'amt'))),sn:(sc>=0&&cl(r[sc]==null?'':r[sc]))||snd,c:cl(g(r,'code')),q:(v=>isNaN(v)?'':v)(num(g(r,'qty'))),nn:cl(g(r,'note')),ar:cl(g(r,'area')),s:'n',nt:'لم يُستخرج',o:null,pk:-1};
+  {const ra=num(g(r,'amt'));if(x.m!==''&&!isNaN(ra)&&ra!==x.m){const t='المبلغ الأصلي '+ra+' اتقرّب لـ '+x.m;x.nn=x.nn?x.nn+' | '+t:t}}
   if(!x.a&&!x.n)return;
   if(x.c&&cur[x.c]){const y=cur[x.c];if(x.q!==''&&x.q!=null)y.q=(y.q===''||y.q==null)?x.q:y.q+x.q;if(x.p&&!y.p.includes(x.p))y.p=y.p?y.p+' + '+x.p:x.p;return}
   if(x.c&&seen.has(x.c)){dup++;return}
