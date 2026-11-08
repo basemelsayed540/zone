@@ -1,0 +1,43 @@
+name: Build Android APK
+on:
+  push:
+    branches: [main]
+    paths: ['android/**', '.github/workflows/apk.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Signing key
+        run: |
+          if [ -n "${{ secrets.ANDROID_KEYSTORE_B64 }}" ]; then
+            echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > "$RUNNER_TEMP/zone.keystore"
+            echo "KS_PASS=${{ secrets.ANDROID_KS_PASS }}" >> "$GITHUB_ENV"
+          else
+            KP=$(openssl rand -hex 12)
+            keytool -genkeypair -keystore "$RUNNER_TEMP/zone.keystore" -alias zone -keyalg RSA -keysize 2048 -validity 36500 -storepass "$KP" -keypass "$KP" -dname "CN=Zone Finder"
+            echo "KS_PASS=$KP" >> "$GITHUB_ENV"
+          fi
+          echo "KEYSTORE_PATH=$RUNNER_TEMP/zone.keystore" >> "$GITHUB_ENV"
+      - name: Build
+        working-directory: android
+        run: gradle --no-daemon assembleRelease
+      - name: Rename
+        run: cp android/app/build/outputs/apk/release/app-release.apk zone.apk
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-latest
+          name: Android APK (latest)
+          body: Install zone.apk once. The app loads the website, so later changes appear by themselves.
+          files: zone.apk

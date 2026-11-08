@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">مستخرج الزون</string>
+    <!-- The app loads this page, so every change pushed to main shows up without reinstalling. -->
+    <string name="app_url" translatable="false">https://basemelsayed540.github.io/zone/</string>
+</resources>
