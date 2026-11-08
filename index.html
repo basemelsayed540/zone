@@ -868,11 +868,12 @@ function build(D,map,snd,T,sc){T=T||RW;sc=sc==null?-1:sc;const g=(r,f)=>{for(con
 function readWb(buf,name){const wb=XLSX.read(buf,{type:'array',cellDates:true});let best=null;
  wb.SheetNames.forEach(sn=>{const M=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,raw:true,defval:''});const k=M.filter(r=>r.some(c=>c!=='')).length;if(!best||k>best.k)best={k,M,sn}});
  return best}
+const autoOf=(m,n)=>!!(m&&!m.gone&&(m.snds?m.snds[n]===true:m.auto===true));
 async function openF(fs){fs=Array.from(fs);await toDay();for(const f of fs){try{const ab=await f.arrayBuffer();const b=readWb(ab,f.name);if(!b||b.k<2){alert('الملف فاضي: '+f.name);continue}
   let d=detect(b.M);const sig=(d.h>=0?d.hd.join('|'):'n'+(d.D[0]||[]).length)+'#'+b.sn,snd=f.name.replace(/\.[^.]+$/,'').replace(/_+/g,' ').trim(),sv=await db('get','m2:'+sig).catch(()=>0);if(sv&&sv.gone)sv=0;
   let hv='a';if(sv&&sv.hr!=null&&sv.hr!=='a'){hv=String(sv.hr);d=detect(b.M,+sv.hr)}
-  const p={f:f.name,snd,d,sig,M:b.M,sn:b.sn,hv,auto:!!(sv&&sv.auto)};
-  if(sv){p.d.map=mergeMap(sv,d.map);if(sv.auto){await imp(p);continue}}
+  const p={f:f.name,snd,fsnd:snd,sv,d,sig,M:b.M,sn:b.sn,hv,auto:autoOf(sv,snd)};
+  if(sv){p.d.map=mergeMap(sv,d.map);if(p.auto){if(sv.auto&&!sv.snds){sv.snds={[snd]:true};db('put',sv,'m2:'+sig).catch(()=>0)}await imp(p);continue}}
   PF.push(p);panel()}catch(err){alert('تعذر قراءة '+f.name+': '+err.message)}}}
 const FC={send:'#e0e0e0',name:'#ffcc80',addr:'#a5d6a7',phone:'#90caf9',phone2:'#b39ddb',prod:'#f48fb1',amt:'#fff176',code:'#80cbc4',note:'#bcaaa4',qty:'#ffab91'};
 function pvh(p,live){const cur={};Object.keys(FN).concat(isSh(p)?['send']:[]).forEach(f=>{const s=live&&$('s0'+f),v=s?s.value:(p.d.map[f]!=null?String(p.d.map[f]):'');if(v!==''&&cur[+v]==null)cur[+v]=f});
@@ -901,7 +902,7 @@ function panel(){const o=$('mp');if(!PF.length){o.innerHTML='';return}
  +'</div></div>'}
 const mergeMap=(sv,dm)=>{const o={};Object.keys(FN).concat('area').forEach(f=>{if(sv[f]===undefined){if(dm[f]!=null)o[f]=dm[f]}else if(sv[f]>=0)o[f]=sv[f]});
  if(dm.alt){o.alt={};Object.keys(dm.alt).forEach(f=>{if(o[f]===dm[f])o.alt[f]=dm.alt[f]})}return o};
-function goImp(au){const p=PF[0],m={};const mf=missF();if(mf.length&&!confirm('⚠ ما حددتش عمود لـ:\n• '+mf.map(f=>FN[f]).join('\n• ')+'\n\nتكمل الاستيراد من غيرهم؟\n(اضغط إلغاء للرجوع وتحديدهم)'))return;Object.keys(FN).forEach(f=>{const s=$('s0'+f);m[f]=s&&s.value!==''?+s.value:-1});m.area=p.d.map.area!=null?p.d.map.area:-1;m.auto=au===true;m.hr=p.hv;p.snd=cl($('sd0').value)||p.snd;
+function goImp(au){const p=PF[0],m={};const mf=missF();if(mf.length&&!confirm('⚠ ما حددتش عمود لـ:\n• '+mf.map(f=>FN[f]).join('\n• ')+'\n\nتكمل الاستيراد من غيرهم؟\n(اضغط إلغاء للرجوع وتحديدهم)'))return;Object.keys(FN).forEach(f=>{const s=$('s0'+f);m[f]=s&&s.value!==''?+s.value:-1});m.area=p.d.map.area!=null?p.d.map.area:-1;m.snds=Object.assign({},(p.sv&&p.sv.snds)||{}),m.snds[p.fsnd||p.snd]=au===true;m.auto=Object.values(m.snds).some(Boolean);m.hr=p.hv;p.snd=cl($('sd0').value)||p.snd;
  if(p.d.h>=0){Object.keys(m).forEach(f=>{if(!(f in FN)||m[f]<0)return;const hh=nh(p.d.hd[m[f]]||'');if(hh)LH[hh]=f});saveLH()}
  db('put',m,'m2:'+p.sig).catch(()=>0);p.d.map=mergeMap(m,p.d.map);if(isSh(p)){const sv=$('s0send');if(sv&&sv.value!=='')p.d.map.send=+sv.value}PF.shift();panel();imp(p)}
 async function trashRestore(){const ks=((await db0('getAllKeys').catch(()=>[]))||[]).filter(k=>/^tr:/.test(k));if(!ks.length){alert('سلة المحذوفات فاضية');return}
@@ -913,15 +914,17 @@ async function trashRestore(){const ks=((await db0('getAllKeys').catch(()=>[]))|
  draw();kick(300);alert('اترجّع '+n+' صف من سلة المحذوفات')}
 async function drawA(){const o=$('autow');const ks=(((await db0('getAllKeys').catch(()=>[]))||[]).filter(k=>/^m2:/.test(k)));const L=[];
  for(const k of ks){const m=await db0('get',k).catch(()=>0);if(m&&!m.gone)L.push([k,m])}
- L.sort((a,b)=>(b[1].auto?1:0)-(a[1].auto?1:0));
- const lab=k=>{const sg=k.slice(3),i=sg.lastIndexOf('#'),h=sg.slice(0,i),sh=sg.slice(i+1);return (h.startsWith('n')&&/^n\d+$/.test(h)?'بدون عناوين ('+h.slice(1)+' عمود)':h.split('|').slice(0,8).join(' · ')+(h.split('|').length>8?' …':''))+'  —  ورقة: '+sh};
- const au=L.filter(x=>x[1].auto).length;
- o.innerHTML='<div class="mp"><h3 style="margin:0 0 6px">⚡ الأشكال المحفوظة للاستيراد</h3><div style="font-size:13px;opacity:.85;margin-bottom:8px">الشكل = أسماء أعمدة ملف الإكسل. الأشكال اللي عليها ⚡ بتتستورد تلقائي من غير نافذة. <b>إلغاء التلقائي</b> بيرجّع نافذة المراجعة ويحتفظ باختيار الأعمدة. <b>حذف</b> بينسى الشكل خالص.</div>'
-  +(L.length?'<div style="margin-bottom:8px"><b>'+au+'</b> شكل تلقائي من '+L.length+' شكل محفوظ</div>':'<div>مفيش أشكال محفوظة.</div>')
-  +L.map(([k,m],i)=>'<div class="fr" style="align-items:center;gap:8px;border-top:1px solid var(--b);padding:8px 0"><span style="flex:1;min-width:200px">'+(m.auto?'<b style="color:#7c3aed">⚡ تلقائي</b> ':'')+e(lab(k))+'</span>'+(m.auto?'<button class="s" onclick="autoOff('+i+')">إلغاء التلقائي</button>':'')+'<button class="s" onclick="autoDel('+i+')">🗑 حذف</button></div>').join('')+'</div>';
- window._AL=L.map(x=>x[0])}
+ const names=[],seen=new Set(),add=n=>{n=cl(n||'');if(n&&!seen.has(n)){seen.add(n);names.push(n)}};
+ [RW,RT,RK,RB,RG,RQ].forEach(a=>a.forEach(r=>add(r.sn)));L.forEach(([k,m])=>Object.keys(m.snds||{}).forEach(add));
+ const recs=n=>L.filter(([k,m])=>m.snds&&n in m.snds),on=n=>recs(n).some(([k,m])=>m.snds[n]===true);
+ const lab=k=>{const sg=k.slice(3),i=sg.lastIndexOf('#'),h=sg.slice(0,i);return /^n\d+$/.test(h)?'بدون عناوين ('+h.slice(1)+' عمود)':h.split('|').slice(0,8).join(' · ')};
+ const leg=L.filter(([k,m])=>m.auto===true&&!m.snds);
+ window._AS=names;window._AL=leg.map(x=>x[0]);
+ o.innerHTML='<div class="mp"><h3 style="margin:0 0 6px">⚡ الراسلين والاستيراد التلقائي</h3><div style="font-size:13px;opacity:.85;margin-bottom:8px">اسم الراسل = اسم ملف الإكسل. <b>مفتوح</b> = ملف بنفس اسم الراسل وشكل الأعمدة بيتستورد تلقائي من غير نافذة. <b>مقفول</b> = بتظهر نافذة المراجعة. بتتحفظ اختيارات الأعمدة في الحالتين.</div>'
+  +(names.length?names.map((n,i)=>{const r=recs(n),st=on(n);return '<div class="fr" style="align-items:center;gap:8px;border-top:1px solid var(--b);padding:8px 0"><span style="flex:1;min-width:160px"><b>'+e(n)+'</b></span>'+(r.length?'<span style="font-size:12px;opacity:.7">'+e(lab(r[0][0]))+'</span><span style="min-width:70px;color:'+(st?'#16a34a':'#6b7280')+'">'+(st?'⚡ مفتوح':'🔒 مقفول')+'</span><button class="s" onclick="autoSnd('+i+','+(st?'false':'true')+')">'+(st?'🔒 قفل':'⚡ فتح')+'</button>':'<span style="font-size:12px;opacity:.7">لسه ما اتستوردش بشكل محفوظ</span>')+'</div>'}).join(''):'<div>مفيش راسلين لسه.</div>')
+  +(leg.length?'<div style="margin-top:12px;font-weight:700">أشكال قديمة تلقائية (من غير اسم راسل)</div>'+leg.map(([k,m],i)=>'<div class="fr" style="align-items:center;gap:8px;border-top:1px solid var(--b);padding:8px 0"><span style="flex:1;min-width:200px"><b style="color:#7c3aed">⚡</b> '+e(lab(k))+'</span><button class="s" onclick="autoOff('+i+')">🔒 قفل</button></div>').join('')+'<div style="font-size:12px;opacity:.7">هتتحول لراسل لما تتفتح مرة.</div>':'')+'</div>'}
+async function autoSnd(i,on){const n=window._AS[i];const ks=(((await db0('getAllKeys').catch(()=>[]))||[]).filter(k=>/^m2:/.test(k)));for(const k of ks){const m=await db0('get',k).catch(()=>0);if(m&&!m.gone&&m.snds&&n in m.snds){m.snds[n]=on;m.auto=Object.values(m.snds).some(Boolean);await db('put',m,k)}}drawA()}
 async function autoOff(i){const k=window._AL[i],m=await db0('get',k);if(!m)return;m.auto=false;await db('put',m,k);drawA()}
-async function autoDel(i){const k=window._AL[i];if(!confirm('تنسى الشكل ده خالص؟ (هيرجع يطلب مراجعة الأعمدة المرة الجاية)'))return;await db('put',{gone:1},k);drawA()}
 async function resetMaps(){if(!confirm('نسيان إعدادات الأعمدة المحفوظة لكل أشكال الملفات؟ (الكلمات والزونات مش هتتأثر)'))return;const k=(await db('getAllKeys').catch(()=>0))||[];for(const x of k)if(/^m2?:/.test(x))await db('delete',x);LH={};saveLH();alert('تم. هيظهر شريط مراجعة الأعمدة مع كل شكل ملف جديد.')}
 async function imp(p){await toDay();const sh=/الشيخ/.test(String(p.f||'')),tt=sh?'k':'w';if(sh&&p.d.map.send==null)detSend(p);tab(tt);const[n,dup]=build(p.d.D,p.d.map,p.snd,sh?RK:RW,sh&&p.d.map.send!=null?p.d.map.send:-1);await save();draw();alert(p.snd+': اتضاف '+n+' صف'+(sh?' في تبويب الشيخ':'')+(dup?' وتخطيت '+dup+' مكرر (نفس الكود)':'')+'\nاتسجلوا في يومية: '+dName(DAY))}
 function zr(x){let r=cls(x.a);if(!r.z&&x.ar){const q=cls(x.ar);if(q.z&&!q.f){r=q;r.fa=1}}
