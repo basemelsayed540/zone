@@ -100,7 +100,7 @@ small{color:var(--mut);opacity:1}
 #out tr.sfh{display:none}#side{max-height:calc(100vh - 20px)}#sfl{flex:1 1 auto;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:3px;margin-top:4px;padding-top:6px;border-top:1px solid var(--b)}.sfh2{font-size:12px;opacity:.7}.sfi{display:flex;justify-content:space-between;align-items:center;gap:6px;text-align:right;padding:5px 8px;font-size:13px;border-radius:8px}.sfi span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sfi b{font-size:12px;background:#0001;border-radius:10px;padding:0 7px}.sfi.on,.sfi.on:hover{background:#16a34a;color:#fff;border-color:#16a34a}.sfi.on b{background:#fff3}@media(max-width:800px){#sfl{width:100%;max-height:220px}}
 </style>
 <style>#out td[data-cb]{background:var(--cb)}#out td.gcr[data-cb]{background:color-mix(in srgb,var(--tc) 35%,var(--cb))}#out td.gcs[data-cb]{background:color-mix(in srgb,var(--g) 22%,var(--cb))}</style>
-<style id="ui3">.pvt{overflow-x:auto;overflow-y:hidden;height:16px;margin-top:10px}.pvt div{height:1px}.pvc{overflow:hidden;margin:0 0 10px}.pvc .pvw{margin:0 0 -16px}.spb{position:relative;display:inline-flex;align-items:center;justify-content:center;min-width:210px;height:28px;border:1px solid var(--b);border-radius:14px;overflow:hidden;vertical-align:middle;margin:0 6px;background:var(--c);font-size:12.5px}.spb i{position:absolute;top:0;bottom:0;right:0;width:0;background:#3b82f666;transition:width .4s}.spb b{position:relative;padding:0 10px;font-weight:700;white-space:nowrap}.spb.ok i{background:#22c55e88;width:100%!important}.spb.er{border-color:#dc2626}.spb.er i{background:#ef444477}.spb.of i{background:#f59e0b77}:root{--tc:var(--p)}500;600;700;800&display=swap');
+<style id="ui3">.eyw{text-align:center;line-height:1;margin-bottom:3px}.eye{background:transparent!important;color:var(--mut)!important;border:1px solid var(--b)!important;border-radius:6px;padding:0 6px!important;height:20px!important;min-height:0!important;font-size:12px!important;cursor:pointer}.eye:hover{background:var(--c)!important;color:var(--t)!important}#hcbar{margin:6px 0;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.eyb{height:auto!important;padding:3px 10px!important}.pvt{overflow-x:auto;overflow-y:hidden;height:16px;margin-top:10px}.pvt div{height:1px}.pvc{overflow:hidden;margin:0 0 10px}.pvc .pvw{margin:0 0 -16px}.spb{position:relative;display:inline-flex;align-items:center;justify-content:center;min-width:210px;height:28px;border:1px solid var(--b);border-radius:14px;overflow:hidden;vertical-align:middle;margin:0 6px;background:var(--c);font-size:12.5px}.spb i{position:absolute;top:0;bottom:0;right:0;width:0;background:#3b82f666;transition:width .4s}.spb b{position:relative;padding:0 10px;font-weight:700;white-space:nowrap}.spb.ok i{background:#22c55e88;width:100%!important}.spb.er{border-color:#dc2626}.spb.er i{background:#ef444477}.spb.of i{background:#f59e0b77}:root{--tc:var(--p)}500;600;700;800&display=swap');
 
 :root {
   color-scheme: light dark;
@@ -982,7 +982,7 @@ function draw(){const BG=GT(TAB);
  $('sum').innerHTML=BG?'':([['all','الإجمالي '+V().length],['a','تلقائي '+c('a')],['r','مراجعة '+c('r')],['u','غير محدد '+c('u')]].concat(nn?[['n','لم يُستخرج '+nn]]:[]).map(([k,l])=>'<button class="f'+(F==k?' on':'')+'" onclick="F=\''+k+'\';draw()">'+l+'</button>').join(''));
  if(BG){drawN();return}
  const DUP=dupPh(R);
- $('out').innerHTML='<colgroup>'+CW.map(w=>'<col style="width:'+w+'px">').join('')+'</colgroup><tr>'+['<input type="checkbox" id="sa" onchange="tgAll(this.checked)">','#','اسم العميل','العنوان','الزون','المنتج','الهاتف','هاتف بديل','المبلغ','الراسل','الكود','العدد','ملاحظات الشحنة','الملاحظة'].map((h,j)=>'<th>'+h+'<span class="rz" onpointerdown="rz(event,'+j+')" ondblclick="rzd('+j+')"></span></th>').join('')+'</tr>'+R.map((x,i)=>{if(!vis(x))return'';
+ $('out').innerHTML='<colgroup>'+CW.map(w=>'<col style="width:'+w+'px">').join('')+'</colgroup><tr>'+['<input type="checkbox" id="sa" onchange="tgAll(this.checked)">','#','اسم العميل','العنوان','الزون','المنتج','الهاتف','هاتف بديل','المبلغ','الراسل','الكود','العدد','ملاحظات الشحنة','الملاحظة'].map((h,j)=>'<th>'+eyeB(CMAP_WT[j],j)+h+'<span class="rz" onpointerdown="rz(event,'+j+')" ondblclick="rzd('+j+')"></span></th>').join('')+'</tr>'+R.map((x,i)=>{if(!vis(x))return'';
   const nt=x.o?'تعارض: '+x.o.map((z,j)=>'<button class="o'+(x.pk==j?' on':'')+'" onclick="pick('+i+','+j+')">'+e(z)+'</button>').join(''):(x.s=='u'||x.pk==9)?'<input id="kw'+i+'" placeholder="جزء من العنوان للتعلّم" value="'+e(x.kw||'')+'" onchange="learn('+i+')"> <small>'+e(x.nt)+'</small>':e(x.nt);
   return'<tr class="'+x.s+(SEL.has(x)?' sl':'')+(DUP.has(phk(x.ph))?' dup':'')+'"><td><input type="checkbox"'+(SEL.has(x)?' checked':'')+' onclick="tg('+i+',this.checked,this,event)"></td><td>'+(i+1)+'</td><td title="'+e(x.n)+'">'+e(x.n)+'</td><td title="'+e(x.a)+'">'+e(x.a)+'</td><td><input id="zi'+i+'" value="'+e(x.z)+'" onchange="sz('+i+',this.value,this)"></td><td title="'+e(x.p)+'">'+e(x.p)+'</td><td>'+e(x.ph)+'</td><td>'+e(x.ph2)+'</td><td>'+e(x.m)+'</td><td title="'+e(x.sn)+'">'+e(x.sn)+'</td><td title="'+e(x.c)+'">'+e(x.c)+'</td><td>'+(x.q==null?'':x.q)+'</td><td title="'+e(x.nn||'')+'">'+e(x.nn||'')+'</td><td class="nt">'+nt+'</td></tr>'}).join('');if($('out').style)$('out').style.width=CW.reduce((x,y)=>x+y,0)+'px';updSel();applyCols()}
 function rz(ev,j){ev.preventDefault();ev.stopPropagation();const el=ev.target,Wc=gCW(),x0=ev.clientX,w0=Wc[j];if(el.setPointerCapture)el.setPointerCapture(ev.pointerId);el.classList.add('on');
@@ -1203,7 +1203,7 @@ function gFillTo(g,tgt){const A=gArr(),n=g.r2-g.r1+1;pushH();let k=0;
  for(let i=g.r2+1;i<=tgt;i++){if(gHid(i))continue;if(!A[i])A[i]=gBlank();const sr=A[g.r1+((i-g.r2-1)%n)];for(let c=g.c1;c<=g.c2;c++){const f=NC[c][0];A[i][f]=gVal(sr,f)}k++}
  GA={r:g.r1,c:g.c1};GE={r:tgt,c:g.c2};gRender();$('msg').textContent='اتكررت الخلايا في '+k+' صف'}
 function drawN(){const A=gArr(),DUPG=dupPh(A),CWi=gCW(),tot=gTot(),HD=['<input type="checkbox" id="sa" onchange="tgAll(this.checked)">','#'].concat(NC.map(c=>c[1]));
- let h='<colgroup>'+CWi.map(w=>'<col style="width:'+w+'px">').join('')+'</colgroup><tr>'+HD.map((x,j)=>'<th'+(j>=2?' onclick="gColSel('+(j-2)+',event)" title="اضغط لتحديد العمود كله"':'')+'>'+x+'<span class="rz" onpointerdown="rz(event,'+j+')" ondblclick="rzd('+j+')"></span></th>').join('')+'</tr>';
+ let h='<colgroup>'+CWi.map(w=>'<col style="width:'+w+'px">').join('')+'</colgroup><tr>'+HD.map((x,j)=>'<th'+(j>=2?' onclick="gColSel('+(j-2)+',event)" title="اضغط لتحديد العمود كله"':'')+'>'+eyeB((TAB=='q'?CMAP_Q:CMAP_G)[j],j)+x+'<span class="rz" onpointerdown="rz(event,'+j+')" ondblclick="rzd('+j+')"></span></th>').join('')+'</tr>';
  for(let i=0;i<tot;i++){const r=A[i],sl=r&&SEL.has(r);
   const hd=(SF||TQ)&&!(r&&rowOk(r)),dp=r&&DUPG.has(phk(r.ph));
   h+='<tr'+((sl||hd||dp)?' class="'+(sl?'sl':'')+(hd?' sfh':'')+(dp?' dup':'')+'"':'')+'><td><input type="checkbox"'+(sl?' checked':'')+' onclick="tg('+i+',this.checked,this,event)"></td><td>'+(i+1)+'</td>';
@@ -1375,16 +1375,24 @@ if(typeof document!='undefined'&&document.body){
  document.addEventListener('paste',ev=>{if(!gClipCtx(ev))return;const d=ev.clipboardData&&ev.clipboardData.getData('text/plain');if(!d)return;ev.preventDefault();gPaste(d)},true)}
 
 /* ===== إظهار/إخفاء الأعمدة (ينطبق على كل التبويبات) ===== */
-let HC=new Set();try{HC=new Set(JSON.parse(localStorage.getItem('zhc')||'[]'))}catch(e){}
+let HC=new Set();const hcK=()=>{try{return 'zhc:'+((SES&&SES.uid)||'')}catch(e){return 'zhc:'}};
+function hcLoad(){try{HC=new Set(JSON.parse(localStorage.getItem(hcK())||localStorage.getItem('zhc')||'[]'))}catch(e){HC=new Set()}}
+function hcSave(){try{localStorage.setItem(hcK(),JSON.stringify([...HC]))}catch(e){}if(SES&&SES.uid&&typeof setPush=='function')setPush('hc:'+SES.uid,[...HC])}
+hcLoad();
 const colHidden=j=>HC.has(NC[j][0]);
 const HCL=[['n','اسم العميل'],['a','العنوان'],['z','الزون'],['p','المنتج'],['ph','الهاتف'],['ph2','هاتف بديل'],['m','المبلغ'],['sn','الراسل'],['c','كود الشحنة'],['q','العدد (الملف الحالي والشيتات)'],['nn','ملاحظات'],['nt','الملاحظة (الملف الحالي والشيتات)'],['ag','المندوب (القيد)'],['ag2','مندوب اخر (القيد)'],['st','الحالة (القيد)'],['rs','السبب (القيد)'],['dt','التاريخ (القيد)'],['net','الصافي (القيد)'],['shp','الشحن (القيد)'],['cn','عدد (القيد)'],['cl','تقفيل (القيد)'],['cm','عمولة المندوب (القيد)']];
 const CMAP_WT=['chk','#','n','a','z','p','ph','ph2','m','sn','c','q','nn','nt'],CMAP_G=['chk','#','n','a','z','p','ph','ph2','m','sn','c','nn'],CMAP_Q=['chk','#'].concat(NCQ.map(c=>c[0]));
+const eyeB=(k,j)=>j>=2&&k?'<div class="eyw"><button class="eye" title="إخفاء العمود (ليك إنت بس)" onclick="eyeHide(\''+k+'\',event)">👁</button></div>':'';
+function eyeHide(k,ev){ev&&ev.stopPropagation();HC.add(k);hcSave();applyCols();if(GT(TAB)){if(colHidden(GE.c)){gMove(0,1,0)}gPaint(false,true)}}
+function hcBar(){let b=$('hcbar');if(!b){const w=document.querySelector('.wrap');if(!w)return;b=document.createElement('div');b.id='hcbar';w.parentNode.insertBefore(b,w)}
+ const mp=TAB=='q'?CMAP_Q:(TAB=='b'||TAB=='g')?CMAP_G:CMAP_WT,lb=new Map(HCL),h=mp.filter(k=>HC.has(k)&&lb.has(k));
+ b.style.display=(h.length&&TAB!='s'&&TAB!='a')?'flex':'none';b.innerHTML=h.length?'<span style="font-size:12.5px;opacity:.8">أعمدة مخفية عندك: </span>'+h.map(k=>'<button class="s eyb" onclick="gearSet(\''+k+'\',true);gearDraw()">👁 '+lb.get(k)+'</button>').join('')+'<button class="s eyb" onclick="HC.clear();hcSave();applyCols();if(GT(TAB))gPaint(false,true)">إظهار الكل</button>':''}
 function applyCols(){let st=document.getElementById('colhide');if(!st){st=document.createElement('style');st.id='colhide';document.head.appendChild(st)}
  const mp=TAB=='q'?CMAP_Q:(TAB=='b'||TAB=='g')?CMAP_G:CMAP_WT,hid=[];mp.forEach((k,i)=>{if(HC.has(k))hid.push(i+1)});
  st.textContent=hid.map(k=>'#out col:nth-child('+k+'),#out th:nth-child('+k+'),#out td:nth-child('+k+'){display:none}').join('');
- const o=$('out');if(o&&o.style){const W=gCW?gCW():CW;o.style.width=W.reduce((x,y,i)=>x+(HC.has(mp[i])?0:y),0)+'px'}}
+ const o=$('out');if(o&&o.style){const W=gCW?gCW():CW;o.style.width=W.reduce((x,y,i)=>x+(HC.has(mp[i])?0:y),0)+'px'}hcBar()}
 function gearDraw(){$('gpop').innerHTML='<div class="gh">الأعمدة الظاهرة (كل التبويبات)</div>'+HCL.map(([k,l])=>'<label><input type="checkbox" '+(HC.has(k)?'':'checked ')+'onchange="gearSet(\''+k+'\',this.checked)">'+l+'</label>').join('')}
-function gearSet(k,on){if(on)HC.delete(k);else HC.add(k);try{localStorage.setItem('zhc',JSON.stringify([...HC]))}catch(e){}applyCols();if(GT(TAB)){if(colHidden(GE.c)){gMove(0,1,0)}gPaint(false,true)}}
+function gearSet(k,on){if(on)HC.delete(k);else HC.add(k);hcSave();applyCols();if(GT(TAB)){if(colHidden(GE.c)){gMove(0,1,0)}gPaint(false,true)}}
 function gearToggle(ev){ev.stopPropagation();const p=$('gpop');if(p.style.display=='block'){p.style.display='none';return}gearDraw();p.style.display='block'}
 document.addEventListener('click',()=>{const p=$('gpop');if(p)p.style.display='none'});
 
@@ -1477,7 +1485,7 @@ const saveDirty=()=>lsSet('zsd',[...SY.dirty]),saveDD=()=>lsSet('zsx',[...SY.dd]
 const uuid=()=>(typeof crypto!='undefined'&&crypto.randomUUID)?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c=='x'?r:(r&3|8)).toString(16)});
 const sj=o=>JSON.stringify(o,(k,v)=>v&&typeof v=='object'&&!Array.isArray(v)?Object.keys(v).sort().reduce((a,x)=>(a[x]=v[x],a),{}):v);
 const strip=r=>{const o={};for(const k in r)if(k!='_id')o[k]=r[k];return o};
-const isSK=k=>k=='kw'||k=='lh'||/^(m2|cmp):/.test(k);
+const isSK=k=>k=='kw'||k=='lh'||/^(m2|cmp|hc):/.test(k);
 const back=ts=>{const t=Date.parse(ts);return isNaN(t)?ts:new Date(t-15000).toISOString()};
 
 /* --- session --- */
@@ -1604,6 +1612,7 @@ async function pushSettings(){for(const k of Object.keys(SY.q)){const v=SY.q[k];
  await db0('put',SY.q,'sy:q').catch(()=>0)}
 async function applySetting(k,v){if(k=='kw'){if(Array.isArray(v)){lsSet('zs',v);await db0('put',v,'kw');load()}}
  else if(k=='lh'){if(v&&typeof v=='object'){Object.keys(LH).forEach(x=>delete LH[x]);Object.assign(LH,v);lsSet('lh',LH);await db0('put',LH,'lh')}}
+ else if(k.startsWith('hc:')){if(SES&&k=='hc:'+SES.uid&&Array.isArray(v)){HC=new Set(v);try{localStorage.setItem(hcK(),JSON.stringify(v))}catch(e){}SY.redraw=true}}
  else if(/^(m2|cmp):/.test(k)){await db0('put',v,k);if(k=='cmp:roster'){SRL=true;if(TAB=='s')SY.redraw=true}}}
 async function pullSettings(){const r=await sbj('/rest/v1/app_settings?select=*'+(SY.sSince?'&updated_at=gt.'+encodeURIComponent(back(SY.sSince)):'')),a=await r.json();let mx=SY.sSince;
  for(const x of a){if(x.updated_at>mx)mx=x.updated_at;if(SY.q[x.key]!==undefined||SY.sv[x.key]==x.updated_at)continue;await applySetting(x.key,x.value);SY.sv[x.key]=x.updated_at}
@@ -1672,7 +1681,7 @@ function startSync(){if(SY.started)return;SY.started=true;
 
 /* --- startup --- */
 let APPST=false;
-async function startApp(){if(!APPST){APPST=true;await init()}setSt('sync');startSync()}
+async function startApp(){hcLoad();if(!APPST){APPST=true;await init()}setSt('sync');startSync()}
 async function boot(){if(!SBOK()){await init();return}
  try{SES=JSON.parse(localStorage.getItem('zsb')||'null')}catch(e){SES=null}
  if(SES&&SES.refresh_token)await startApp();else showLogin()}
