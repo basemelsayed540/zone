@@ -1718,4 +1718,4 @@ async function boot(){if(!SBOK()){await init();return}
  if(SES&&SES.refresh_token)await startApp();else showLogin()}
 
 if(typeof document!='undefined'&&document.body)boot();
-</script></body></html>
+</script><script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>0))</script></body></html>
