@@ -242,6 +242,8 @@ button.s:hover {
 #t3 { --tc: #7c3aed; }
 #t4 { --tc: #0891b2; }
 #t6 { --tc: #d97706; }
+#t8 { --tc: #7c3aed; }
+#main[data-tab=a]{--tc:#7c3aed}
 #t5 { --tc: #be185d; }
 #main { --tc: #15803d; }
 #main[data-tab=w] { --tc: #15803d; }
@@ -721,9 +723,9 @@ input[type=checkbox],input[type=radio]{height:auto;width:auto;padding:0}
 <div id="app"><aside id="side"><button class="w1 w12" onclick="fi.click()">📂 فتح ملف Excel</button><input type="file" id="fi" multiple hidden accept=".xlsx,.xls,.xlsm,.xlsb,.csv,.ods" onchange="openF(Array.from(this.files));this.value=''">
 <button id="exb" onclick="exOpen()">📤 تصدير Excel</button><button class="w13" onclick="runBtn()">🔍 استخراج الزونات</button><hr><button class="s" onclick="backup()">💾 نسخة احتياطية</button><button class="s" onclick="fr.click()">♻ استعادة</button><input type="file" id="fr" hidden accept=".json" onchange="restore(this.files[0]);this.value=''"><div id="sfl"></div></aside><main id="main" data-tab="w">
 <div class="bar">اليوم: <select id="dsel" onchange="goDay(this.value)"></select><button class="s" id="dbtn" onclick="askDaily()">＋ يومية</button><span id="spb" class="spb" style="display:none"><i></i><b></b></span> <span id="gearw"><button class="s" id="gear" onclick="gearToggle(event)" title="إظهار / إخفاء الأعمدة">⚙</button><div id="gpop" onclick="event.stopPropagation()"></div></span> <small>(اليوميات اللي فيها بيانات. الاستيراد والكتابة بيتسجلوا على اليومية المختارة)</small> <small id="bk"></small></div><div class="bar" style="display:none"><button class="s" id="bdir" onclick="pickDir()">الحفظ التلقائي في فولدر</button> <small id="as"></small></div>
-<div class="row1"><button id="t1" class="tb on" onclick="tab('w')">الملف الحالي</button><button id="t2" class="tb" onclick="tab('t')">الشيتات</button><button id="t7" class="tb" onclick="tab('k')">الشيخ</button><button id="t3" class="tb" onclick="tab('b')">بومبو</button><button id="t4" class="tb" onclick="tab('g')">تصوير</button><button id="t6" class="tb" onclick="tab('q')">القيد</button><button id="t5" class="tb" onclick="tab('s')">مقارنة الراسلين</button></div>
+<div class="row1"><button id="t1" class="tb on" onclick="tab('w')">الملف الحالي</button><button id="t2" class="tb" onclick="tab('t')">الشيتات</button><button id="t7" class="tb" onclick="tab('k')">الشيخ</button><button id="t3" class="tb" onclick="tab('b')">بومبو</button><button id="t4" class="tb" onclick="tab('g')">تصوير</button><button id="t6" class="tb" onclick="tab('q')">القيد</button><button id="t8" class="tb" onclick="tab('a')">⚡ الاستيراد التلقائي</button><button id="t5" class="tb" onclick="tab('s')">مقارنة الراسلين</button></div>
 <div class="bar"></div>
-<div id="mp"></div><div class="row2"><span id="sum"></span><button class="s w3" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s w4" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s wbg" onclick="gPasteAsk()" style="display:none">📋 لصق</button><span class="wbg" style="display:none"><input id="tq" type="search" placeholder="🔍 بحث: اسم العميل / هاتف / هاتف بديل" autocomplete="off" oninput="tqSet(this.value)" style="width:260px;max-width:100%"> <small id="tqc"></small></span><button class="s wq" onclick="$('fq').click()" style="display:none">📥 رفع ملف (ALL ← قيد)</button><input type="file" id="fq" accept=".xlsx,.xlsb,.xls,.xlsm,.csv" style="display:none" onchange="qUp(this)"><button class="s wns" id="bwr" onclick="wr()" title="عرض النص كامل">عرض النص كامل</button><button class="s wns" onclick="rzReset()" title="اسحب حافة رأس العمود لتغيير عرضه (دبل كليك يرجّعه)">إعادة ضبط الأعمدة</button><button class="s w1 w12" onclick="mv()">➡ نقل للشيتات</button></div><div class="bar"><small id="msg"></small></div><div class="wrap"><table id="out"></table></div><div id="cmpw"><div class="wrap sgw"><table id="sgt"></table></div><small>اكتب في عمود "قائمة راسليني" كل الراسلين اللي بتشتغل معاهم (مرة واحدة، وتفضل محفوظة كل يوم في قاعدة البيانات). العمود التالت بيظهر الراسلين اللي في قايمتك ومش موجودين في شحنات اليوم المختار. اضغط مرتين على خلية للكتابة، واسحب بالماوس للتحديد، واضغط على عنوان العمود لتحديده ونسخه، وDelete بيمسح.</small></div><div id="selbar" style="display:none"><b id="selcnt"></b><button onclick="copySel()">📋 نسخ</button><button class="s" id="bdel" onclick="delSel()">🗑 حذف المحدد (0)</button><button class="w1 w12" onclick="mvSel()">➡ نقل لتبويب الشيتات</button></div>
+<div id="mp"></div><div class="row2"><span id="sum"></span><button class="s w3" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s w4" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s wbg" onclick="gPasteAsk()" style="display:none">📋 لصق</button><span class="wbg" style="display:none"><input id="tq" type="search" placeholder="🔍 بحث: اسم العميل / هاتف / هاتف بديل" autocomplete="off" oninput="tqSet(this.value)" style="width:260px;max-width:100%"> <small id="tqc"></small></span><button class="s wq" onclick="$('fq').click()" style="display:none">📥 رفع ملف (ALL ← قيد)</button><input type="file" id="fq" accept=".xlsx,.xlsb,.xls,.xlsm,.csv" style="display:none" onchange="qUp(this)"><button class="s wns" id="bwr" onclick="wr()" title="عرض النص كامل">عرض النص كامل</button><button class="s wns" onclick="rzReset()" title="اسحب حافة رأس العمود لتغيير عرضه (دبل كليك يرجّعه)">إعادة ضبط الأعمدة</button><button class="s w1 w12" onclick="mv()">➡ نقل للشيتات</button></div><div class="bar"><small id="msg"></small></div><div class="wrap"><table id="out"></table></div><div id="autow" style="display:none"></div><div id="cmpw"><div class="wrap sgw"><table id="sgt"></table></div><small>اكتب في عمود "قائمة راسليني" كل الراسلين اللي بتشتغل معاهم (مرة واحدة، وتفضل محفوظة كل يوم في قاعدة البيانات). العمود التالت بيظهر الراسلين اللي في قايمتك ومش موجودين في شحنات اليوم المختار. اضغط مرتين على خلية للكتابة، واسحب بالماوس للتحديد، واضغط على عنوان العمود لتحديده ونسخه، وDelete بيمسح.</small></div><div id="selbar" style="display:none"><b id="selcnt"></b><button onclick="copySel()">📋 نسخ</button><button class="s" id="bdel" onclick="delSel()">🗑 حذف المحدد (0)</button><button class="w1 w12" onclick="mvSel()">➡ نقل لتبويب الشيتات</button></div>
 <details class="w1"><summary>لصق عناوين فقط</summary><textarea id="in" placeholder="عنوان في كل سطر"></textarea><button onclick="paste()">إضافة لليوم</button></details>
 <details><summary>إضافة كلمة جديدة لجدول الزونات</summary><input id="nk" placeholder="الكلمة"> <input id="nz" placeholder="الزون"><button onclick="add()">إضافة</button> <small id="cn"></small><div id="kl"></div></details>
 <details><summary>إعدادات متقدمة</summary><button class="s" onclick="trashRestore()">♻ استرجاع من سلة المحذوفات</button><button class="s" onclick="resetMaps()">نسيان إعدادات الأعمدة المحفوظة</button></details>
@@ -867,7 +869,7 @@ function readWb(buf,name){const wb=XLSX.read(buf,{type:'array',cellDates:true});
  wb.SheetNames.forEach(sn=>{const M=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,raw:true,defval:''});const k=M.filter(r=>r.some(c=>c!=='')).length;if(!best||k>best.k)best={k,M,sn}});
  return best}
 async function openF(fs){fs=Array.from(fs);await toDay();for(const f of fs){try{const ab=await f.arrayBuffer();const b=readWb(ab,f.name);if(!b||b.k<2){alert('الملف فاضي: '+f.name);continue}
-  let d=detect(b.M);const sig=(d.h>=0?d.hd.join('|'):'n'+(d.D[0]||[]).length)+'#'+b.sn,snd=f.name.replace(/\.[^.]+$/,'').replace(/_+/g,' ').trim(),sv=await db('get','m2:'+sig).catch(()=>0);
+  let d=detect(b.M);const sig=(d.h>=0?d.hd.join('|'):'n'+(d.D[0]||[]).length)+'#'+b.sn,snd=f.name.replace(/\.[^.]+$/,'').replace(/_+/g,' ').trim(),sv=await db('get','m2:'+sig).catch(()=>0);if(sv&&sv.gone)sv=0;
   let hv='a';if(sv&&sv.hr!=null&&sv.hr!=='a'){hv=String(sv.hr);d=detect(b.M,+sv.hr)}
   const p={f:f.name,snd,d,sig,M:b.M,sn:b.sn,hv,auto:!!(sv&&sv.auto)};
   if(sv){p.d.map=mergeMap(sv,d.map);if(sv.auto){await imp(p);continue}}
@@ -909,6 +911,17 @@ async function trashRestore(){const ks=((await db0('getAllKeys').catch(()=>[]))|
   if(t.day==DAY)await save();else{await persistDay(t.day,st);SY.dirty.add(t.day);saveDirty()}
   await db0('delete',k).catch(()=>0)}
  draw();kick(300);alert('اترجّع '+n+' صف من سلة المحذوفات')}
+async function drawA(){const o=$('autow');const ks=(((await db0('getAllKeys').catch(()=>[]))||[]).filter(k=>/^m2:/.test(k)));const L=[];
+ for(const k of ks){const m=await db0('get',k).catch(()=>0);if(m&&!m.gone)L.push([k,m])}
+ L.sort((a,b)=>(b[1].auto?1:0)-(a[1].auto?1:0));
+ const lab=k=>{const sg=k.slice(3),i=sg.lastIndexOf('#'),h=sg.slice(0,i),sh=sg.slice(i+1);return (h.startsWith('n')&&/^n\d+$/.test(h)?'بدون عناوين ('+h.slice(1)+' عمود)':h.split('|').slice(0,8).join(' · ')+(h.split('|').length>8?' …':''))+'  —  ورقة: '+sh};
+ const au=L.filter(x=>x[1].auto).length;
+ o.innerHTML='<div class="mp"><h3 style="margin:0 0 6px">⚡ الأشكال المحفوظة للاستيراد</h3><div style="font-size:13px;opacity:.85;margin-bottom:8px">الشكل = أسماء أعمدة ملف الإكسل. الأشكال اللي عليها ⚡ بتتستورد تلقائي من غير نافذة. <b>إلغاء التلقائي</b> بيرجّع نافذة المراجعة ويحتفظ باختيار الأعمدة. <b>حذف</b> بينسى الشكل خالص.</div>'
+  +(L.length?'<div style="margin-bottom:8px"><b>'+au+'</b> شكل تلقائي من '+L.length+' شكل محفوظ</div>':'<div>مفيش أشكال محفوظة.</div>')
+  +L.map(([k,m],i)=>'<div class="fr" style="align-items:center;gap:8px;border-top:1px solid var(--b);padding:8px 0"><span style="flex:1;min-width:200px">'+(m.auto?'<b style="color:#7c3aed">⚡ تلقائي</b> ':'')+e(lab(k))+'</span>'+(m.auto?'<button class="s" onclick="autoOff('+i+')">إلغاء التلقائي</button>':'')+'<button class="s" onclick="autoDel('+i+')">🗑 حذف</button></div>').join('')+'</div>';
+ window._AL=L.map(x=>x[0])}
+async function autoOff(i){const k=window._AL[i],m=await db0('get',k);if(!m)return;m.auto=false;await db('put',m,k);drawA()}
+async function autoDel(i){const k=window._AL[i];if(!confirm('تنسى الشكل ده خالص؟ (هيرجع يطلب مراجعة الأعمدة المرة الجاية)'))return;await db('put',{gone:1},k);drawA()}
 async function resetMaps(){if(!confirm('نسيان إعدادات الأعمدة المحفوظة لكل أشكال الملفات؟ (الكلمات والزونات مش هتتأثر)'))return;const k=(await db('getAllKeys').catch(()=>0))||[];for(const x of k)if(/^m2?:/.test(x))await db('delete',x);LH={};saveLH();alert('تم. هيظهر شريط مراجعة الأعمدة مع كل شكل ملف جديد.')}
 async function imp(p){await toDay();const sh=/الشيخ/.test(String(p.f||'')),tt=sh?'k':'w';if(sh&&p.d.map.send==null)detSend(p);tab(tt);const[n,dup]=build(p.d.D,p.d.map,p.snd,sh?RK:RW,sh&&p.d.map.send!=null?p.d.map.send:-1);await save();draw();alert(p.snd+': اتضاف '+n+' صف'+(sh?' في تبويب الشيخ':'')+(dup?' وتخطيت '+dup+' مكرر (نفس الكود)':'')+'\nاتسجلوا في يومية: '+dName(DAY))}
 function zr(x){let r=cls(x.a);if(!r.z&&x.ar){const q=cls(x.ar);if(q.z&&!q.f){r=q;r.fa=1}}
@@ -919,7 +932,7 @@ const runBtn=()=>GT(TAB)?runG():run();
 function runG(){load();let f=0,nz=0,na=0,ch=0;gArr().forEach(r=>{if(!r||!r.a||!String(r.a).trim()){na++;return}const c=cls(String(r.a));if(c&&c.z){const old=String(r.z==null?'':r.z).trim();if(old&&old!==c.z)ch++;r.z=c.z;f++}else nz++});
  if(f)gRender();else draw();$('msg').textContent='استخراج الزونات: اتكتب '+f+' زون'+(ch?' (منهم '+ch+' اتغيّر عن اللي كان مكتوب)':'')+(nz?' | '+nz+' عنوان مالقيتش ليه زون (الزون سابته زي ما هو)':'')+(na?' | '+na+' صف من غير عنوان':'')}
 const SFL=[];let SFQ='';
-function sfDraw(){const o=$('sfl');if(!o)return;if(TAB=='s'){o.style.display='none';return}o.style.display='';
+function sfDraw(){const o=$('sfl');if(!o)return;if(TAB=='s'||TAB=='a'){o.style.display='none';return}o.style.display='';
  const m=new Map();R.forEach(x=>{const nm=String(x&&x.sn!=null?x.sn:'').trim();if(!nm||nm=='لصق')return;const k=snk(nm);if(!k)return;const e2=m.get(k);if(e2)e2.n++;else m.set(k,{k,nm,n:1})});
  if(SF&&!m.has(SF))SF='';
  const AL=[...m.values()],qn=acNorm(SFQ),L=qn?AL.filter(x=>acNorm(x.nm).includes(qn)):AL;SFL.length=0;L.forEach(x=>SFL.push(x.k));
@@ -942,7 +955,7 @@ function kl(){const d=$('kl');if(!d)return;d.innerHTML=kwList().map((t,i)=>'<but
 function kdel(i){const c=kwList();c.splice(i,1);kwSave(c);load()}
 async function paste(){await toDay();tab('w');load();$('in').value.split('\n').map(cl).filter(Boolean).forEach(a=>RW.push({n:'',a,z:'',p:'',ph:'',ph2:'',m:'',sn:'لصق',c:'',ar:'',s:'n',nt:'لم يُستخرج',o:null,pk:-1}));$('in').value='';save();draw()}
 function draw(){const BG=GT(TAB);
- $('main').dataset.tab=TAB;$('cmpw').style.display=TAB=='s'?'block':'none';document.querySelector('.wrap').style.display=TAB=='s'?'none':'';
+ $('main').dataset.tab=TAB;$('cmpw').style.display=TAB=='s'?'block':'none';$('autow').style.display=TAB=='a'?'block':'none';document.querySelector('.wrap').style.display=TAB=='s'||TAB=='a'?'none':'';$('t8').className='tb'+(TAB=='a'?' on':'');
  if(BG)gTrim();
  sfDraw();
  $('t1').textContent='الملف الحالي ('+RW.length+')';$('t2').textContent='الشيتات ('+RT.length+')';$('t7').textContent='الشيخ ('+RK.length+')';$('t3').textContent='بومبو ('+RB.length+')';$('t4').textContent='تصوير ('+RG.length+')';$('t6').textContent='القيد ('+RQ.length+')';document.querySelectorAll('button[onclick="mv()"]').forEach(b=>b.classList.toggle('blk',RW.length>0));
@@ -954,13 +967,14 @@ function draw(){const BG=GT(TAB);
   if(c.contains('w2')&&TAB!='t')v=false;
   if(c.contains('w3')&&TAB!='b')v=false;
   if(c.contains('w4')&&TAB!='g'&&TAB!='q')v=false;
-  if(c.contains('w12')&&(BG||TAB=='s'))v=false;
-  if(c.contains('w13')&&TAB=='s')v=false;
-  if(c.contains('wns')&&TAB=='s')v=false;
+  if(c.contains('w12')&&(BG||TAB=='s'||TAB=='a'))v=false;
+  if(c.contains('w13')&&(TAB=='s'||TAB=='a'))v=false;
+  if(c.contains('wns')&&(TAB=='s'||TAB=='a'))v=false;
   if(c.contains('wbg')&&!BG)v=false;
   if(c.contains('wq')&&TAB!='q')v=false;
   b.style.display=v?'':'none'})}
  if(TAB=='s'){$('sum').innerHTML='';drawS();return}
+ if(TAB=='a'){$('sum').innerHTML='';drawA();return}
  const c=s=>V().filter(x=>x.s==s).length,nn=c('n');
  $('sum').innerHTML=BG?'':([['all','الإجمالي '+V().length],['a','تلقائي '+c('a')],['r','مراجعة '+c('r')],['u','غير محدد '+c('u')]].concat(nn?[['n','لم يُستخرج '+nn]]:[]).map(([k,l])=>'<button class="f'+(F==k?' on':'')+'" onclick="F=\''+k+'\';draw()">'+l+'</button>').join(''));
  if(BG){drawN();return}
