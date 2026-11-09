@@ -969,17 +969,19 @@ function learn(i){const x=R[i],k=$('kw'+i),kw=cl(k?k.value:'');if(!kw||!x||!x.z)
  save();draw();$('msg').textContent='اتعلّم: "'+kw+'" ← '+x.z+(n?' وانحلّ '+n+' صف تاني تلقائي':'')}
 function kl(){const d=$('kl');if(!d)return;d.innerHTML=kwList().map((t,i)=>'<button class="o" onclick="kdel('+i+')">'+e(t[0])+' ← '+e(t[1])+' ✕</button>').join('')}
 
-let ZQ='';
+let ZQ='',ZF='';const zcmp=(a,b)=>String(a).localeCompare(String(b),'ar');
 function drawZ(){const o=$('zonew');if(!o)return;
- if(!$('zq')){o.innerHTML='<div style="padding:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center"><input id="zq" type="search" placeholder="بحث في الكلمات أو الزونات" oninput="ZQ=this.value;zlist()" style="min-width:200px"> <input id="zk" placeholder="كلمة / عنوان جديد"> <input id="zz" placeholder="الزون"> <button class="s" onclick="zadd()">➕ إضافة</button> <small id="zc"></small></div><div style="padding:0 10px"><b>قائمتي (بتتعلّم وبتتزامن)</b><div id="zl" style="overflow:auto;max-height:50vh"></div><details style="margin-top:8px"><summary>الجدول الأساسي (للعرض فقط)</summary><div id="zb" style="overflow:auto;max-height:40vh"></div></details></div>'}
+ if(!$('zq')){o.innerHTML='<div style="padding:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center"><select id="zf" onchange="ZF=this.value;zlist()"></select> <input id="zq" type="search" placeholder="بحث في الكلمات أو الزونات" oninput="ZQ=this.value;zlist()" style="min-width:200px"> <input id="zk" placeholder="كلمة / عنوان جديد"> <input id="zz" placeholder="الزون"> <button class="s" onclick="zadd()">➕ إضافة</button> <small id="zc"></small></div><div style="padding:0 10px"><b>قائمتي (بتتعلّم وبتتزامن)</b><div id="zl" style="overflow:auto;max-height:50vh"></div><details style="margin-top:8px"><summary>الجدول الأساسي (للعرض فقط)</summary><div id="zb" style="overflow:auto;max-height:40vh"></div></details></div>'}
  $('zq').value=ZQ;zlist()}
-function zlist(){const q=nrmS(ZQ),c=kwList(),m=(a,b)=>!q||nrmS(a).includes(q)||nrmS(b).includes(q);
+function zlist(){const q=nrmS(ZQ),c=kwList(),m=(a,b)=>(!ZF||String(b)==ZF)&&(!q||nrmS(a).includes(q)||nrmS(b).includes(q));
+ const zs=[...new Set(c.map(t=>t[1]).concat(D.map(t=>t[1])).filter(Boolean))].sort(zcmp);if(ZF&&!zs.includes(ZF))ZF='';
+ $('zf').innerHTML='<option value="">كل الزونات ('+zs.length+')</option>'+zs.map(z=>'<option'+(z==ZF?' selected':'')+'>'+e(z)+'</option>').join('');
  let h='<table style="width:100%"><tr><th>الكلمة / العنوان</th><th>الزون</th><th></th></tr>',n=0;
- c.forEach((t,i)=>{if(!m(t[0],t[1]))return;n++;h+='<tr><td><input value="'+e(t[0])+'" onchange="zed('+i+',0,this.value)" style="width:98%"></td><td><input value="'+e(t[1])+'" onchange="zed('+i+',1,this.value)" style="width:98%"></td><td><button class="o" onclick="zdel('+i+')">🗑</button></td></tr>'});
+ c.map((t,i)=>[t,i]).sort((x,y)=>zcmp(x[0][1],y[0][1])||zcmp(x[0][0],y[0][0])).forEach(([t,i])=>{if(!m(t[0],t[1]))return;n++;h+='<tr><td><input value="'+e(t[0])+'" onchange="zed('+i+',0,this.value)" style="width:98%"></td><td><input value="'+e(t[1])+'" onchange="zed('+i+',1,this.value)" style="width:98%"></td><td><button class="o" onclick="zdel('+i+')">🗑</button></td></tr>'});
  if(!n)h+='<tr><td colspan="3">'+(c.length?'مفيش نتايج':'القائمة فاضية')+'</td></tr>';
  $('zl').innerHTML=h+'</table>';
  let b='<table style="width:100%"><tr><th>الكلمة</th><th>الزون</th></tr>',k=0,tot=0;
- D.forEach(t=>{if(!m(t[0],t[1]))return;tot++;if(k<300){k++;b+='<tr><td>'+e(t[0])+'</td><td>'+e(t[1])+'</td></tr>'}});
+ D.slice().sort((x,y)=>zcmp(x[1],y[1])||zcmp(x[0],y[0])).forEach(t=>{if(!m(t[0],t[1]))return;tot++;if(k<300){k++;b+='<tr><td>'+e(t[0])+'</td><td>'+e(t[1])+'</td></tr>'}});
  $('zb').innerHTML=b+'</table>'+(tot>k?'<small>معروض أول '+k+' من '+tot+' — استخدم البحث</small>':'');
  $('zc').textContent=c.length+' في قائمتي | '+D.length+' في الأساسي'}
 function zadd(){const k=cl($('zk').value),z=cl($('zz').value);if(!k||!z){$('msg').textContent='اكتب الكلمة والزون';return}const c=kwList();if(c.some(t=>t[0]==k&&t[1]==z)){$('msg').textContent='موجودة بالفعل';return}c.push([k,z]);kwSave(c);$('zk').value='';$('zz').value='';load();zlist()}
