@@ -723,7 +723,7 @@ input[type=checkbox],input[type=radio]{height:auto;width:auto;padding:0}
 <div id="app"><aside id="side"><button class="w1 w12" onclick="fi.click()">📂 فتح ملف Excel</button><input type="file" id="fi" multiple hidden accept=".xlsx,.xls,.xlsm,.xlsb,.csv,.ods" onchange="openF(Array.from(this.files));this.value=''">
 <button id="exb" onclick="exOpen()">📤 تصدير Excel</button><button class="w13" onclick="runBtn()">🔍 استخراج الزونات</button><hr><button class="s" onclick="backup()">💾 نسخة احتياطية</button><button class="s" onclick="fr.click()">♻ استعادة</button><input type="file" id="fr" hidden accept=".json" onchange="restore(this.files[0]);this.value=''"><div id="sfl"></div></aside><main id="main" data-tab="w">
 <div class="bar">اليوم: <select id="dsel" onchange="goDay(this.value)"></select><button class="s" id="dbtn" onclick="askDaily()">＋ يومية</button><span id="spb" class="spb" style="display:none"><i></i><b></b></span> <span id="gearw"><button class="s" id="gear" onclick="gearToggle(event)" title="إظهار / إخفاء الأعمدة">⚙</button><div id="gpop" onclick="event.stopPropagation()"></div></span> <small>(اليوميات اللي فيها بيانات. الاستيراد والكتابة بيتسجلوا على اليومية المختارة)</small> <small id="bk"></small></div><div class="bar" style="display:none"><button class="s" id="bdir" onclick="pickDir()">الحفظ التلقائي في فولدر</button> <small id="as"></small></div>
-<div class="row1"><button id="t1" class="tb on" onclick="tab('w')">الملف الحالي</button><button id="t2" class="tb" onclick="tab('t')">الشيتات</button><button id="t7" class="tb" onclick="tab('k')">الشيخ</button><button id="t3" class="tb" onclick="tab('b')">بومبو</button><button id="t4" class="tb" onclick="tab('g')">تصوير</button><button id="t6" class="tb" onclick="tab('q')">القيد</button><button id="t8" class="tb" onclick="tab('a')">⚡ الاستيراد التلقائي</button><button id="t9" class="tb" onclick="tab('z')">📍 الزونات المسجلة</button><button id="t5" class="tb" onclick="tab('s')">مقارنة الراسلين</button></div>
+<div class="row1"><button id="t1" class="tb on" onclick="tab('w')">الملف الحالي</button><button id="t2" class="tb" onclick="tab('t')">الشيتات</button><button id="t7" class="tb" onclick="tab('k')">الشيخ</button><button id="t3" class="tb" onclick="tab('b')">بومبو</button><button id="t4" class="tb" onclick="tab('g')">تصوير</button><button id="t6" class="tb" onclick="tab('q')">القيد</button><button id="t10" class="tb" onclick="tab('h')">حسن نشات</button><button id="t8" class="tb" onclick="tab('a')">⚡ الاستيراد التلقائي</button><button id="t9" class="tb" onclick="tab('z')">📍 الزونات المسجلة</button><button id="t5" class="tb" onclick="tab('s')">مقارنة الراسلين</button></div>
 <div class="bar"></div>
 <div id="mp"></div><div class="row2"><span id="sum"></span><button class="s w3" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s w4" onclick="ex()" style="display:none">📤 تصدير Excel</button><button class="s wbg" onclick="gPasteAsk()" style="display:none">📋 لصق</button><span class="wbg" style="display:none"><input id="tq" type="search" placeholder="🔍 بحث: اسم العميل / هاتف / هاتف بديل" autocomplete="off" oninput="tqSet(this.value)" style="width:260px;max-width:100%"> <small id="tqc"></small></span><button class="s wq" onclick="$('fq').click()" style="display:none">📥 رفع ملف (ALL ← قيد)</button><input type="file" id="fq" accept=".xlsx,.xlsb,.xls,.xlsm,.csv" style="display:none" onchange="qUp(this)"><button class="s wns" id="bwr" onclick="wr()" title="عرض النص كامل">عرض النص كامل</button><button class="s wns" onclick="rzReset()" title="اسحب حافة رأس العمود لتغيير عرضه (دبل كليك يرجّعه)">إعادة ضبط الأعمدة</button><button class="s w1 w12" onclick="mv()">➡ نقل للشيتات</button></div><div class="bar"><small id="msg"></small></div><div class="wrap"><table id="out"></table></div><div id="autow" style="display:none"></div><div id="zonew" style="display:none"></div><div id="cmpw"><div style="padding:6px 0;display:flex;flex-wrap:wrap;gap:6px;align-items:center"><input id="sga" placeholder="اسم راسل جديد لقائمتي" onkeydown="if(event.key=='Enter')sgAdd()"> <button class="s" onclick="sgAdd()">➕ إضافة</button> <button class="s" onclick="sgEditBtn()">✎ تعديل المحدد</button> <button class="o" onclick="sgDelBtn()">🗑 حذف المحدد من قائمتي</button></div><div class="wrap sgw"><table id="sgt"></table></div><small>اكتب في عمود "قائمة راسليني" كل الراسلين اللي بتشتغل معاهم (مرة واحدة، وتفضل محفوظة كل يوم في قاعدة البيانات). العمود التالت بيظهر الراسلين اللي في قايمتك ومش موجودين في شحنات اليوم المختار. اضغط مرتين على خلية للكتابة، واسحب بالماوس للتحديد، واضغط على عنوان العمود لتحديده ونسخه، وDelete بيمسح.</small></div><div id="selbar" style="display:none"><b id="selcnt"></b><button onclick="copySel()">📋 نسخ</button><button class="s" id="bdel" onclick="delSel()">🗑 حذف المحدد (0)</button><button class="w1 w12" onclick="mvSel()">➡ نقل لتبويب الشيتات</button></div>
 <details class="w1"><summary>لصق عناوين فقط</summary><textarea id="in" placeholder="عنوان في كل سطر"></textarea><button onclick="paste()">إضافة لليوم</button></details>
@@ -791,7 +791,7 @@ const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth
 const DB=new Promise((ok,no)=>{try{const q=indexedDB.open('zs2',1);q.onupgradeneeded=()=>q.result.createObjectStore('d');q.onsuccess=()=>ok(q.result);q.onerror=no}catch(e){no(e)}});
 const db0=(m,...a)=>DB.then(d=>new Promise((ok,no)=>{const r=d.transaction('d',m.startsWith('get')?'readonly':'readwrite').objectStore('d')[m](...a);r.onsuccess=()=>ok(r.result);r.onerror=no}));
 const db=(m,...a)=>{const p=db0(m,...a);if(m=='put'&&typeof a[1]=='string'&&isSK(a[1]))p.then(()=>setPush(a[1],a[0]),()=>0);return p};
-let RW=[],RT=[],RK=[],RB=[],RG=[],RQ=[],R=RW,TAB='w',F='all',SF='',DAY=today(),PF=[];
+let RW=[],RT=[],RK=[],RB=[],RG=[],RH=[],RQ=[],R=RW,TAB='w',F='all',SF='',DAY=today(),PF=[];
 let TQ='';
 const snk=v=>nrmK(String(v==null?'':v)),tqHit=x=>{if(!x)return false;const t=acNorm(dg(TQ)),d=dg(TQ).replace(/\D/g,'');return[x.n,x.ph,x.ph2].some(v=>{const s=dg(v==null?'':v);return acNorm(s).includes(t)||(d&&s.replace(/\D/g,'').includes(d))})},rowOk=x=>(!SF||snk(x.sn)==SF)&&(!TQ||tqHit(x)),V=()=>(SF||TQ)?R.filter(rowOk):R;
 const CWD=[48,44,150,280,130,180,110,110,70,110,90,70,160,260];const fixCW=v=>Array.isArray(v)?(v.length==14?v:v.length==12?v.slice(0,11).concat([70,160],v.slice(11)):null):null;let CW=CWD.slice();try{const v=fixCW(JSON.parse(localStorage.getItem('cw')||'null'));if(v)CW=v}catch(e){}CW[0]=Math.max(CW[0],48);
@@ -799,13 +799,13 @@ const saveCWi=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}db
 const saveCW=()=>saveCWi('cw',CW);
 let SEL=new Set();const vis=x=>!((F!='all'&&x.s!=F)||!rowOk(x));
 const $=id=>document.getElementById(id),e=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-const save=()=>db0('put',{w:RW,t:RT,k:RK,b:RB,g:RG,q:RQ,u:Date.now()},DAY).then(()=>{SY.dirty.add(DAY);saveDirty();kick(1200);bkNote();asched();return days()},()=>alert('المتصفح مانع الحفظ الدائم، البيانات هتفضل لحد ما تقفل الصفحة'));
-async function goDay(d){let v=null;if(d&&isDay(d)){DAY=d;v=await db('get',d).catch(()=>0)}else DAY=today();if(Array.isArray(v)){RW=v;RT=[];RK=[];RB=[];RG=[];RQ=[]}else{RW=(v&&v.w)||[];RT=(v&&v.t)||[];RK=(v&&v.k)||[];RB=(v&&v.b)||[];RG=(v&&v.g)||[];RQ=(v&&v.q)||[]}R=TAB=='w'?RW:TAB=='t'?RT:TAB=='k'?RK:TAB=='b'?RB:TAB=='g'?RG:RQ;F='all';SF='';SEL.clear();gReset();draw();await days();if(SY.started&&d&&isDay(d)){SY.pullDay=DAY;kick(100)}}
-function tab(t){TAB=t;NC=t=='q'?NCQ:NC10;R=t=='w'?RW:t=='t'?RT:t=='k'?RK:t=='b'?RB:t=='g'?RG:RQ;F='all';SF='';TQ='';if($('tq'))$('tq').value='';SEL.clear();gReset();draw();updSel()}
-const cnt=r=>Array.isArray(r)?r.length:((r.w||[]).length+(r.t||[]).length+(r.k||[]).length+(r.b||[]).length+(r.g||[]).length+(r.q||[]).length);
+const save=()=>db0('put',{w:RW,t:RT,k:RK,b:RB,g:RG,h:RH,q:RQ,u:Date.now()},DAY).then(()=>{SY.dirty.add(DAY);saveDirty();kick(1200);bkNote();asched();return days()},()=>alert('المتصفح مانع الحفظ الدائم، البيانات هتفضل لحد ما تقفل الصفحة'));
+async function goDay(d){let v=null;if(d&&isDay(d)){DAY=d;v=await db('get',d).catch(()=>0)}else DAY=today();if(Array.isArray(v)){RW=v;RT=[];RK=[];RB=[];RG=[];RH=[];RQ=[]}else{RW=(v&&v.w)||[];RT=(v&&v.t)||[];RK=(v&&v.k)||[];RB=(v&&v.b)||[];RG=(v&&v.g)||[];RH=(v&&v.h)||[];RQ=(v&&v.q)||[]}R=TAB=='w'?RW:TAB=='t'?RT:TAB=='k'?RK:TAB=='b'?RB:TAB=='g'?RG:TAB=='h'?RH:RQ;F='all';SF='';SEL.clear();gReset();draw();await days();if(SY.started&&d&&isDay(d)){SY.pullDay=DAY;kick(100)}}
+function tab(t){TAB=t;NC=t=='q'?NCQ:NC10;R=t=='w'?RW:t=='t'?RT:t=='k'?RK:t=='b'?RB:t=='g'?RG:t=='h'?RH:RQ;F='all';SF='';TQ='';if($('tq'))$('tq').value='';SEL.clear();gReset();draw();updSel()}
+const cnt=r=>Array.isArray(r)?r.length:((r.w||[]).length+(r.t||[]).length+(r.k||[]).length+(r.b||[]).length+(r.g||[]).length+(r.h||[]).length+(r.q||[]).length);
 async function days(){let k=[],v=[];try{k=(await db('getAllKeys'))||[];v=(await db('getAll'))||[]}catch(e){}
  const L=k.map((x,i)=>[x,v[i]]).filter(([x,r])=>isDay(x)&&r&&(cnt(r)>0||x==DAY)).sort((a,b)=>{const ua=(a[1]&&a[1].u)||(/^\d/.test(a[0])?Date.parse(a[0]):0),ub=(b[1]&&b[1].u)||(/^\d/.test(b[0])?Date.parse(b[0]):0);return ub-ua});
- if(DAY.startsWith('d:')&&!L.some(x=>x[0]==DAY))L.unshift([DAY,{w:[],t:[],k:[],b:[],g:[],q:[]}]);
+ if(DAY.startsWith('d:')&&!L.some(x=>x[0]==DAY))L.unshift([DAY,{w:[],t:[],k:[],b:[],g:[],h:[],q:[]}]);
  const wd=x=>{try{return new Date(x+'T12:00').toLocaleDateString('ar-EG-u-nu-latn',{weekday:'long'})}catch(e){return''}};
  $('dsel').innerHTML=L.length?L.map(([x,r])=>'<option value="'+e(x)+'"'+(x==DAY?' selected':'')+'>'+(x.startsWith('d:')?e(dName(x)):wd(x)+' '+x)+' ('+cnt(r)+' صف)</option>').join(''):'<option value="">لا توجد أيام محفوظة بعد</option>';spUpd();return L}
 const toDay=async()=>{};
@@ -917,7 +917,7 @@ async function drawA(){const o=$('autow');const ks=(((await db0('getAllKeys').ca
  const names=[],seen=new Set(),add=n=>{n=cl(n||'');if(n&&!seen.has(n)){seen.add(n);names.push(n)}};
  let HID=[];try{HID=(await db0('get','cmp:hide'))||[]}catch(x){}HID=new Set(HID.map(x=>nrmK(x)));if(MAND!==true){try{const v=await db0('get','cmp:roster');MAN=Array.isArray(v)?v.map(String):[]}catch(x){}}
  const add0=add;const addH=n=>{if(!HID.has(nrmK(cl(n||''))))add0(n)};
- [RW,RT,RK,RB,RG,RQ].forEach(a=>a.forEach(r=>addH(r.sn)));(MAN||[]).forEach(addH);L.forEach(([k,m])=>Object.keys(m.snds||{}).forEach(add0));
+ [RW,RT,RK,RB,RG,RH,RQ].forEach(a=>a.forEach(r=>addH(r.sn)));(MAN||[]).forEach(addH);L.forEach(([k,m])=>Object.keys(m.snds||{}).forEach(add0));
  const recs=n=>L.filter(([k,m])=>m.snds&&n in m.snds),on=n=>recs(n).some(([k,m])=>m.snds[n]===true);
  const lab=k=>{const sg=k.slice(3),i=sg.lastIndexOf('#'),h=sg.slice(0,i);return /^n\d+$/.test(h)?'بدون عناوين ('+h.slice(1)+' عمود)':h.split('|').slice(0,8).join(' · ')};
  const leg=L.filter(([k,m])=>m.auto===true&&!m.snds);
@@ -938,7 +938,8 @@ async function autoDel(i){const o=window._AS[i];if(!confirm('حذف الراسل
  let H=[];try{H=(await db0('get','cmp:hide'))||[]}catch(x){}if(!H.some(x=>nrmK(x)==nrmK(o)))H.push(o);await db('put',H,'cmp:hide');drawA()}
 async function autoOff(i){const k=window._AL[i],m=await db0('get',k);if(!m)return;m.auto=false;await db('put',m,k);drawA()}
 async function resetMaps(){if(!confirm('نسيان إعدادات الأعمدة المحفوظة لكل أشكال الملفات؟ (الكلمات والزونات مش هتتأثر)'))return;const k=(await db('getAllKeys').catch(()=>0))||[];for(const x of k)if(/^m2?:/.test(x))await db('delete',x);LH={};saveLH();alert('تم. هيظهر شريط مراجعة الأعمدة مع كل شكل ملف جديد.')}
-async function imp(p){await toDay();const sh=/الشيخ/.test(String(p.f||'')),tt=sh?'k':'w';if(sh&&p.d.map.send==null)detSend(p);tab(tt);const[n,dup]=build(p.d.D,p.d.map,p.snd,sh?RK:RW,sh&&p.d.map.send!=null?p.d.map.send:-1);await save();draw();alert(p.snd+': اتضاف '+n+' صف'+(sh?' في تبويب الشيخ':'')+(dup?' وتخطيت '+dup+' مكرر (نفس الكود)':'')+'\nاتسجلوا في يومية: '+dName(DAY))}
+function buildH(p){const T=[],r=build(p.d.D,p.d.map,p.snd,T,-1);T.forEach(x=>{const o=gBlank();NC.forEach(c=>{if(x[c[0]]!=null)o[c[0]]=String(x[c[0]])});RH.push(o)});return r}
+async function imp(p){await toDay();const hh=TAB=='h'||/حسن\s*نشات/.test(String(p.f||'')),sh=!hh&&/الشيخ/.test(String(p.f||'')),tt=hh?'h':sh?'k':'w';if(sh&&p.d.map.send==null)detSend(p);tab(tt);const[n,dup]=hh?buildH(p):build(p.d.D,p.d.map,p.snd,sh?RK:RW,sh&&p.d.map.send!=null?p.d.map.send:-1);await save();draw();alert(p.snd+': اتضاف '+n+' صف'+(hh?' في تبويب حسن نشات':sh?' في تبويب الشيخ':'')+(dup?' وتخطيت '+dup+' مكرر (نفس الكود)':'')+'\nاتسجلوا في يومية: '+dName(DAY))}
 function zr(x){let r=cls(x.a);if(!r.z&&x.ar){const q=cls(x.ar);if(q.z&&!q.f){r=q;r.fa=1}}
  let s,o=null,n;if(!r.z){n='غير محدد';s='u'}else if(r.fa){n='من عمود المنطقة: '+r.z;s='r'}else if(r.f){n='تقريبي: '+r.k;s='r'}else if(r.cf.length){o=[r.z].concat(r.cf);n='تعارض: '+o.join(' / ');s='r'}else if(r.x){n='منطقة مقترحة: '+r.k;s='r'}else{n='تلقائي: '+r.k;s='a'}
  x.z=r.z;x.s=s;x.nt=n;x.o=o;x.pk=-1}
@@ -990,15 +991,15 @@ function draw(){const BG=GT(TAB);
  $('main').dataset.tab=TAB;$('cmpw').style.display=TAB=='s'?'block':'none';$('autow').style.display=TAB=='a'?'block':'none';$('zonew').style.display=TAB=='z'?'block':'none';$('t9').className='tb'+(TAB=='z'?' on':'');document.querySelector('.wrap').style.display=TAB=='s'||TAB=='a'||TAB=='z'?'none':'';$('t8').className='tb'+(TAB=='a'?' on':'');
  if(BG)gTrim();
  sfDraw();
- $('t1').textContent='الملف الحالي ('+RW.length+')';$('t2').textContent='الشيتات ('+RT.length+')';$('t7').textContent='الشيخ ('+RK.length+')';$('t3').textContent='بومبو ('+RB.length+')';$('t4').textContent='تصوير ('+RG.length+')';$('t6').textContent='القيد ('+RQ.length+')';document.querySelectorAll('button[onclick="mv()"]').forEach(b=>b.classList.toggle('blk',RW.length>0));
- $('t1').className='tb'+(TAB=='w'?' on':'');$('t2').className='tb'+(TAB=='t'?' on':'');$('t7').className='tb'+(TAB=='k'?' on':'');$('t3').className='tb'+(TAB=='b'?' on':'');$('t4').className='tb'+(TAB=='g'?' on':'');$('t6').className='tb'+(TAB=='q'?' on':'');$('t5').className='tb'+(TAB=='s'?' on':'');
- if($('out').style)$('out').style.setProperty('--p',TAB=='w'?'#15803d':TAB=='t'?'#ea580c':TAB=='k'?'#0d9488':TAB=='b'?'#7c3aed':TAB=='q'?'#d97706':'#0891b2');
+ $('t1').textContent='الملف الحالي ('+RW.length+')';$('t2').textContent='الشيتات ('+RT.length+')';$('t7').textContent='الشيخ ('+RK.length+')';$('t3').textContent='بومبو ('+RB.length+')';$('t4').textContent='تصوير ('+RG.length+')';$('t6').textContent='القيد ('+RQ.length+')';$('t10').textContent='حسن نشات ('+RH.length+')';document.querySelectorAll('button[onclick="mv()"]').forEach(b=>b.classList.toggle('blk',RW.length>0));
+ $('t1').className='tb'+(TAB=='w'?' on':'');$('t2').className='tb'+(TAB=='t'?' on':'');$('t7').className='tb'+(TAB=='k'?' on':'');$('t3').className='tb'+(TAB=='b'?' on':'');$('t4').className='tb'+(TAB=='g'?' on':'');$('t6').className='tb'+(TAB=='q'?' on':'');$('t10').className='tb'+(TAB=='h'?' on':'');$('t5').className='tb'+(TAB=='s'?' on':'');
+ if($('out').style)$('out').style.setProperty('--p',TAB=='w'?'#15803d':TAB=='t'?'#ea580c':TAB=='k'?'#0d9488':TAB=='b'?'#7c3aed':TAB=='q'?'#d97706':TAB=='h'?'#be185d':'#0891b2');
  if(document.querySelectorAll){document.querySelectorAll('.w1,.w2,.w3,.w4,.w12,.w13,.wbg,.wns,.wq').forEach(b=>{const c=b.classList;
   let v=true;
   if(c.contains('w1')&&TAB!='w')v=false;
   if(c.contains('w2')&&TAB!='t')v=false;
   if(c.contains('w3')&&TAB!='b')v=false;
-  if(c.contains('w4')&&TAB!='g'&&TAB!='q')v=false;
+  if(c.contains('w4')&&TAB!='g'&&TAB!='q'&&TAB!='h')v=false;
   if(c.contains('w12')&&(BG||TAB=='s'||TAB=='a'||TAB=='z'))v=false;
   if(c.contains('w13')&&(TAB=='s'||TAB=='a'||TAB=='z'))v=false;
   if(c.contains('wns')&&(TAB=='s'||TAB=='a'||TAB=='z'))v=false;
@@ -1020,10 +1021,10 @@ function rz(ev,j){ev.preventDefault();ev.stopPropagation();const el=ev.target,Wc
  const up=()=>{el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up);el.classList.remove('on');saveCWi(cwKey(),gCW());applyCols()};
  el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up)}
 function rzd(j){const Wc=gCW();Wc[j]=GT(TAB)?gNW()[j]:CWD[j];saveCWi(cwKey(),Wc);draw()}
-function rzReset(){if(TAB=='b'){CWB=NW.slice();saveCWi('cwb',CWB)}else if(TAB=='g'){CWG=NW.slice();saveCWi('cwg',CWG)}else if(TAB=='q'){CWQ=NWQ.slice();saveCWi('cwq',CWQ)}else{CW=CWD.slice();saveCW()}draw()}
+function rzReset(){if(TAB=='b'){CWB=NW.slice();saveCWi('cwb',CWB)}else if(TAB=='g'){CWG=NW.slice();saveCWi('cwg',CWG)}else if(TAB=='h'){CWH=NW.slice();saveCWi('cwh',CWH)}else if(TAB=='q'){CWQ=NWQ.slice();saveCWi('cwq',CWQ)}else{CW=CWD.slice();saveCW()}draw()}
 function bkNote(){const t=+localStorage.getItem('lastbk')||0,n=Math.round((Date.now()-t)/864e5),el=$('bk');if(!el)return;
  el.textContent=t?'آخر نسخة احتياطية: '+new Date(t).toLocaleDateString('ar-EG-u-nu-latn')+(n>0?' (من '+n+' يوم)':' (النهارده)'):'⚠ لسه ما عملتش نسخة احتياطية';
- if(el.style)el.style.color=(!t||n>=3)&&(RW.length+RT.length+RK.length+RB.length+RG.length+RQ.length||t)?'#c62828':''}
+ if(el.style)el.style.color=(!t||n>=3)&&(RW.length+RT.length+RK.length+RB.length+RG.length+RH.length+RQ.length||t)?'#c62828':''}
 async function bkObj(){const k=(await db('getAllKeys').catch(()=>0))||[],v=(await db('getAll').catch(()=>0))||[],o={ver:2,at:new Date().toISOString(),idb:{},ls:{}};k.forEach((x,i)=>{if(x!='dirh'&&!/^s[ny]:/.test(x))o.idb[x]=v[i]});
  ['zs','lh','cw','cwb','cwg','cwq'].forEach(x=>{try{const s=localStorage.getItem(x);if(s)o.ls[x]=JSON.parse(s)}catch(e){}});return o}
 const rowsOf=o=>Object.keys(o.idb||{}).filter(isDay).reduce((s,x)=>s+cnt(o.idb[x]),0);
@@ -1078,7 +1079,7 @@ function updSel(){$('bdel').textContent='🗑 حذف المحدد ('+SEL.size+')
 let LAST=null;
 function tg(i,c,el,ev){if(!R[i])return;if(ev&&ev.shiftKey&&LAST!=null&&LAST!=i){const a=Math.min(LAST,i),b=Math.max(LAST,i);for(let k=a;k<=b;k++){const y=R[k];if(vis(y))c?SEL.add(y):SEL.delete(y)}LAST=i;draw();return}LAST=i;const x=R[i];c?SEL.add(x):SEL.delete(x);const tr=el&&el.closest&&el.closest('tr');if(tr)tr.classList.toggle('sl',c);updSel()}
 function tgAll(c){R.filter(vis).forEach(x=>c?SEL.add(x):SEL.delete(x));draw()}
-function delSel(){if(!SEL.size){alert('حدد شحنات الأول بعلامة ✓ على الصف');return}const k=SEL.size,tn=TAB=='w'?'الملف الحالي':TAB=='t'?'الشيتات':TAB=='k'?'الشيخ':TAB=='b'?'بومبو':TAB=='g'?'تصوير':'القيد';if(!confirm('حذف '+k+(TAB=='w'||TAB=='t'||TAB=='k'?' شحنة':' صف')+' نهائياً من '+tn+'؟'))return;
+function delSel(){if(!SEL.size){alert('حدد شحنات الأول بعلامة ✓ على الصف');return}const k=SEL.size,tn=TAB=='w'?'الملف الحالي':TAB=='t'?'الشيتات':TAB=='k'?'الشيخ':TAB=='b'?'بومبو':TAB=='g'?'تصوير':TAB=='h'?'حسن نشات':'القيد';if(!confirm('حذف '+k+(TAB=='w'||TAB=='t'||TAB=='k'?' شحنة':' صف')+' نهائياً من '+tn+'؟'))return;
  SY.okDel=Date.now();const A=gArr(),B=A.filter(x=>!SEL.has(x));gSet(B);SEL.clear();save();draw();$('msg').textContent='اتحذف '+k+(TAB=='w'||TAB=='t'?' شحنة':' صف')}
 function mv(){if(TAB!='w'||!RW.length){alert('مفيش بيانات في الملف الحالي للنقل');return}
  const c=s=>RW.filter(x=>x.s==s).length,n=c('n'),r=c('r'),u=c('u');
@@ -1099,10 +1100,10 @@ function cp(){const Q=V();if(!Q.length)return;const t=Q.map(x=>x.z).join('\n'),w
 function ex(){if(GT(TAB))return exN();exOpen()}
 function exN(){const A=gArr(),H=NC.map(c=>c[1]);
  const rows=A.map(r=>NC.map(c=>exVal(c[0],r[c[0]],TAB=='q'))).filter(l=>l.some(v=>v!==''));
- if(!rows.length){alert('مفيش بيانات في '+(TAB=='b'?'بومبو':TAB=='g'?'تصوير':'القيد')+' للتصدير');return}
+ if(!rows.length){alert('مفيش بيانات في '+(TAB=='b'?'بومبو':TAB=='g'?'تصوير':TAB=='h'?'حسن نشات':'القيد')+' للتصدير');return}
  const ws=XLSX.utils.aoa_to_sheet([H].concat(rows));ws['!cols']=(TAB=='q'?WNQ:WN10).map(w=>({wch:w}));
- const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};const nm=TAB=='b'?'bombo':TAB=='g'?'tasweer':'qayd';XLSX.utils.book_append_sheet(wb,ws,TAB=='b'?'بومبو':TAB=='g'?'تصوير':'القيد');XLSX.writeFile(wb,nm+'_'+dfile()+'.xlsx');$('msg').textContent='اتصدّر '+rows.length+' صف في '+nm+'_'+dfile()+'.xlsx'}
-async function delDay(){if((RW.length+RT.length+RK.length+RB.length+RG.length+RQ.length)&&confirm('حذف بيانات يومية "'+dName(DAY)+'" نهائياً؟')){await db('delete',DAY).catch(()=>0);await dayGone(DAY);const L=await days();await goDay(L.length?L[0][0]:null)}}
+ const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};const nm=TAB=='b'?'bombo':TAB=='g'?'tasweer':TAB=='h'?'hassan':'qayd';XLSX.utils.book_append_sheet(wb,ws,TAB=='b'?'بومبو':TAB=='g'?'تصوير':TAB=='h'?'حسن نشات':'القيد');XLSX.writeFile(wb,nm+'_'+dfile()+'.xlsx');$('msg').textContent='اتصدّر '+rows.length+' صف في '+nm+'_'+dfile()+'.xlsx'}
+async function delDay(){if((RW.length+RT.length+RK.length+RB.length+RG.length+RH.length+RQ.length)&&confirm('حذف بيانات يومية "'+dName(DAY)+'" نهائياً؟')){await db('delete',DAY).catch(()=>0);await dayGone(DAY);const L=await days();await goDay(L.length?L[0][0]:null)}}
 function add(){const k=$('nk').value.trim(),z=$('nz').value.trim();if(!k||!z)return;const c=kwList();c.push([k,z]);kwSave(c);$('nk').value='';$('nz').value='';load()}
 
 /* ===== استيراد ملف "ALL" (xlsb) إلى القيد + قراءة تنسيق الخلايا ===== */
@@ -1167,14 +1168,14 @@ const qSt=new Map();
 function qStyAttr(v){if(!v)return '';let a=qSt.get(v);if(a!=null)return a;const [sz,fc,b,bg]=v.split('|');let c='';if(sz)c+='font-size:'+sz+'pt;';if(fc)c+='color:#'+fc+';';if(b)c+='font-weight:bold;';if(bg)c+='--cb:#'+bg+';';a=c?' style="'+c+'"'+(bg?' data-cb="1"':''):'';qSt.set(v,a);return a}
 const WN10=[22,60,18,30,14,14,10,18,16,40,10],WNQ=[22,60,18,30,14,14,10,18,16,14,14,10,12,30,12,10,10,8,10,12],QNUM=['m','net','shp','cn','cm'];
 const exVal=(k,v,q)=>{if(v==null)return '';v=String(v);return q&&QNUM.includes(k)&&/^-?\d+(\.\d+)?$/.test(v.trim())?Number(v):v};
-const EXN=[['w','الملف الحالي','current'],['t','الشيتات','sheets'],['k','الشيخ','sheikh'],['b','بومبو','bombo'],['g','تصوير','tasweer'],['q','القيد','qayd'],['s','مقارنة الراسلين','compare']];
+const EXN=[['w','الملف الحالي','current'],['t','الشيتات','sheets'],['k','الشيخ','sheikh'],['b','بومبو','bombo'],['g','تصوير','tasweer'],['h','حسن نشات','hassan'],['q','القيد','qayd'],['s','مقارنة الراسلين','compare']];
 async function exData(k){const H=['اسم العميل','العنوان','الزون','المنتج','الهاتف','هاتف بديل','المبلغ','الراسل','الكود','العدد','ملاحظات'];
  const f=A=>[H].concat(A.map(x=>[x.n,x.a,x.z,x.p,x.ph,x.ph2,x.m===''||x.m==null?'':x.m,x.sn,x.c,x.q==null?'':x.q,x.nn==null?'':x.nn]));
  const g=(A,cols,q)=>[cols.map(c=>c[1])].concat(A.map(r=>cols.map(c=>exVal(c[0],r[c[0]],q))).filter(l=>l.some(v=>v!=='')));
  if(k=='w')return[f(RW),[22,60,18,30,14,14,10,18,16,8,40]];
  if(k=='t')return[f(RT),[22,60,18,30,14,14,10,18,16,8,40]];
  if(k=='k')return[f(RK),[22,60,18,30,14,14,10,18,16,8,40]];
- if(k=='b')return[g(RB,NC10,false),WN10];if(k=='g')return[g(RG,NC10,false),WN10];if(k=='q')return[g(RQ,NCQ,true),WNQ];
+ if(k=='b')return[g(RB,NC10,false),WN10];if(k=='g')return[g(RG,NC10,false),WN10];if(k=='h')return[g(RH,NC10,false),WN10];if(k=='q')return[g(RQ,NCQ,true),WNQ];
  if(MAND!==true){let v=null;try{v=await db0('get','cmp:roster');if(v==null)v=await db0('get','cmp:'+DAY)}catch(x){}MAN=Array.isArray(v)?v.map(String):(typeof v=='string'?v.split(/\n/):[]);MAND=true}
  sgCalc();const man=MAN.filter(x=>String(x).trim()),n=Math.max(ALLS.length,man.length,MISS.length,NEWS.length),a=[['الراسلين من كل التبويبات','اكتب الراسلين بيدك','الراسلين الناقصين','الراسلين الجدد']];
  for(let i=0;i<n;i++)a.push([ALLS[i]||'',man[i]||'',MISS[i]||'',NEWS[i]||'']);return[a,[30,30,30,30]]}
@@ -1184,7 +1185,7 @@ async function exRun(keys){const wb=XLSX.utils.book_new();wb.Workbook={Views:[{R
  if(!tot){alert('مفيش بيانات للتصدير');return}
  const fn=(keys.length==1?EXN.find(x=>x[0]==keys[0])[2]:'all')+'_'+dfile()+'.xlsx';XLSX.writeFile(wb,fn);$('msg').textContent='اتصدّر '+txt.join(' + ')+' في '+fn;exClose()}
 function exClose(){const o=$('exO');if(o)o.remove()}
-function exOpen(){if($('exO'))return;if(GED)gCommit();const cnt={w:RW.length,t:RT.length,k:RK.length,b:RB.length,g:RG.length,q:RQ.length},o=document.createElement('div');o.className='ov';o.id='exO';
+function exOpen(){if($('exO'))return;if(GED)gCommit();const cnt={w:RW.length,t:RT.length,k:RK.length,b:RB.length,g:RG.length,h:RH.length,q:RQ.length},o=document.createElement('div');o.className='ov';o.id='exO';
  o.innerHTML='<div class="dlg" style="max-width:440px;padding:20px"><h3>تصدير Excel</h3><button class="w1" style="width:100%;font-size:15px;height:42px;margin-bottom:12px" onclick="exRun(EXN.map(x=>x[0]))">📦 تصدير الكل (ملف واحد بكل التبويبات)</button><div style="margin:12px 0 8px;font-size:13px;font-weight:600;color:var(--mut)">أو تصدير تبويب واحد:</div><div style="display:flex;flex-direction:column;gap:6px">'
  +EXN.map(x=>'<button class="s" style="height:36px;justify-content:space-between" onclick="exRun([\''+x[0]+'\'])"><span>'+x[1]+'</span><span style="font-size:12px;opacity:.7">'+(cnt[x[0]]!=null?cnt[x[0]]+' صف':'')+'</span></button>').join('')+'</div><div style="margin-top:14px;text-align:left"><button class="s" onclick="exClose()">إغلاق</button></div></div>';
  o.addEventListener('click',ev=>{if(ev.target===o)exClose()});document.body.appendChild(o)}
@@ -1192,20 +1193,20 @@ function exOpen(){if($('exO'))return;if(GED)gCommit();const cnt={w:RW.length,t:R
 let NC;const NC10=[['n','اسم العميل'],['a','العنوان'],['z','الزون'],['p','المنتج'],['ph','الهاتف'],['ph2','هاتف بديل'],['m','المبلغ'],['sn','الراسل'],['c','كود الشحنة'],['nn','ملاحظات'],['cn','العدد']];
 NC=NC10;
 const NCQ=[['n','اسم العميل'],['a','العنوان'],['z','الزون'],['p','المنتج'],['ph','الهاتف'],['ph2','هاتف بديل'],['m','المبلغ'],['sn','الراسل'],['c','كود الشحنة'],['ag','المندوب'],['ag2','مندوب اخر'],['st','الحالة'],['rs','السبب'],['nn','ملاحظات'],['dt','التاريخ'],['net','الصافي'],['shp','الشحن'],['cn','عدد'],['cl','تقفيل'],['cm','عمولة المندوب']];
-const GT=t=>t=='b'||t=='g'||t=='q';
+const GT=t=>t=='b'||t=='g'||t=='h'||t=='q';
 const ACI=[0,1,2,3,7],ACK=['n','a','z','p','sn','ag','ag2','st','rs','nn'],NW=[44,44,150,260,110,150,120,120,80,120,110,200,80],NCO=[22,60,18,30,14,14,10,18,16,40,10];
 const NWQ=[44,44,150,260,110,150,120,120,120,80,110,110,90,140,160,100,90,90,70,80,100,120];
 const fixCWN=v=>Array.isArray(v)&&(v.length==13?v.slice():v.length==12?v.concat([80]):null);
 const fixCWQ=v=>Array.isArray(v)&&v.length==22?v.slice():null;
 const gNW=()=>TAB=='q'?NWQ:NW;
-let CWB=NW.slice(),CWG=NW.slice(),CWQ=NWQ.slice();
+let CWB=NW.slice(),CWG=NW.slice(),CWH=NW.slice(),CWQ=NWQ.slice();try{const v=fixCWN(JSON.parse(localStorage.getItem('cwh')||'null'));if(v)CWH=v}catch(e){}
 try{const v=fixCWQ(JSON.parse(localStorage.getItem('cwq')||'null'));if(v)CWQ=v}catch(e){}
 try{const v=fixCWN(JSON.parse(localStorage.getItem('cwb')||'null'));if(v)CWB=v}catch(e){}
 try{const v=fixCWN(JSON.parse(localStorage.getItem('cwg')||'null'));if(v)CWG=v}catch(e){}
-const gCW=()=>TAB=='b'?CWB:TAB=='g'?CWG:TAB=='q'?CWQ:CW;
-const cwKey=()=>TAB=='b'?'cwb':TAB=='g'?'cwg':TAB=='q'?'cwq':'cw';
-const gArr=()=>TAB=='w'?RW:TAB=='t'?RT:TAB=='k'?RK:TAB=='b'?RB:TAB=='g'?RG:RQ;
-const gSet=v=>{if(TAB=='w')RW=v;else if(TAB=='t')RT=v;else if(TAB=='k')RK=v;else if(TAB=='b')RB=v;else if(TAB=='g')RG=v;else RQ=v;R=v};
+const gCW=()=>TAB=='b'?CWB:TAB=='g'?CWG:TAB=='h'?CWH:TAB=='q'?CWQ:CW;
+const cwKey=()=>TAB=='b'?'cwb':TAB=='g'?'cwg':TAB=='h'?'cwh':TAB=='q'?'cwq':'cw';
+const gArr=()=>TAB=='w'?RW:TAB=='t'?RT:TAB=='k'?RK:TAB=='b'?RB:TAB=='g'?RG:TAB=='h'?RH:RQ;
+const gSet=v=>{if(TAB=='w')RW=v;else if(TAB=='t')RT=v;else if(TAB=='k')RK=v;else if(TAB=='b')RB=v;else if(TAB=='g')RG=v;else if(TAB=='h')RH=v;else RQ=v;R=v};
 const gBlank=()=>{const o={};NC.forEach(c=>o[c[0]]='');return o};
 const gVal=(r,f)=>r&&r[f]!=null?String(r[f]):'';
 const gBlankRow=r=>!r||NC.every(c=>gVal(r,c[0])==='');
@@ -1425,10 +1426,10 @@ const CMAP_WT=['chk','#','n','a','z','p','ph','ph2','m','sn','c','q','nn','nt'],
 const eyeB=(k,j)=>j>=2&&k?'<div class="eyw"><button class="eye" title="إخفاء العمود (ليك إنت بس)" onclick="eyeHide(\''+k+'\',event)">👁</button></div>':'';
 function eyeHide(k,ev){ev&&ev.stopPropagation();HC.add(k);hcSave();applyCols();if(GT(TAB)){if(colHidden(GE.c)){gMove(0,1,0)}gPaint(false,true)}}
 function hcBar(){let b=$('hcbar');if(!b){const w=document.querySelector('.wrap');if(!w)return;b=document.createElement('div');b.id='hcbar';w.parentNode.insertBefore(b,w)}
- const mp=TAB=='q'?CMAP_Q:(TAB=='b'||TAB=='g')?CMAP_G:CMAP_WT,lb=new Map(HCL),h=mp.filter(k=>HC.has(k)&&lb.has(k));
+ const mp=TAB=='q'?CMAP_Q:(TAB=='b'||TAB=='g'||TAB=='h')?CMAP_G:CMAP_WT,lb=new Map(HCL),h=mp.filter(k=>HC.has(k)&&lb.has(k));
  b.style.display=(h.length&&TAB!='s'&&TAB!='a'&&TAB!='z')?'flex':'none';b.innerHTML=h.length?'<span style="font-size:12.5px;opacity:.8">أعمدة مخفية عندك: </span>'+h.map(k=>'<button class="s eyb" onclick="gearSet(\''+k+'\',true);gearDraw()">👁 '+lb.get(k)+'</button>').join('')+'<button class="s eyb" onclick="HC.clear();hcSave();applyCols();if(GT(TAB))gPaint(false,true)">إظهار الكل</button>':''}
 function applyCols(){let st=document.getElementById('colhide');if(!st){st=document.createElement('style');st.id='colhide';document.head.appendChild(st)}
- const mp=TAB=='q'?CMAP_Q:(TAB=='b'||TAB=='g')?CMAP_G:CMAP_WT,hid=[];mp.forEach((k,i)=>{if(HC.has(k))hid.push(i+1)});
+ const mp=TAB=='q'?CMAP_Q:(TAB=='b'||TAB=='g'||TAB=='h')?CMAP_G:CMAP_WT,hid=[];mp.forEach((k,i)=>{if(HC.has(k))hid.push(i+1)});
  st.textContent=hid.map(k=>'#out col:nth-child('+k+'),#out th:nth-child('+k+'),#out td:nth-child('+k+'){display:none}').join('');
  const o=$('out');if(o&&o.style){const W=gCW?gCW():CW;o.style.width=W.reduce((x,y,i)=>x+(HC.has(mp[i])?0:y),0)+'px'}hcBar()}
 function gearDraw(){$('gpop').innerHTML='<div class="gh">الأعمدة الظاهرة (كل التبويبات)</div>'+HCL.map(([k,l])=>'<label><input type="checkbox" '+(HC.has(k)?'':'checked ')+'onchange="gearSet(\''+k+'\',this.checked)">'+l+'</label>').join('')}
@@ -1517,7 +1518,7 @@ document.addEventListener('cut',ev=>{if(TAB!='s'||sgE)return;const t=ev.target;i
 document.addEventListener('paste',ev=>{if(TAB!='s'||sgE)return;const t=ev.target;if(t&&(t.tagName=='INPUT'||t.tagName=='TEXTAREA'))return;const d=ev.clipboardData&&ev.clipboardData.getData('text/plain');if(!d)return;ev.preventDefault();sgPaste(d)},true);
 
 /* ====== Cloud sync (Supabase REST + polling). Local IndexedDB stays the working copy. ====== */
-const TABS=['w','t','k','b','g','q'];
+const TABS=['w','t','k','b','g','h','q'];
 const CFG=(typeof window!='undefined'&&window.ZONE_CONFIG)||{},SBU=String(CFG.SUPABASE_URL||'').replace(/\/+$/,''),SBK=String(CFG.SUPABASE_KEY||'');
 const SBOK=()=>!!SBU&&!!SBK&&!/PASTE_/.test(SBK);
 const APPV=2;
@@ -1567,9 +1568,9 @@ const toast=t=>{try{$('msg').textContent=t}catch(e){}};
 /* --- local snapshot of what the cloud has (also acts as the offline queue) --- */
 async function getSnap(d){if(SY.snc[d])return SY.snc[d];let s=null;try{s=await db0('get','sn:'+d)}catch(e){}if(!s||!s.rows)s={rows:{}};return SY.snc[d]=s}
 const putSnap=(d,s)=>db0('put',s,'sn:'+d).catch(()=>0);
-async function loadState(d){if(d==DAY)return{w:RW,t:RT,k:RK,b:RB,g:RG,q:RQ};let v=null;try{v=await db0('get',d)}catch(e){}
- if(Array.isArray(v))return{w:v,t:[],k:[],b:[],g:[],q:[]};return{w:(v&&v.w)||[],t:(v&&v.t)||[],k:(v&&v.k)||[],b:(v&&v.b)||[],g:(v&&v.g)||[],q:(v&&v.q)||[]}}
-const persistDay=(d,s)=>db0('put',{w:s.w,t:s.t,k:s.k||[],b:s.b,g:s.g,q:s.q||[],u:Date.now()},d).catch(()=>0);
+async function loadState(d){if(d==DAY)return{w:RW,t:RT,k:RK,b:RB,g:RG,h:RH,q:RQ};let v=null;try{v=await db0('get',d)}catch(e){}
+ if(Array.isArray(v))return{w:v,t:[],k:[],b:[],g:[],h:[],q:[]};return{w:(v&&v.w)||[],t:(v&&v.t)||[],k:(v&&v.k)||[],b:(v&&v.b)||[],g:(v&&v.g)||[],h:(v&&v.h)||[],q:(v&&v.q)||[]}}
+const persistDay=(d,s)=>db0('put',{w:s.w,t:s.t,k:s.k||[],b:s.b,g:s.g,h:s.h||[],q:s.q||[],u:Date.now()},d).catch(()=>0);
 let NOSC=false;
 function softDraw(){if((typeof GED!='undefined'&&GED)||(document.activeElement&&(document.activeElement.tagName=='TEXTAREA'||document.activeElement.tagName=='INPUT')&&document.activeElement.type!='checkbox')){SY.redraw=true;return}SY.redraw=false;const sy=scrollY,sx=scrollX,wr=document.querySelector('.wrap'),wt=wr?wr.scrollTop:0,wl=wr?wr.scrollLeft:0;NOSC=true;try{draw()}finally{NOSC=false}scrollTo(sx,sy);if(wr){wr.scrollTop=wt;wr.scrollLeft=wl}days()}
 
@@ -1615,7 +1616,7 @@ async function pushDay(d){const st=await loadState(d),sn=await getSnap(d),pl=pla
 /* --- merge what the cloud has into the local day --- */
 async function mergeDay(d,ups,dels){const sn=await getSnap(d),st=await loadState(d),live=d==DAY;
  const loc=new Map();TABS.forEach(t=>st[t].forEach(r=>{if(r._id)loc.set(r._id,{r,t})}));
- const drop=new Set(),add={w:[],t:[],k:[],b:[],g:[],q:[]};let ch=false,lost=0;const mk=x=>Object.assign({},x.data,{_id:x.id});
+ const drop=new Set(),add={w:[],t:[],k:[],b:[],g:[],h:[],q:[]};let ch=false,lost=0;const mk=x=>Object.assign({},x.data,{_id:x.id});
  dels=dels||[];
  {const cand=dels.filter(id=>{const s=sn.rows[id],L=loc.get(id);return s&&L&&sj(strip(L.r))==s.j&&TABS.includes(s.t)});
   if(cand.length>20){const keep=!confirm('⚠ جهاز تاني (أو السحابة) مسح '+cand.length+' صف من يومية "'+dName(d)+'".\nلو ده مش مقصود اضغط إلغاء: هتحتفظ بالصفوف وهتتعاد للسحابة.\nموافق = تمسحهم من هنا كمان (هيتحفظوا في سلة المحذوفات).');
@@ -1674,7 +1675,7 @@ async function ensureImport(){if(lsGet('zsi',null)==SES.uid)return;
 
 /* --- sync progress bar: counts rows the cloud confirmed, then double-checks the cloud count --- */
 const SPB={t:0};
-async function spCalc(){const st={w:RW,t:RT,k:RK,b:RB,g:RG,q:RQ},sn=await getSnap(DAY),seen=new Set();let tot=0,ok=0,del=0;
+async function spCalc(){const st={w:RW,t:RT,k:RK,b:RB,g:RG,h:RH,q:RQ},sn=await getSnap(DAY),seen=new Set();let tot=0,ok=0,del=0;
  for(const t of TABS)for(const r of st[t]){tot++;const s=r._id&&sn.rows[r._id];if(s&&s.t==t&&s.j==sj(strip(r)))ok++;if(r._id)seen.add(r._id)}
  for(const id in sn.rows)if(!seen.has(id))del++;return{tot,ok,del}}
 function spUpd(){clearTimeout(SPB.t);SPB.t=setTimeout(spDraw,250)}
