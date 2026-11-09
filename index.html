@@ -791,7 +791,7 @@ const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth
 const DB=new Promise((ok,no)=>{try{const q=indexedDB.open('zs2',1);q.onupgradeneeded=()=>q.result.createObjectStore('d');q.onsuccess=()=>ok(q.result);q.onerror=no}catch(e){no(e)}});
 const db0=(m,...a)=>DB.then(d=>new Promise((ok,no)=>{const r=d.transaction('d',m.startsWith('get')?'readonly':'readwrite').objectStore('d')[m](...a);r.onsuccess=()=>ok(r.result);r.onerror=no}));
 const db=(m,...a)=>{const p=db0(m,...a);if(m=='put'&&typeof a[1]=='string'&&isSK(a[1]))p.then(()=>setPush(a[1],a[0]),()=>0);return p};
-let RW=[],RT=[],RK=[],RB=[],RG=[],RH=[],RQ=[],R=RW,TAB='w',F='all',SF='',DAY=today(),PF=[];
+const MV={};let RW=[],RT=[],RK=[],RB=[],RG=[],RH=[],RQ=[],R=RW,TAB='w',F='all',SF='',DAY=today(),PF=[];
 let TQ='';
 const snk=v=>nrmK(String(v==null?'':v)),tqHit=x=>{if(!x)return false;const t=acNorm(dg(TQ)),d=dg(TQ).replace(/\D/g,'');return[x.n,x.ph,x.ph2].some(v=>{const s=dg(v==null?'':v);return acNorm(s).includes(t)||(d&&s.replace(/\D/g,'').includes(d))})},rowOk=x=>(!SF||snk(x.sn)==SF)&&(!TQ||tqHit(x)),V=()=>(SF||TQ)?R.filter(rowOk):R;
 const CWD=[48,44,150,280,130,180,110,110,70,110,90,70,160,260];const fixCW=v=>Array.isArray(v)?(v.length==14?v:v.length==12?v.slice(0,11).concat([70,160],v.slice(11)):null):null;let CW=CWD.slice();try{const v=fixCW(JSON.parse(localStorage.getItem('cw')||'null'));if(v)CW=v}catch(e){}CW[0]=Math.max(CW[0],48);
@@ -800,7 +800,7 @@ const saveCW=()=>saveCWi('cw',CW);
 let SEL=new Set();const vis=x=>!((F!='all'&&x.s!=F)||!rowOk(x));
 const $=id=>document.getElementById(id),e=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
 const save=()=>db0('put',{w:RW,t:RT,k:RK,b:RB,g:RG,h:RH,q:RQ,u:Date.now()},DAY).then(()=>{SY.dirty.add(DAY);saveDirty();kick(1200);bkNote();asched();return days()},()=>alert('المتصفح مانع الحفظ الدائم، البيانات هتفضل لحد ما تقفل الصفحة'));
-async function goDay(d){let v=null;if(d&&isDay(d)){DAY=d;v=await db('get',d).catch(()=>0)}else DAY=today();if(Array.isArray(v)){RW=v;RT=[];RK=[];RB=[];RG=[];RH=[];RQ=[]}else{RW=(v&&v.w)||[];RT=(v&&v.t)||[];RK=(v&&v.k)||[];RB=(v&&v.b)||[];RG=(v&&v.g)||[];RH=(v&&v.h)||[];RQ=(v&&v.q)||[]}R=TAB=='w'?RW:TAB=='t'?RT:TAB=='k'?RK:TAB=='b'?RB:TAB=='g'?RG:TAB=='h'?RH:RQ;F='all';SF='';SEL.clear();gReset();draw();await days();if(SY.started&&d&&isDay(d)){SY.pullDay=DAY;kick(100)}}
+async function goDay(d){let v=null;if(d&&isDay(d)){let n0;do{n0=MV[d]||0;v=await db('get',d).catch(()=>0)}while((MV[d]||0)!=n0);DAY=d}else DAY=today();if(Array.isArray(v)){RW=v;RT=[];RK=[];RB=[];RG=[];RH=[];RQ=[]}else{RW=(v&&v.w)||[];RT=(v&&v.t)||[];RK=(v&&v.k)||[];RB=(v&&v.b)||[];RG=(v&&v.g)||[];RH=(v&&v.h)||[];RQ=(v&&v.q)||[]}R=TAB=='w'?RW:TAB=='t'?RT:TAB=='k'?RK:TAB=='b'?RB:TAB=='g'?RG:TAB=='h'?RH:RQ;F='all';SF='';SEL.clear();gReset();draw();await days();if(SY.started&&d&&isDay(d)){SY.pullDay=DAY;kick(100)}}
 function tab(t){TAB=t;NC=t=='q'?NCQ:NC10;R=t=='w'?RW:t=='t'?RT:t=='k'?RK:t=='b'?RB:t=='g'?RG:t=='h'?RH:RQ;F='all';SF='';TQ='';if($('tq'))$('tq').value='';SEL.clear();gReset();draw();updSel()}
 const cnt=r=>Array.isArray(r)?r.length:((r.w||[]).length+(r.t||[]).length+(r.k||[]).length+(r.b||[]).length+(r.g||[]).length+(r.h||[]).length+(r.q||[]).length);
 async function days(){let k=[],v=[];try{k=(await db('getAllKeys'))||[];v=(await db('getAll'))||[]}catch(e){}
@@ -1572,7 +1572,7 @@ async function getSnap(d){if(SY.snc[d])return SY.snc[d];let s=null;try{s=await d
 const putSnap=(d,s)=>db0('put',s,'sn:'+d).catch(()=>0);
 async function loadState(d){if(d==DAY)return{w:RW,t:RT,k:RK,b:RB,g:RG,h:RH,q:RQ};let v=null;try{v=await db0('get',d)}catch(e){}
  if(Array.isArray(v))return{w:v,t:[],k:[],b:[],g:[],h:[],q:[]};return{w:(v&&v.w)||[],t:(v&&v.t)||[],k:(v&&v.k)||[],b:(v&&v.b)||[],g:(v&&v.g)||[],h:(v&&v.h)||[],q:(v&&v.q)||[]}}
-const persistDay=(d,s)=>db0('put',{w:s.w,t:s.t,k:s.k||[],b:s.b,g:s.g,h:s.h||[],q:s.q||[],u:Date.now()},d).catch(()=>0);
+const persistDay=(d,s)=>db0('put',{w:s.w,t:s.t,k:s.k||[],b:s.b,g:s.g,h:s.h||[],q:s.q||[],u:Date.now()},d).then(r=>{MV[d]=(MV[d]||0)+1;return r}).catch(()=>0);
 let NOSC=false;
 function softDraw(){if((typeof GED!='undefined'&&GED)||(document.activeElement&&(document.activeElement.tagName=='TEXTAREA'||document.activeElement.tagName=='INPUT')&&document.activeElement.type!='checkbox')){SY.redraw=true;return}SY.redraw=false;const sy=scrollY,sx=scrollX,wr=document.querySelector('.wrap'),wt=wr?wr.scrollTop:0,wl=wr?wr.scrollLeft:0;NOSC=true;try{draw()}finally{NOSC=false}scrollTo(sx,sy);if(wr){wr.scrollTop=wt;wr.scrollLeft=wl}days()}
 
@@ -1637,7 +1637,8 @@ async function mergeDay(d,ups,dels){const sn=await getSnap(d),st=await loadState
  if(ch){TABS.forEach(t=>{const keep=st[t].filter(r=>!drop.has(r)).concat(add[t]),inS=[],out=[];
   keep.forEach(r=>{const s=r._id&&sn.rows[r._id];(s&&s.t==t?inS:out).push(r)});inS.sort((a,b)=>sn.rows[a._id].p-sn.rows[b._id].p);
   st[t].length=0;inS.concat(out).forEach(r=>st[t].push(r))});
-  await persistDay(d,st);if(live){SY.redraw=true}}
+  await persistDay(d,st);if(live&&st.w===RW){SY.redraw=true}
+  else if(d==DAY){RW=st.w;RT=st.t;RK=st.k;RB=st.b;RG=st.g;RH=st.h;RQ=st.q;R=TAB=='w'?RW:TAB=='t'?RT:TAB=='k'?RK:TAB=='b'?RB:TAB=='g'?RG:TAB=='h'?RH:RQ;SY.redraw=true}}
  await putSnap(d,sn);return{ch,lost}}
 
 async function fetchDay(d){const rows=[];for(let off=0;;off+=1000){const r=await sbj('/rest/v1/shipments?select=id,day,tab,pos,data,version&day=eq.'+encodeURIComponent(d)+'&order=pos.asc,id.asc',{headers:{Range:off+'-'+(off+999),'Range-Unit':'items'}});const a=await r.json();rows.push(...a);if(a.length<1000)break}return rows}
