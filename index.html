@@ -1178,10 +1178,11 @@ const qSt=new Map();
 function qStyAttr(v){if(!v)return '';let a=qSt.get(v);if(a!=null)return a;const [sz,fc,b,bg]=v.split('|');let c='';if(sz)c+='font-size:'+sz+'pt;';if(fc)c+='color:#'+fc+';';if(b)c+='font-weight:bold;';if(bg)c+='--cb:#'+bg+';';a=c?' style="'+c+'"'+(bg?' data-cb="1"':''):'';qSt.set(v,a);return a}
 const WN10=[22,60,18,30,14,14,10,18,16,40,10],WNQ=[22,60,18,30,14,14,10,18,16,14,14,10,12,30,12,10,10,8,10,12],QNUM=['m','net','shp','cn','cm'];
 const exVal=(k,v,q)=>{if(v==null)return '';v=String(v);return q&&QNUM.includes(k)&&/^-?\d+(\.\d+)?$/.test(v.trim())?Number(v):v};
-const EXN=[['w','الملف الحالي','current'],['t','الشيتات','sheets'],['k','الشيخ','sheikh'],['b','بومبو','bombo'],['g','تصوير','tasweer'],['h','حسن نشات','hassan'],['q','القيد','qayd'],['s','مقارنة الراسلين','compare']];
+const EXN=[['w','الملف الحالي','current'],['t','الشيتات','sheets'],['k','الشيخ','sheikh'],['b','بومبو','bombo'],['g','تصوير','tasweer'],['h','حسن نشات','hassan'],['q','القيد','qayd'],['s','مقارنة الراسلين','compare'],['m','البيانات المجمعة','combined']];
 async function exData(k){const H=['اسم العميل','العنوان','الزون','المنتج','الهاتف','هاتف بديل','المبلغ','الراسل','الكود','العدد','ملاحظات'];
  const f=A=>[H].concat(A.map(x=>[x.n,x.a,x.z,x.p,x.ph,x.ph2,x.m===''||x.m==null?'':x.m,x.sn,x.c,x.q==null?'':x.q,x.nn==null?'':x.nn]));
  const g=(A,cols,q)=>[cols.map(c=>c[1])].concat(A.map(r=>cols.map(c=>exVal(c[0],r[c[0]],q))).filter(l=>l.some(v=>v!=='')));
+ if(k=='m'){const rows=[],F=['n','a','z','p','ph','ph2','m','sn','c','cn','nn'];[RW,RT,RK].forEach(A=>A.forEach(x=>rows.push([x.n,x.a,x.z,x.p,x.ph,x.ph2,x.m===''||x.m==null?'':x.m,x.sn,x.c,x.q==null?'':x.q,x.nn==null?'':x.nn])));[RB,RG].forEach(A=>A.forEach(r=>{const l=F.map(c=>exVal(c,r[c],false));if(l.some(v=>v!==''))rows.push(l)}));return[[H].concat(rows),[22,60,18,30,14,14,10,18,16,8,40]]}
  if(k=='w')return[f(RW),[22,60,18,30,14,14,10,18,16,8,40]];
  if(k=='t')return[f(RT),[22,60,18,30,14,14,10,18,16,8,40]];
  if(k=='k')return[f(RK),[22,60,18,30,14,14,10,18,16,8,40]];
@@ -1195,7 +1196,7 @@ async function exRun(keys){const wb=XLSX.utils.book_new();wb.Workbook={Views:[{R
  if(!tot){alert('مفيش بيانات للتصدير');return}
  const fn=(keys.length==1?EXN.find(x=>x[0]==keys[0])[2]:'all')+'_'+dfile()+'.xlsx';XLSX.writeFile(wb,fn);$('msg').textContent='اتصدّر '+txt.join(' + ')+' في '+fn;exClose()}
 function exClose(){const o=$('exO');if(o)o.remove()}
-function exOpen(){if($('exO'))return;if(GED)gCommit();const cnt={w:RW.length,t:RT.length,k:RK.length,b:RB.length,g:RG.length,h:RH.length,q:RQ.length},o=document.createElement('div');o.className='ov';o.id='exO';
+function exOpen(){if($('exO'))return;if(GED)gCommit();const cnt={w:RW.length,t:RT.length,k:RK.length,b:RB.length,g:RG.length,h:RH.length,q:RQ.length,m:RW.length+RT.length+RK.length+RB.length+RG.length},o=document.createElement('div');o.className='ov';o.id='exO';
  o.innerHTML='<div class="dlg" style="max-width:440px;padding:20px"><h3>تصدير Excel</h3><button class="w1" style="width:100%;font-size:15px;height:42px;margin-bottom:12px" onclick="exRun(EXN.map(x=>x[0]))">📦 تصدير الكل (ملف واحد بكل التبويبات)</button><div style="margin:12px 0 8px;font-size:13px;font-weight:600;color:var(--mut)">أو تصدير تبويب واحد:</div><div style="display:flex;flex-direction:column;gap:6px">'
  +EXN.map(x=>'<button class="s" style="height:36px;justify-content:space-between" onclick="exRun([\''+x[0]+'\'])"><span>'+x[1]+'</span><span style="font-size:12px;opacity:.7">'+(cnt[x[0]]!=null?cnt[x[0]]+' صف':'')+'</span></button>').join('')+'</div><div style="margin-top:14px;text-align:left"><button class="s" onclick="exClose()">إغلاق</button></div></div>';
  o.addEventListener('click',ev=>{if(ev.target===o)exClose()});document.body.appendChild(o)}
