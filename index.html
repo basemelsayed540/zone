@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="ar" dir="rtl"><head>
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><meta charset="utf-8"><meta name="description" content="تطبيق لإدارة وتوزيع شحنات التوصيل واستخراج الزونات وإدارة اليوميات ومقارنة الراسلين وتصدير الشيتات.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>"><meta name="viewport" content="width=device-width,initial-scale=1"><title>مستخرج الزون والشحنات</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>"><meta name="viewport" content="width=device-width,initial-scale=1"><title>داتا انتري</title>
 <style>:root{color-scheme:light dark;--bg:#f6f7f9;--c:#fff;--t:#1d2733;--b:#d5dbe3;--p:#1f4e78}@media(prefers-color-scheme:dark){:root{--bg:#161b22;--c:#1f2630;--t:#e6edf3;--b:#38414d;--p:#6ea8dc}}
 body{font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--t);margin:0;padding:14px}h1{color:var(--p);font-size:21px;margin:4px 0 10px}
 textarea,input,select{box-sizing:border-box;background:var(--c);color:var(--t);border:1px solid var(--b);border-radius:6px;padding:6px;font:inherit}textarea{width:100%;height:110px}
@@ -719,7 +719,7 @@ small {
 input[type=checkbox],input[type=radio]{height:auto;width:auto;padding:0}
 </style>
 </head><body>
-<h1>مستخرج الزون والشحنات (بدون إنترنت)</h1>
+<h1 style="display:flex;align-items:center"><span>داتا انتري</span><button class="s" id="rfb" onclick="refreshApp()" title="تحديث التطبيق لآخر نسخة" style="font-size:14px;margin:0;margin-inline-start:auto">🔄 تحديث</button></h1>
 <div id="app"><aside id="side"><button class="w1 w12" onclick="fi.click()">📂 فتح ملف Excel</button><input type="file" id="fi" multiple hidden accept=".xlsx,.xls,.xlsm,.xlsb,.csv,.ods" onchange="openF(Array.from(this.files));this.value=''">
 <button id="exb" onclick="exOpen()">📤 تصدير Excel</button><button class="w13" onclick="runBtn()">🔍 استخراج الزونات</button><hr><button class="s" onclick="backup()">💾 نسخة احتياطية</button><button class="s" onclick="fr.click()">♻ استعادة</button><input type="file" id="fr" hidden accept=".json" onchange="restore(this.files[0]);this.value=''"><div id="sfl"></div></aside><main id="main" data-tab="w">
 <div class="bar">اليوم: <select id="dsel" onchange="goDay(this.value)"></select><button class="s" id="dbtn" onclick="askDaily()">＋ يومية</button><button class="s" id="ddel" onclick="delEmptyDay()" title="حذف اليومية الحالية (لو فاضية بس)">🗑</button><span id="spb" class="spb" style="display:none"><i></i><b></b></span> <span id="gearw"><button class="s" id="gear" onclick="gearToggle(event)" title="إظهار / إخفاء الأعمدة">⚙</button><div id="gpop" onclick="event.stopPropagation()"></div></span> <small>(اليوميات اللي فيها بيانات. الاستيراد والكتابة بيتسجلوا على اليومية المختارة)</small> <small id="bk"></small></div><div class="bar" style="display:none"><button class="s" id="bdir" onclick="pickDir()">الحفظ التلقائي في فولدر</button> <small id="as"></small></div>
@@ -803,6 +803,11 @@ const save=()=>db0('put',{w:RW,t:RT,k:RK,b:RB,g:RG,h:RH,q:RQ,u:Date.now()},DAY).
 async function goDay(d){let v=null;if(d&&isDay(d)){let n0;do{n0=MV[d]||0;v=await db('get',d).catch(()=>0)}while((MV[d]||0)!=n0);DAY=d}else DAY=today();if(Array.isArray(v)){RW=v;RT=[];RK=[];RB=[];RG=[];RH=[];RQ=[]}else{RW=(v&&v.w)||[];RT=(v&&v.t)||[];RK=(v&&v.k)||[];RB=(v&&v.b)||[];RG=(v&&v.g)||[];RH=(v&&v.h)||[];RQ=(v&&v.q)||[]}R=TAB=='w'?RW:TAB=='t'?RT:TAB=='k'?RK:TAB=='b'?RB:TAB=='g'?RG:TAB=='h'?RH:RQ;F='all';SF='';SEL.clear();gReset();draw();await days();if(SY.started&&d&&isDay(d)){SY.pullDay=DAY;kick(100)}}
 function tab(t){TAB=t;NC=t=='q'?NCQ:NC10;R=t=='w'?RW:t=='t'?RT:t=='k'?RK:t=='b'?RB:t=='g'?RG:t=='h'?RH:RQ;F='all';SF='';TQ='';if($('tq'))$('tq').value='';SEL.clear();gReset();draw();updSel()}
 const cnt=r=>Array.isArray(r)?r.length:((r.w||[]).length+(r.t||[]).length+(r.k||[]).length+(r.b||[]).length+(r.g||[]).length+(r.h||[]).length+(r.q||[]).length);
+async function refreshApp(){const b=$('rfb');if(b){b.disabled=true;b.textContent='⏳ جاري التحديث...'}
+ try{await Promise.race([syncCycle(),new Promise(r=>setTimeout(r,4000))])}catch(e){}
+ try{if('serviceWorker' in navigator){const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.unregister()))}}catch(e){}
+ try{if(window.caches){const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}}catch(e){}
+ location.reload()}
 async function dayReg(d,on){if(!isDay(d))return;let a=[];try{a=(await db0('get','cmp:days'))||[]}catch(e){}if(!Array.isArray(a))a=[];const had=a.includes(d);if(on==had)return;a=on?a.concat([d]):a.filter(x=>x!=d);await db('put',a,'cmp:days')}
 async function days(){let k=[],v=[],RG0=[];try{k=(await db('getAllKeys'))||[];v=(await db('getAll'))||[];RG0=(await db0('get','cmp:days'))||[]}catch(e){}if(!Array.isArray(RG0))RG0=[];
  const L=k.map((x,i)=>[x,v[i]]).filter(([x,r])=>isDay(x)&&r&&(cnt(r)>0||x==DAY||RG0.includes(x))).sort((a,b)=>{const ua=(a[1]&&a[1].u)||(/^\d/.test(a[0])?Date.parse(a[0]):0),ub=(b[1]&&b[1].u)||(/^\d/.test(b[0])?Date.parse(b[0]):0);return ub-ua});
