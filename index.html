@@ -767,7 +767,12 @@ let K=[],U2=[],FSW=FS.map(x=>W(x)[0]),QW=QU.map(x=>W(x)[0]);
 function load(){let c=[];try{c=JSON.parse(localStorage.getItem('zs')||'[]')}catch(e){}
 K=D.concat(c.map(x=>[x[0],x[1],'m',0,0])).map(([k,z,t,w,x])=>{const ws=W(k);return{ws,z,x,k,wt:(w||TW[t]||50)+G.lw*ws.join('').length}}).filter(k=>k.ws.length&&k.z);
 U2=UN.map(([b,l])=>({ws:W(b),z:l,k:b,wt:40,u:1}));if(typeof document!='undefined'&&document.getElementById('cn'))document.getElementById('cn').textContent=K.length+' كلمة في الجدول';try{kl()}catch(e){}}
-function cls(a){const aw=W(a),best={};
+// تصحيحات الكلمات (من ملف الإكسل ورقة تصحيح): العنصر الأول = الكلمة الأساسية، والباقي كتابات تتصحح ليها. بتتطبق وقت الاستخراج بس ومش بتغيّر نص العنوان.
+const CORR=[["الابراهمية",["الابراهميه","الابراهيميه"]],["الساعة",["الساعه"]],["ابوسليمان",["ابو سليمان"]],["الظاهرية",["الظاهريه"]],["بولكي",[]],["حجرالنواتية",["حجر النواتيه","حجرالنواتيه"]],["ابوقير",["ابو قير"]],["الملاحة",["ملاحه","ملاحة","الملاحه"]],["عصافرةبحري",["عصافرة بحري","عصافرةبحرى","عصافره بحري","عصافره بحرى"]],["عصافره قبلي",["عصافرة قبلي","عصافرة قبلى","عصافرةقبلى","عصافرةقبلي"]],["مندره قبلي",["مندره قبلى","مندرةقبلي","مندرةقبلى","مندرة قبلي"]],["فلكي",["فلكى","الفلكي","الفلكى"]],["المعمورة",["المعموره"]],["الشاطبى",["الشاطبي"]],["بشربحرى",["بشر بحري","بشربحري","بشر بحرى"]],["بشر قبلى",["بشر قبلي","بشرقبلي","بشرقبلى"]],["بولكى",["بولكي"]],["ميامى",["ميامي"]],["منشية",["منشيه","المنشيه","المنشية"]],["كوبرى الناموس",["كوبري الناموس"]],["الازاريطة",["الازاريطه"]],["ستانلى",["ستانلي"]],["رشدى",["رشدي"]]];
+let CR=null;function crBuild(){const seen={},o=[];CORR.forEach(([b,vs])=>{const to=W(b);vs.forEach(v=>{const from=W(v),k=from.join(' ');if(!from.length||!to.length||k==to.join(' ')||seen[k])return;seen[k]=1;o.push({from,to})})});o.sort((x,y)=>y.from.length-x.from.length);CR=o}
+function fixW(aw){if(!CR)crBuild();const o=[];for(let p=0;p<aw.length;){const r=CR.find(c=>p+c.from.length<=aw.length&&c.from.every((w,i)=>aw[p+i]==w));if(r){o.push(...r.to);p+=r.from.length}else o.push(aw[p++])}return o}
+function cls(a){const r=cls0(fixW(W(a)));return r.z?r:cls0(W(a))}
+function cls0(aw){const best={};
 for(const k of K){const m=k.ws.length;for(let p=0;p<=aw.length-m;p++){if(k.ws.every((w,i)=>aw[p+i]==w)){const sc=k.wt+G.extra*(m-1)-(PEN[k.z]||0),b=best[k.z];if(!b)best[k.z]=[sc,p,k,1];else{b[3]++;if(sc>b[0]||(sc==b[0]&&p<b[1])){b[0]=sc;b[1]=p;b[2]=k}}break}}}
 const c=Object.entries(best).filter(([z,b])=>b[0]>=G.min).map(([z,b])=>[b[0]+G.sup*(b[3]-1),b[1],z,b[2]]).sort((x,y)=>y[0]-x[0]||x[1]-y[1]);
 if(c.length){const t=c[0];return{z:t[2],k:t[3].k,x:t[3].x,cf:c.slice(1).filter(y=>t[0]-y[0]<=G.margin).map(y=>y[2])}}
